@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://b8jqspdsl8r1w"]
+
+[ext_resource type="Script" path="res://scenes/rhythm/RhythmTestMain.cs" id="1_exf5t"]
+
+[node name="Main" type="Node"]
+script = ExtResource("1_exf5t")
+
+[node name="Node2D" type="Node2D" parent="."]
