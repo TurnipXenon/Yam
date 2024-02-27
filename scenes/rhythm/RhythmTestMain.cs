@@ -1,8 +1,17 @@
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Godot;
+using Yam.scenes.rhythm.models;
 
 public partial class RhythmTestMain : Node
 {
+    enum MapReadingState
+    {
+        Searching,
+        ReadingHitObject,
+    }
+
     private const string RawSongBasePath = "res://scenes/rhythm/songs/raw/";
 
     // Called when the node enters the scene tree for the first time.
@@ -73,10 +82,42 @@ public partial class RhythmTestMain : Node
             return;
         }
 
+        var rhythmData = new RhythmData(); // todo: maybe transfer to RhythmData
         var body = f.GetAsText();
+        var readingStateStack = new Stack<MapReadingState>();
+        readingStateStack.Push(MapReadingState.Searching);
         foreach (var line in body.Split("\n"))
         {
-            GD.Print(line);
+            switch (readingStateStack.Peek())
+            {
+                case MapReadingState.Searching:
+                    if (line.Contains("[HitObjects]"))
+                    {
+                        readingStateStack.Push(MapReadingState.ReadingHitObject);
+                    }
+
+                    GD.Print(line);
+                    break;
+
+                case MapReadingState.ReadingHitObject:
+                    if (line.Split(",").Length <= 1)
+                    {
+                        readingStateStack.Pop();
+                        continue;
+                    }
+
+                    GD.Print(line.Split(",").Join("---"));
+
+                    // todo: get timing points
+                    rhythmData.HitObjectList.Add(HitObject.FromOsuHitObjectString(line));
+
+                    break;
+
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
+
+        GD.Print("Done");
     }
 }

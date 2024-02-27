@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://bbrteryx52skc"]
+
+[ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://assets/placeholder/niko_square.jpg" id="1_0qhtg"]
+
+[node name="NikoSquare" type="Sprite2D"]
+position = Vector2(138, 139)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_0qhtg")

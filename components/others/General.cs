@@ -2,5 +2,5 @@
 
 public static class General
 {
-    public const int IndefiniteDelay = -1;
+    // todo
 }
