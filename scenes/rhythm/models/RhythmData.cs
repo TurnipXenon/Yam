@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using Godot;
 
 namespace Yam.scenes.rhythm.models;
@@ -20,7 +19,7 @@ public class RhythmData
     // todo Timing points
 
     // todo: HitObjects
-    public readonly List<HitObject> HitObjectList = new();
+    public readonly List<HitObjectData> HitObjectList = new();
 
     private enum MapReadingState
     {
@@ -65,7 +64,7 @@ public class RhythmData
                     continue;
                 }
                 case MapReadingState.ReadingHitObject:
-                    rhythmData.HitObjectList.Add(HitObject.FromOsuHitObjectString(line));
+                    rhythmData.HitObjectList.Add(HitObjectData.FromOsuHitObjectString(line));
                     break;
 
                 case MapReadingState.Difficulty when CheckIfLineEmpty(line, ref readingStateStack):

@@ -6,7 +6,7 @@ namespace Yam.scenes.rhythm.models;
 /// <c>HitObject</c> (or we could generically as <c>Beat</c>) is the representation
 /// of a musical beat that players should react to.
 /// </summary>
-public class HitObject
+public class HitObjectData
 {
     public int X;
     public int Y;
@@ -19,16 +19,16 @@ public class HitObject
     /// <c>HitObject</c> should exactly be interacted with. Or visually, should be displayed (with best effort)
     /// as the exact point in time when the object should be interacted with.
     /// </remarks>
-    public int Timing;
+    public ulong Timing;
     // todo: other properties
 
-    public static HitObject FromOsuHitObjectString(string line)
+    public static HitObjectData FromOsuHitObjectString(string line)
     {
         // todo: handle error / exceptions
         var components = line.Split(",");
-        var hitObject = new HitObject
+        var hitObject = new HitObjectData
         {
-            Timing = Convert.ToInt32(components[2])
+            Timing = Convert.ToUInt64(components[2])
         };
         return hitObject;
     }

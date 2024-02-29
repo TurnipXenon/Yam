@@ -3,24 +3,26 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 using Yam.scenes.rhythm.models;
+using Yam.scenes.rhythm.services;
 
 public partial class RhythmTestMain : Node
 {
     private const string RawSongBasePath = "res://scenes/rhythm/songs/raw/";
 
     [Export]
-    public Node SpawnPoint;
+    public Node2D SpawnPoint;
 
     [Export]
-    public Node TriggerPoint;
+    public Node2D TriggerPoint;
 
     [Export]
-    public Node DestructionPoint;
+    public Node2D DestructionPoint;
 
     [Export]
     public PackedScene HitObjectPrefab;
 
     private readonly List<RhythmData> _rhythmDataList = new();
+    private readonly RhythmInterpreter _interpreter = new();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -37,6 +39,7 @@ public partial class RhythmTestMain : Node
     public override void _Process(double delta)
     {
         // todo: simulate what needs to exist
+        _interpreter.Process();
     }
 
     async Task RunRandomCoroutine()
@@ -82,7 +85,10 @@ public partial class RhythmTestMain : Node
             await Task.Yield();
         }
 
-        // create object
+        // initialize
+        // todo: checks
         GD.Print("Finished");
+        _interpreter.SetRhythmData(_rhythmDataList[0]);
+        _interpreter.Start(this);
     }
 }
