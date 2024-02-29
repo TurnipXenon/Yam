@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -7,13 +6,6 @@ using Yam.scenes.rhythm.models;
 
 public partial class RhythmTestMain : Node
 {
-    private enum MapReadingState
-    {
-        Searching,
-        Difficulty,
-        ReadingHitObject,
-    }
-
     private const string RawSongBasePath = "res://scenes/rhythm/songs/raw/";
 
     [Export]
@@ -78,9 +70,10 @@ public partial class RhythmTestMain : Node
             {
                 // todo: remove hardcode to finding "[Cake]"
                 if (!content.Contains("[Cake].osu")) continue;
-                
+
                 // todo
-                ReadMap($"{songBasePath}{content}");
+                var rhythmData = RhythmData.FromOsuMapFile($"{songBasePath}{content}");
+                _rhythmDataList.Add(rhythmData);
             }
 
             // todo: find mp3
@@ -91,84 +84,5 @@ public partial class RhythmTestMain : Node
 
         // create object
         GD.Print("Finished");
-    }
-
-    private void ReadMap(string path)
-    {
-        var f = FileAccess.Open(path, FileAccess.ModeFlags.Read);
-        if (f == null)
-        {
-            GD.PrintErr("TODO: handle error in ReadMap");
-            return;
-        }
-
-        var rhythmData = new RhythmData(); // todo: maybe transfer to RhythmData
-        var body = f.GetAsText();
-        var readingStateStack = new Stack<MapReadingState>();
-        readingStateStack.Push(MapReadingState.Searching);
-        foreach (var line in body.Split("\n"))
-        {
-            switch (readingStateStack.Peek())
-            {
-                case MapReadingState.Searching:
-                    switch (line.StripEdges())
-                    {
-                        case "[HitObjects]":
-                            readingStateStack.Push(MapReadingState.ReadingHitObject);
-                            break;
-                        case "[Difficulty]":
-                            readingStateStack.Push(MapReadingState.Difficulty);
-                            break;
-                    }
-
-                    break;
-
-                case MapReadingState.ReadingHitObject when CheckIfLineEmpty(line, ref readingStateStack):
-                {
-                    continue;
-                }
-                case MapReadingState.ReadingHitObject:
-                    rhythmData.HitObjectList.Add(HitObject.FromOsuHitObjectString(line));
-                    break;
-
-                case MapReadingState.Difficulty when CheckIfLineEmpty(line, ref readingStateStack):
-                {
-                    continue;
-                }
-                case MapReadingState.Difficulty:
-                    var lineParts = line.StripEdges().Split(":");
-                    Debug.Assert(lineParts.Length >= 2);
-                    var property = lineParts[0];
-                    var value = lineParts[1];
-                    switch (property)
-                    {
-                        case "ApproachRate":
-                            rhythmData.ApproachRate = float.Parse(value);
-                            break;
-                        // todo: add more properties
-                    }
-
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-        }
-
-        _rhythmDataList.Add(rhythmData);
-        GD.Print("Done");
-    }
-
-    private bool CheckIfLineEmpty(string line, ref Stack<MapReadingState> stateStack)
-    {
-        Debug.Assert(stateStack != null);
-
-        if (line.StripEdges() == "")
-        {
-            stateStack.Pop();
-            return true;
-        }
-
-        return false;
     }
 }
