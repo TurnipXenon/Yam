@@ -1,22 +1,43 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 using Yam.scenes.rhythm.models;
 
 public partial class RhythmTestMain : Node
 {
-    enum MapReadingState
+    private enum MapReadingState
     {
         Searching,
+        Difficulty,
         ReadingHitObject,
     }
 
     private const string RawSongBasePath = "res://scenes/rhythm/songs/raw/";
 
+    [Export]
+    public Node SpawnPoint;
+
+    [Export]
+    public Node TriggerPoint;
+
+    [Export]
+    public Node DestructionPoint;
+
+    [Export]
+    public PackedScene HitObjectPrefab;
+
+    private readonly List<RhythmData> _rhythmDataList = new();
+
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
     {
+        Debug.Assert(SpawnPoint != null);
+        Debug.Assert(TriggerPoint != null);
+        Debug.Assert(DestructionPoint != null);
+        Debug.Assert(HitObjectPrefab != null);
+
         Task.Run(RunRandomCoroutine);
     }
 
@@ -56,11 +77,10 @@ public partial class RhythmTestMain : Node
             foreach (var content in contentFiles)
             {
                 // todo: remove hardcode to finding "[Cake]"
-                if (content.Contains("[Cake].osu"))
-                {
-                    GD.Print(content);
-                    ReadMap($"{songBasePath}{content}");
-                }
+                if (!content.Contains("[Cake].osu")) continue;
+                
+                // todo
+                ReadMap($"{songBasePath}{content}");
             }
 
             // todo: find mp3
@@ -91,25 +111,42 @@ public partial class RhythmTestMain : Node
             switch (readingStateStack.Peek())
             {
                 case MapReadingState.Searching:
-                    if (line.Contains("[HitObjects]"))
+                    switch (line.StripEdges())
                     {
-                        readingStateStack.Push(MapReadingState.ReadingHitObject);
+                        case "[HitObjects]":
+                            readingStateStack.Push(MapReadingState.ReadingHitObject);
+                            break;
+                        case "[Difficulty]":
+                            readingStateStack.Push(MapReadingState.Difficulty);
+                            break;
                     }
 
-                    GD.Print(line);
                     break;
 
+                case MapReadingState.ReadingHitObject when CheckIfLineEmpty(line, ref readingStateStack):
+                {
+                    continue;
+                }
                 case MapReadingState.ReadingHitObject:
-                    if (line.Split(",").Length <= 1)
-                    {
-                        readingStateStack.Pop();
-                        continue;
-                    }
-
-                    GD.Print(line.Split(",").Join("---"));
-
-                    // todo: get timing points
                     rhythmData.HitObjectList.Add(HitObject.FromOsuHitObjectString(line));
+                    break;
+
+                case MapReadingState.Difficulty when CheckIfLineEmpty(line, ref readingStateStack):
+                {
+                    continue;
+                }
+                case MapReadingState.Difficulty:
+                    var lineParts = line.StripEdges().Split(":");
+                    Debug.Assert(lineParts.Length >= 2);
+                    var property = lineParts[0];
+                    var value = lineParts[1];
+                    switch (property)
+                    {
+                        case "ApproachRate":
+                            rhythmData.ApproachRate = float.Parse(value);
+                            break;
+                        // todo: add more properties
+                    }
 
                     break;
 
@@ -118,6 +155,20 @@ public partial class RhythmTestMain : Node
             }
         }
 
+        _rhythmDataList.Add(rhythmData);
         GD.Print("Done");
+    }
+
+    private bool CheckIfLineEmpty(string line, ref Stack<MapReadingState> stateStack)
+    {
+        Debug.Assert(stateStack != null);
+
+        if (line.StripEdges() == "")
+        {
+            stateStack.Pop();
+            return true;
+        }
+
+        return false;
     }
 }
