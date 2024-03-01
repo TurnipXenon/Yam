@@ -8,10 +8,6 @@ public partial class HitObject : Sprite2D
     private bool _isReady;
     private float _premultiplier;
 
-    // Called when the node enters the scene tree for the first time.
-    public override void _Ready()
-    {
-    }
 
     public void SetData(HitObjectData data, RhythmTestMain rhythmTestMain, ulong preemptTime)
     {
@@ -19,6 +15,8 @@ public partial class HitObject : Sprite2D
         _data = data;
         _premultiplier = (_rhythmTestMain.TriggerPoint.Position.X - _rhythmTestMain.SpawnPoint.Position.X) /
                          preemptTime;
+        var x = _rhythmTestMain.SpawnPoint.Position.X + _premultiplier * (Time.GetTicksMsec() - _data.Timing);
+        Position = new Vector2(x, _rhythmTestMain.SpawnPoint.Position.Y);
         _isReady = true;
     }
 
@@ -30,8 +28,16 @@ public partial class HitObject : Sprite2D
             return;
         }
 
-        // todo: maybe put all the time in one place so they dont go insane?
-        var x = _rhythmTestMain.SpawnPoint.Position.X + _premultiplier * (Time.GetTicksMsec() - _data.Timing);
+        // todo: maybe put all the time in one place so the HitObjects dont go insane?
+        var currentTime = Time.GetTicksMsec();
+        var timeDiff = currentTime > _data.Timing ? currentTime - _data.Timing : 0; // prevent underflow
+        var x = _rhythmTestMain.SpawnPoint.Position.X + _premultiplier * timeDiff;
         Position = new Vector2(x, _rhythmTestMain.SpawnPoint.Position.Y);
+
+        // todo: put the object in a pool object residing in RhythmInterpreter instead of fully destroying
+        if (x > _rhythmTestMain.DestructionPoint.Position.X)
+        {
+            QueueFree();
+        }
     }
 }

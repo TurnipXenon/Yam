@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Godot;
 using Yam.scenes.rhythm.models;
 
@@ -19,7 +20,6 @@ public class RhythmInterpreter
     private ulong _startTime = 0;
     private bool _active;
     private Queue<HitObjectData> _hitObjectQueue;
-    private Node _hitNode;
 
     public void SetRhythmData(RhythmData rhythmData)
     {
@@ -28,11 +28,17 @@ public class RhythmInterpreter
 
     public void Start(RhythmTestMain hostNode)
     {
+        _hostNode = hostNode;
+        // Play audio
+        using var file = FileAccess.Open(_rhythmData.AudioFilename, FileAccess.ModeFlags.Read);
+        var sound = new AudioStreamMP3();
+        sound.Data = file.GetBuffer((long)file.GetLength());
+        _hostNode.AudioPlayer!.Stream = sound;
+        _hostNode.AudioPlayer.Play();
+
         _hitObjectQueue = new Queue<HitObjectData>(_rhythmData.HitObjectList);
         _preemptTime = (ulong)(1200 + 600 * Mathf.Max(0, 5 - _rhythmData.ApproachRate) / 5);
-        GD.Print($"Preempt: {_preemptTime}");
 
-        _hostNode = hostNode;
         _incurredElapsedTime = 0;
         _startTime = Time.GetTicksMsec();
         // todo: play song
@@ -55,13 +61,14 @@ public class RhythmInterpreter
         // todo: do we need to instantiate a HitObject?
         var latestHitObject = _hitObjectQueue.Peek();
         // should show?
-        GD.Print($"{elapsedTime} >= {latestHitObject.Timing - _preemptTime}");
-        if (elapsedTime >= latestHitObject.Timing - _preemptTime && _hitNode == null)
+        if (elapsedTime >= latestHitObject.Timing - _preemptTime)
         {
-            _hitNode = _hostNode.HitObjectPrefab.Instantiate();
-            var hitObject = (HitObject)_hitNode;
+            GD.Print(latestHitObject.Timing);
+            var hitNode = _hostNode.HitObjectPrefab.Instantiate();
+            var hitObject = (HitObject)hitNode;
             hitObject.SetData(latestHitObject, _hostNode, _preemptTime);
-            _hostNode.AddChild(_hitNode);
+            _hostNode.AddChild(hitNode);
+            _hitObjectQueue.Dequeue();
         }
 
         // todo: how do we figure out the timeframe a hit object should exist?

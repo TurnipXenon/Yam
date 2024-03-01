@@ -16,6 +16,8 @@ public class RhythmData
     /// </remarks>
     public float ApproachRate;
 
+    public string AudioFilename;
+
     // todo Timing points
 
     // todo: HitObjects
@@ -24,12 +26,13 @@ public class RhythmData
     private enum MapReadingState
     {
         Searching,
-        Difficulty,
+        Metadata,
         ReadingHitObject,
     }
 
-    public static RhythmData FromOsuMapFile(string path)
+    public static RhythmData FromOsuMapFile(string songBasePath, string mapName)
     {
+        var path = $"{songBasePath}{mapName}";
         var rhythmData = new RhythmData(); // todo: maybe transfer to RhythmData
 
         var f = FileAccess.Open(path, FileAccess.ModeFlags.Read);
@@ -52,8 +55,9 @@ public class RhythmData
                         case "[HitObjects]":
                             readingStateStack.Push(MapReadingState.ReadingHitObject);
                             break;
+                        case "[General]":
                         case "[Difficulty]":
-                            readingStateStack.Push(MapReadingState.Difficulty);
+                            readingStateStack.Push(MapReadingState.Metadata);
                             break;
                     }
 
@@ -67,17 +71,24 @@ public class RhythmData
                     rhythmData.HitObjectList.Add(HitObjectData.FromOsuHitObjectString(line));
                     break;
 
-                case MapReadingState.Difficulty when CheckIfLineEmpty(line, ref readingStateStack):
+                case MapReadingState.Metadata when CheckIfLineEmpty(line, ref readingStateStack):
                 {
                     continue;
                 }
-                case MapReadingState.Difficulty:
+                case MapReadingState.Metadata:
                     var lineParts = line.StripEdges().Split(":");
                     Debug.Assert(lineParts.Length >= 2);
                     var property = lineParts[0];
-                    var value = lineParts[1];
+                    var value = lineParts[1].StripEdges();
                     switch (property)
                     {
+                        // General
+                        case "AudioFilename":
+                            rhythmData.AudioFilename = $"{songBasePath}{value}";
+                            GD.Print($"Filename: {rhythmData.AudioFilename}");
+                            break;
+
+                        // Difficulty
                         case "ApproachRate":
                             rhythmData.ApproachRate = float.Parse(value);
                             break;

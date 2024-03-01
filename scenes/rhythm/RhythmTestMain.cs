@@ -21,6 +21,9 @@ public partial class RhythmTestMain : Node
     [Export]
     public PackedScene HitObjectPrefab;
 
+    [Export]
+    public AudioStreamPlayer AudioPlayer;
+
     private readonly List<RhythmData> _rhythmDataList = new();
     private readonly RhythmInterpreter _interpreter = new();
 
@@ -31,6 +34,7 @@ public partial class RhythmTestMain : Node
         Debug.Assert(TriggerPoint != null);
         Debug.Assert(DestructionPoint != null);
         Debug.Assert(HitObjectPrefab != null);
+        Debug.Assert(AudioPlayer != null);
 
         Task.Run(RunRandomCoroutine);
     }
@@ -75,7 +79,7 @@ public partial class RhythmTestMain : Node
                 if (!content.Contains("[Cake].osu")) continue;
 
                 // todo
-                var rhythmData = RhythmData.FromOsuMapFile($"{songBasePath}{content}");
+                var rhythmData = RhythmData.FromOsuMapFile(songBasePath, content);
                 _rhythmDataList.Add(rhythmData);
             }
 
