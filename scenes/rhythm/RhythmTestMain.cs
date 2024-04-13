@@ -7,7 +7,7 @@ using Yam.scenes.rhythm.services;
 
 public partial class RhythmTestMain : Node
 {
-    private const string RawSongBasePath = "res://scenes/rhythm/songs/raw/";
+    private const string RawSongBasePath = "res://scenes/rhythm/songs/";
 
     [Export]
     public Node2D SpawnPoint;
@@ -24,7 +24,7 @@ public partial class RhythmTestMain : Node
     [Export]
     public AudioStreamPlayer AudioPlayer;
 
-    private readonly List<RhythmData> _rhythmDataList = new();
+    private readonly List<ChartMetadata> _chartList = new();
     private readonly RhythmInterpreter _interpreter = new();
 
     // Called when the node enters the scene tree for the first time.
@@ -48,7 +48,6 @@ public partial class RhythmTestMain : Node
 
     async Task RunRandomCoroutine()
     {
-        GD.Print("Testing...");
         var baseDir = DirAccess.Open(RawSongBasePath);
         if (baseDir == null)
         {
@@ -75,12 +74,10 @@ public partial class RhythmTestMain : Node
             var contentFiles = songBaseDir.GetFiles();
             foreach (var content in contentFiles)
             {
-                // todo: remove hardcode to finding "[Cake]"
-                if (!content.Contains("[Cake].osu")) continue;
+                if (!content.Contains("chart_meta.json")) continue;
 
-                // todo
-                var rhythmData = RhythmData.FromOsuMapFile(songBasePath, content);
-                _rhythmDataList.Add(rhythmData);
+                var chartMetadata = ChartMetadata.FromChartMeta(songBasePath, content);
+                _chartList.Add(chartMetadata);
             }
 
             // todo: find mp3
@@ -89,10 +86,7 @@ public partial class RhythmTestMain : Node
             await Task.Yield();
         }
 
-        // initialize
-        // todo: checks
-        GD.Print("Finished");
-        _interpreter.SetRhythmData(_rhythmDataList[0]);
+        _interpreter.SetActiveChart(_chartList[0]);
         _interpreter.Start(this);
     }
 }

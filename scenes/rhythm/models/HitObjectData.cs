@@ -1,6 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using Godot;
+﻿using System.Text.Json.Serialization;
 
 namespace Yam.scenes.rhythm.models;
 
@@ -18,15 +16,15 @@ public class HitObjectData
     /// </remarks>
     public enum Type
     {
-        Unknown = -2,
-        Unset = -1,
+        Unknown = -1,
+        Unmarked = 0,
         HitCircle = 1,
-        Slider = 1 << 1,
-        Spinner = 3 << 1,
+        Slide = 2,
+        HoldStart = 3,
+        HoldMiddle = 4,
+        HoldRelease = 5,
+        SlideToHoldRelease = 6,
     }
-
-    public int X;
-    public int Y;
 
     /// <summary>
     /// <c>Timing</c> is the time in milliseconds when the <c>HitObject</c> should be interacted with.
@@ -36,54 +34,74 @@ public class HitObjectData
     /// <c>HitObject</c> should exactly be interacted with. Or visually, should be displayed (with best effort)
     /// as the exact point in time when the object should be interacted with.
     /// </remarks>
-    public ulong Timing;
+    [JsonInclude]
+    public float Timing;
 
-    public int TypeBit;
-    // todo: other properties
+    [JsonInclude]
+    public int Y;
 
-    private Type _type = Type.Unset;
+    [JsonInclude]
+    public Type HitObjectType;
 
-    public static HitObjectData FromOsuHitObjectString(string line)
-    {
-        // todo: handle error / exceptions
-        var components = line.Split(",");
-        var hitObject = new HitObjectData
-        {
-            Timing = Convert.ToUInt64(components[2]),
-            TypeBit = int.Parse(components[3])
-            // 5th one end time for mania
-        };
-        return hitObject;
-    }
+    [JsonInclude]
+    public int Channel;
 
-    public Type GetHitObjectType()
-    {
-        if (_type == Type.Unset)
-        {
-            if ((TypeBit & (int)Type.HitCircle) != 0)
-            {
-                _type = Type.HitCircle;
-            }
-            else if ((TypeBit & (int)Type.Slider) != 0)
-            {
-                _type = Type.Slider;
-            }
-            else if ((TypeBit & (int)Type.Spinner) != 0)
-            {
-                _type = Type.Spinner;
-            }
-            else
-            {
-                GD.PrintErr($"Unknown beat type at time {Timing} with value {TypeBit}");
-                _type = Type.Unknown;
-            }
-        }
+    [JsonInclude]
+    public bool HoldCurvePriority = false;
 
-        return _type;
-    }
+    [JsonInclude]
+    public int BezCurveStartX;
 
-    public override string ToString()
-    {
-        return Timing.ToString();
-    }
+    [JsonInclude]
+    public int BezCurveStartY;
+
+    [JsonInclude]
+    public int BezCurveEndX;
+
+    [JsonInclude]
+    public int BezCurveEndY;
+
+    // public static HitObjectData FromOsuHitObjectString(string line)
+    // {
+    //     // todo: handle error / exceptions
+    //     var components = line.Split(",");
+    //     var hitObject = new HitObjectData
+    //     {
+    //         Timing = Convert.ToUInt64(components[2]),
+    //         TypeBit = int.Parse(components[3])
+    //         // 5th one end time for mania
+    //     };
+    //     return hitObject;
+    // }
+    //
+    // public Type GetHitObjectType()
+    // {
+    //     if (_type == Type.Unset)
+    //     {
+    //         if ((TypeBit & (int)Type.HitCircle) != 0)
+    //         {
+    //             _type = Type.HitCircle;
+    //         }
+    //         else if ((TypeBit & (int)Type.Slider) != 0)
+    //         {
+    //             _type = Type.Slider;
+    //         }
+    //         else if ((TypeBit & (int)Type.Spinner) != 0)
+    //         {
+    //             _type = Type.Spinner;
+    //         }
+    //         else
+    //         {
+    //             GD.PrintErr($"Unknown beat type at time {Timing} with value {TypeBit}");
+    //             _type = Type.Unknown;
+    //         }
+    //     }
+    //
+    //     return _type;
+    // }
+    //
+    // public override string ToString()
+    // {
+    //     return Timing.ToString();
+    // }
 }
