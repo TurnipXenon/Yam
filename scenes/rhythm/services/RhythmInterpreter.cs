@@ -52,6 +52,11 @@ public class RhythmInterpreter
         {
             return;
         }
+        // todo: prioritize timingpoints
+        // todo: SlideMultiplier property
+        // todo: beatLnegth
+        // todo: Length property?
+        // todo: get duration
 
         var elapsedTime = Time.GetTicksMsec() - (_startTime + _incurredElapsedTime);
         // var afterPreemptTime = elapsedTime - _preemptTime;

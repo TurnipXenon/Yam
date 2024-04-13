@@ -8,6 +8,6 @@
   <ItemGroup>
     <Content Include="scenes\rhythm\.gitignore" />
     <Content Include="scenes\rhythm\RhythmTestMain.md" />
-    <Content Include="scenes\rhythm\songs\raw\496096 Red Velvet - Ice Cream Cake\Red Velvet - Ice Cream Cake (Lilyanna) [Cake].osu" />
+    <Content Include="scenes\rhythm\songs\sunleth_waterscape\Final Fantasy XIII - The Sunleth Waterscape.mp3" />
   </ItemGroup>
 </Project>
