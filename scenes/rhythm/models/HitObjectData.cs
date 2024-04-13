@@ -60,48 +60,4 @@ public class HitObjectData
 
     [JsonInclude]
     public int BezCurveEndY;
-
-    // public static HitObjectData FromOsuHitObjectString(string line)
-    // {
-    //     // todo: handle error / exceptions
-    //     var components = line.Split(",");
-    //     var hitObject = new HitObjectData
-    //     {
-    //         Timing = Convert.ToUInt64(components[2]),
-    //         TypeBit = int.Parse(components[3])
-    //         // 5th one end time for mania
-    //     };
-    //     return hitObject;
-    // }
-    //
-    // public Type GetHitObjectType()
-    // {
-    //     if (_type == Type.Unset)
-    //     {
-    //         if ((TypeBit & (int)Type.HitCircle) != 0)
-    //         {
-    //             _type = Type.HitCircle;
-    //         }
-    //         else if ((TypeBit & (int)Type.Slider) != 0)
-    //         {
-    //             _type = Type.Slider;
-    //         }
-    //         else if ((TypeBit & (int)Type.Spinner) != 0)
-    //         {
-    //             _type = Type.Spinner;
-    //         }
-    //         else
-    //         {
-    //             GD.PrintErr($"Unknown beat type at time {Timing} with value {TypeBit}");
-    //             _type = Type.Unknown;
-    //         }
-    //     }
-    //
-    //     return _type;
-    // }
-    //
-    // public override string ToString()
-    // {
-    //     return Timing.ToString();
-    // }
 }
