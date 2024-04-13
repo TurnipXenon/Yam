@@ -44,7 +44,6 @@ public partial class HitObject : Sprite2D
         // todo: put the object in a pool object residing in RhythmInterpreter instead of fully destroying
         if (x > _rhythmTestMain.DestructionPoint.Position.X)
         {
-            GD.Print("Destroyed");
             QueueFree();
         }
 

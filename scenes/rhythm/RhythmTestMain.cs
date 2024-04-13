@@ -22,9 +22,6 @@ public partial class RhythmTestMain : Node
     public PackedScene HitObjectPrefab;
 
     [Export]
-    public PackedScene BeatlinePrefab;
-
-    [Export]
     public AudioStreamPlayer AudioPlayer;
 
     private readonly List<ChartMetadata> _chartList = new();
@@ -38,7 +35,6 @@ public partial class RhythmTestMain : Node
         Debug.Assert(DestructionPoint != null);
         Debug.Assert(HitObjectPrefab != null);
         Debug.Assert(AudioPlayer != null);
-        Debug.Assert(BeatlinePrefab != null);
 
         Task.Run(RunRandomCoroutine);
     }
@@ -74,7 +70,6 @@ public partial class RhythmTestMain : Node
                 continue;
             }
 
-            GD.Print(DirAccess.GetOpenError().ToString());
             var contentFiles = songBaseDir.GetFiles();
             foreach (var content in contentFiles)
             {
