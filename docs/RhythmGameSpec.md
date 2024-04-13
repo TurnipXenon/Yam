@@ -7,7 +7,7 @@ Mimic the gameplay for Theatrhythm Curtain Call: https://www.youtube.com/watch?v
 - [x] Get audio for inspo
 - [x] Design data structure
 - [x] Implement attaching meta of the song with the data structure
-- [x] Implement playing song via
+- [x] Implement playing song via Chart metadata
 - [ ] Figure out dynamic timing (base it on osu)
 	- Try to figure out the beat of the song maybe through a website: https://tunebat.com/Analyzer
 - [ ] Figure out how to chart the song
@@ -30,6 +30,8 @@ Reference: https://osu.ppy.sh/wiki/en/Client/File_formats/osu_%28file_format%29
 - TimingPoints
 	- Time: integer = start of timing section
 	- BeatLength: float = the duration of a beat in milliseconds
+      - If BPM = 132; then BeatLength = 60 000 ms / 132 BPM =  454
+      - 60 000 ms / x BPM = BeatLength
 	- Meter: integer = amount of beats in a meter
 - HitObjects
 	- Timing: ulong = time to react to the object from the beginning of the song

@@ -20,6 +20,11 @@ public class ChartMetadata
     [JsonInclude]
     public List<HitObjectData> HitObjectList = new();
 
+    [JsonInclude]
+    public float ApproachRate = 3f;
+
+    public string AudioPath;
+
     private enum MapReadingState
     {
         Searching,
@@ -40,16 +45,7 @@ public class ChartMetadata
 
         var body = f.GetAsText();
         var chartMeta = JsonSerializer.Deserialize<ChartMetadata>(body);
-
-        GD.Print("Done");
-        chartMeta.TimingPointList.Add(new TimingPointData
-        {
-            Time = 11,
-            BeatLength = 12,
-            Meter = 4
-        });
-        GD.Print(chartMeta.TimingPointList.Count);
-        GD.Print(JsonSerializer.Serialize(chartMeta));
+        chartMeta.AudioPath = $"{songBasePath}{chartMeta.AudioFilename}";
         return chartMeta;
     }
 

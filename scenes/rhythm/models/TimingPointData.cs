@@ -8,8 +8,24 @@ public class TimingPointData
     public int Time;
 
     [JsonInclude]
-    public float BeatLength;
+    // ReSharper disable once InconsistentNaming
+    public float BPM;
 
     [JsonInclude]
     public int Meter;
+
+    private float _beatLength = -1;
+
+    public float BeatLength
+    {
+        get
+        {
+            if (_beatLength <= 0)
+            {
+                _beatLength = 60000 / BPM;
+            }
+
+            return _beatLength;
+        }
+    }
 }

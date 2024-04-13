@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Godot;
 using Yam.scenes.rhythm.models;
 
@@ -20,8 +19,9 @@ public class RhythmInterpreter
     private ulong _startTime = 0;
     private bool _active;
     private Queue<HitObjectData> _hitObjectQueue;
+    private float _audioPosition;
 
-    public void SetRhythmData(ChartMetadata chartMetadata)
+    public void SetActiveChart(ChartMetadata chartMetadata)
     {
         _chartMetadata = chartMetadata;
     }
@@ -30,14 +30,14 @@ public class RhythmInterpreter
     {
         _hostNode = hostNode;
         // Play audio
-        using var file = FileAccess.Open(_chartMetadata.AudioFilename, FileAccess.ModeFlags.Read);
+        using var file = FileAccess.Open(_chartMetadata.AudioPath, FileAccess.ModeFlags.Read);
         var sound = new AudioStreamMP3();
         sound.Data = file.GetBuffer((long)file.GetLength());
         _hostNode.AudioPlayer!.Stream = sound;
         _hostNode.AudioPlayer.Play();
 
         _hitObjectQueue = new Queue<HitObjectData>(_chartMetadata.HitObjectList);
-        // _preemptTime = (ulong)(1200 + 600 * Mathf.Max(0, 5 - _rhythmData.ApproachRate) / 5);
+        _preemptTime = (ulong)(1200 + 600 * Mathf.Max(0, 5 - _chartMetadata.ApproachRate) / 5);
 
         _incurredElapsedTime = 0;
         _startTime = Time.GetTicksMsec();
@@ -58,22 +58,38 @@ public class RhythmInterpreter
         // todo: Length property?
         // todo: get duration
 
+        if (Input.IsActionJustPressed("toggle_pause"))
+        {
+            if (_hostNode.AudioPlayer.Playing)
+            {
+                _audioPosition = _hostNode.AudioPlayer.GetPlaybackPosition();
+                _hostNode.AudioPlayer.Stop();
+            }
+            else
+            {
+                _hostNode.AudioPlayer.Play(_audioPosition);
+            }
+        }
+
         var elapsedTime = Time.GetTicksMsec() - (_startTime + _incurredElapsedTime);
         // var afterPreemptTime = elapsedTime - _preemptTime;
 
         // todo
 
         // todo: do we need to instantiate a HitObject?
-        var latestHitObject = _hitObjectQueue.Peek();
-        // should show?
-        if (elapsedTime >= latestHitObject.Timing - _preemptTime)
+        if (_hitObjectQueue.Count > 0)
         {
-            GD.Print(latestHitObject.Timing);
-            var hitNode = _hostNode.HitObjectPrefab.Instantiate();
-            var hitObject = (HitObject)hitNode;
-            hitObject.SetData(latestHitObject, _hostNode, _preemptTime);
-            _hostNode.AddChild(hitNode);
-            _hitObjectQueue.Dequeue();
+            var latestHitObject = _hitObjectQueue.Peek();
+            // should show?
+            if (elapsedTime >= latestHitObject.Timing - _preemptTime)
+            {
+                GD.Print(latestHitObject.Timing);
+                var hitNode = _hostNode.HitObjectPrefab.Instantiate();
+                var hitObject = (HitObject)hitNode;
+                hitObject.SetData(latestHitObject, _hostNode, _preemptTime);
+                _hostNode.AddChild(hitNode);
+                _hitObjectQueue.Dequeue();
+            }
         }
 
         // todo: how do we figure out the timeframe a hit object should exist?

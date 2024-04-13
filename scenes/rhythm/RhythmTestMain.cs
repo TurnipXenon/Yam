@@ -24,7 +24,7 @@ public partial class RhythmTestMain : Node
     [Export]
     public AudioStreamPlayer AudioPlayer;
 
-    private readonly List<ChartMetadata> _rhythmDataList = new();
+    private readonly List<ChartMetadata> _chartList = new();
     private readonly RhythmInterpreter _interpreter = new();
 
     // Called when the node enters the scene tree for the first time.
@@ -76,8 +76,8 @@ public partial class RhythmTestMain : Node
             {
                 if (!content.Contains("chart_meta.json")) continue;
 
-                var rhythmData = ChartMetadata.FromChartMeta(songBasePath, content);
-                _rhythmDataList.Add(rhythmData);
+                var chartMetadata = ChartMetadata.FromChartMeta(songBasePath, content);
+                _chartList.Add(chartMetadata);
             }
 
             // todo: find mp3
@@ -86,10 +86,7 @@ public partial class RhythmTestMain : Node
             await Task.Yield();
         }
 
-        // initialize
-        // todo: checks
-        // GD.Print("Finished");
-        // _interpreter.SetRhythmData(_rhythmDataList[0]);
-        // _interpreter.Start(this);
+        _interpreter.SetActiveChart(_chartList[0]);
+        _interpreter.Start(this);
     }
 }
