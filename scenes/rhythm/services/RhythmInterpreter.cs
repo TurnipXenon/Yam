@@ -14,12 +14,11 @@ public class RhythmInterpreter
     private RhythmTestMain _hostNode;
 
     private ChartMetadata _chartMetadata;
-    private ulong _incurredElapsedTime = 0;
-    private ulong _preemptTime = 0;
-    private ulong _startTime = 0;
+    private float _preemptTime = 0;
+    private float _startTime = 0;
     private bool _active;
     private Queue<HitObjectData> _hitObjectQueue;
-    private float _audioPosition;
+    public float AudioPosition;
 
     public void SetActiveChart(ChartMetadata chartMetadata)
     {
@@ -37,9 +36,8 @@ public class RhythmInterpreter
         _hostNode.AudioPlayer.Play();
 
         _hitObjectQueue = new Queue<HitObjectData>(_chartMetadata.HitObjectList);
-        _preemptTime = (ulong)(1200 + 600 * Mathf.Max(0, 5 - _chartMetadata.ApproachRate) / 5);
-
-        _incurredElapsedTime = 0;
+        _preemptTime = (1.2f + 0.6f * Mathf.Max(0, 5 - _chartMetadata.ApproachRate) / 5);
+        GD.Print("Preempt", _preemptTime);
         _startTime = Time.GetTicksMsec();
         // todo: play song
 
@@ -58,20 +56,23 @@ public class RhythmInterpreter
         // todo: Length property?
         // todo: get duration
 
+        if (_hostNode.AudioPlayer.Playing)
+        {
+            AudioPosition = _hostNode.AudioPlayer.GetPlaybackPosition();
+        }
+
         if (Input.IsActionJustPressed("toggle_pause"))
         {
             if (_hostNode.AudioPlayer.Playing)
             {
-                _audioPosition = _hostNode.AudioPlayer.GetPlaybackPosition();
                 _hostNode.AudioPlayer.Stop();
             }
             else
             {
-                _hostNode.AudioPlayer.Play(_audioPosition);
+                _hostNode.AudioPlayer.Play(AudioPosition);
             }
         }
 
-        var elapsedTime = Time.GetTicksMsec() - (_startTime + _incurredElapsedTime);
         // var afterPreemptTime = elapsedTime - _preemptTime;
 
         // todo
@@ -81,12 +82,12 @@ public class RhythmInterpreter
         {
             var latestHitObject = _hitObjectQueue.Peek();
             // should show?
-            if (elapsedTime >= latestHitObject.Timing - _preemptTime)
+            if (AudioPosition >= latestHitObject.Timing - _preemptTime)
             {
                 GD.Print(latestHitObject.Timing);
                 var hitNode = _hostNode.HitObjectPrefab.Instantiate();
                 var hitObject = (HitObject)hitNode;
-                hitObject.SetData(latestHitObject, _hostNode, _preemptTime);
+                hitObject.SetData(latestHitObject, _hostNode, _preemptTime, this);
                 _hostNode.AddChild(hitNode);
                 _hitObjectQueue.Dequeue();
             }

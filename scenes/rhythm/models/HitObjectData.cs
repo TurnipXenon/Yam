@@ -35,7 +35,7 @@ public class HitObjectData
     /// as the exact point in time when the object should be interacted with.
     /// </remarks>
     [JsonInclude]
-    public ulong Timing;
+    public float Timing;
 
     [JsonInclude]
     public int Y;
