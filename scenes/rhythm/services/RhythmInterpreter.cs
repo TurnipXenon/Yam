@@ -6,6 +6,8 @@ namespace Yam.scenes.rhythm.services;
 
 public class RhythmInterpreter
 {
+    private const int ObjectWindowSize = 5;
+
     /// <summary>
     /// <c>_hostNode</c> allows this service to have access to Godot stuff
     /// </summary>
@@ -17,7 +19,8 @@ public class RhythmInterpreter
     private float _preemptTime = 0;
     private float _startTime = 0;
     private bool _active;
-    private Queue<HitObjectData> _hitObjectQueue;
+    private List<HitObjectData> _hitObjectList;
+    private int index = 0;
     public float AudioPosition;
 
     public void SetActiveChart(ChartMetadata chartMetadata)
@@ -35,7 +38,7 @@ public class RhythmInterpreter
         _hostNode.AudioPlayer!.Stream = sound;
         _hostNode.AudioPlayer.Play();
 
-        _hitObjectQueue = new Queue<HitObjectData>(_chartMetadata.HitObjectList);
+        _hitObjectList = new List<HitObjectData>(_chartMetadata.HitObjectList);
         _preemptTime = (1.2f + 0.6f * Mathf.Max(0, 5 - _chartMetadata.ApproachRate) / 5);
         GD.Print("Preempt", _preemptTime);
         _startTime = Time.GetTicksMsec();
@@ -52,7 +55,7 @@ public class RhythmInterpreter
         }
         // todo: prioritize timingpoints
         // todo: SlideMultiplier property
-        // todo: beatLnegth
+        // todo: beatLength
         // todo: Length property?
         // todo: get duration
 
@@ -73,14 +76,11 @@ public class RhythmInterpreter
             }
         }
 
-        // var afterPreemptTime = elapsedTime - _preemptTime;
-
-        // todo
 
         // todo: do we need to instantiate a HitObject?
-        if (_hitObjectQueue.Count > 0)
+        if (index < _hitObjectList.Count)
         {
-            var latestHitObject = _hitObjectQueue.Peek();
+            var latestHitObject = _hitObjectList[index];
             // should show?
             if (AudioPosition >= latestHitObject.Timing - _preemptTime)
             {
@@ -89,7 +89,7 @@ public class RhythmInterpreter
                 var hitObject = (HitObject)hitNode;
                 hitObject.SetData(latestHitObject, _hostNode, _preemptTime, this);
                 _hostNode.AddChild(hitNode);
-                _hitObjectQueue.Dequeue();
+                index++;
             }
         }
 

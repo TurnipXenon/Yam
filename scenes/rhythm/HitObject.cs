@@ -45,5 +45,12 @@ public partial class HitObject : Sprite2D
             GD.Print("Destroyed");
             QueueFree();
         }
+
+        // todo: change this to use preemptTime
+        if (timeDiff < (-10f))
+        {
+            GD.Print("Destroyed for being too early");
+            QueueFree();
+        }
     }
 }
