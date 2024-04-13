@@ -14,30 +14,30 @@ public class RhythmInterpreter
     /// directly to Godot being able to migrate out of Godot if need 
     private RhythmTestMain _hostNode;
 
-    private RhythmData _rhythmData;
+    private ChartMetadata _chartMetadata;
     private ulong _incurredElapsedTime = 0;
     private ulong _preemptTime = 0;
     private ulong _startTime = 0;
     private bool _active;
     private Queue<HitObjectData> _hitObjectQueue;
 
-    public void SetRhythmData(RhythmData rhythmData)
+    public void SetRhythmData(ChartMetadata chartMetadata)
     {
-        _rhythmData = rhythmData;
+        _chartMetadata = chartMetadata;
     }
 
     public void Start(RhythmTestMain hostNode)
     {
         _hostNode = hostNode;
         // Play audio
-        using var file = FileAccess.Open(_rhythmData.AudioFilename, FileAccess.ModeFlags.Read);
+        using var file = FileAccess.Open(_chartMetadata.AudioFilename, FileAccess.ModeFlags.Read);
         var sound = new AudioStreamMP3();
         sound.Data = file.GetBuffer((long)file.GetLength());
         _hostNode.AudioPlayer!.Stream = sound;
         _hostNode.AudioPlayer.Play();
 
-        _hitObjectQueue = new Queue<HitObjectData>(_rhythmData.HitObjectList);
-        _preemptTime = (ulong)(1200 + 600 * Mathf.Max(0, 5 - _rhythmData.ApproachRate) / 5);
+        _hitObjectQueue = new Queue<HitObjectData>(_chartMetadata.HitObjectList);
+        // _preemptTime = (ulong)(1200 + 600 * Mathf.Max(0, 5 - _rhythmData.ApproachRate) / 5);
 
         _incurredElapsedTime = 0;
         _startTime = Time.GetTicksMsec();
