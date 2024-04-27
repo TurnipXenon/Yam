@@ -25,7 +25,7 @@ public partial class RhythmTestMain : Node
     public AudioStreamPlayer AudioPlayer;
 
     private readonly List<ChartMetadata> _chartList = new();
-    private readonly RhythmInterpreter _interpreter = new();
+    public RhythmInterpreter Interpreter = new();
 
     // Called when the node enters the scene tree for the first time.
     public override void _Ready()
@@ -43,7 +43,7 @@ public partial class RhythmTestMain : Node
     public override void _Process(double delta)
     {
         // todo: simulate what needs to exist
-        _interpreter.Process();
+        Interpreter.Process();
     }
 
     async Task RunRandomCoroutine()
@@ -85,7 +85,7 @@ public partial class RhythmTestMain : Node
             await Task.Yield();
         }
 
-        _interpreter.SetActiveChart(_chartList[0]);
-        _interpreter.Start(this);
+        Interpreter.SetActiveChart(_chartList[0]);
+        Interpreter.Start(this);
     }
 }

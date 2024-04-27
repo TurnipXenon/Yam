@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=3 uid="uid://b8jqspdsl8r1w"]
+[gd_scene load_steps=6 format=3 uid="uid://b8jqspdsl8r1w"]
 
 [ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://assets/placeholder/niko_square.jpg" id="2_227wh"]
 [ext_resource type="PackedScene" uid="uid://bbrteryx52skc" path="res://scenes/rhythm/hit_object.tscn" id="2_gvurc"]
 [ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://assets/placeholder/white_square.png" id="2_rnfu6"]
 [ext_resource type="Script" path="res://scenes/rhythm/RhythmTestMain.cs" id="5_faihu"]
+[ext_resource type="Script" path="res://scenes/rhythm/ProspectiveHitObject.cs" id="5_nna1n"]
 
 [node name="Main" type="Node" node_paths=PackedStringArray("SpawnPoint", "TriggerPoint", "DestructionPoint", "AudioPlayer")]
 script = ExtResource("5_faihu")
@@ -30,3 +31,7 @@ position = Vector2(391, 301)
 texture = ExtResource("2_227wh")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="ProspectiveHitObject" parent="." node_paths=PackedStringArray("RhythmTestMain") instance=ExtResource("2_gvurc")]
+script = ExtResource("5_nna1n")
+RhythmTestMain = NodePath("..")

@@ -22,6 +22,8 @@ public class RhythmInterpreter
     private int _beatIndex = 0;
     public float AudioPosition;
 
+    public bool IsReady { get; private set; }
+
     public void SetActiveChart(ChartMetadata chartMetadata)
     {
         Chart = chartMetadata;
@@ -51,7 +53,9 @@ public class RhythmInterpreter
         _startTime = Time.GetTicksMsec();
 
         _active = true;
+        IsReady = true;
     }
+
 
     public void Process()
     {
