@@ -22,7 +22,7 @@ public class TimingPointData
         {
             if (_beatLength <= 0)
             {
-                _beatLength = 60000 / BPM;
+                _beatLength = 60 / BPM;
             }
 
             return _beatLength;

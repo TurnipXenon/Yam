@@ -11,6 +11,8 @@ public partial class HitObject : Sprite2D
     private float _premultiplier;
     private RhythmInterpreter _interpreter;
 
+    public float Timing => _data.Timing;
+
     public void SetData(HitObjectData data, RhythmTestMain rhythmTestMain, float preemptTime,
         RhythmInterpreter rhythmInterpreter)
     {
@@ -36,21 +38,20 @@ public partial class HitObject : Sprite2D
         // todo: maybe put all the time in one place so the HitObjects dont go insane?
         var currentTime = _interpreter.AudioPosition;
         var timeDiff = currentTime - _data.Timing;
-        var x = _rhythmTestMain.SpawnPoint.Position.X + _premultiplier * timeDiff;
+        var x = _rhythmTestMain.TriggerPoint.Position.X + _premultiplier * timeDiff;
         Position = new Vector2(x, _rhythmTestMain.SpawnPoint.Position.Y);
 
         // todo: put the object in a pool object residing in RhythmInterpreter instead of fully destroying
         if (x > _rhythmTestMain.DestructionPoint.Position.X)
         {
-            GD.Print("Destroyed");
             QueueFree();
         }
 
         // todo: change this to use preemptTime
-        if (timeDiff < (-10f))
-        {
-            GD.Print("Destroyed for being too early");
-            QueueFree();
-        }
+        // if (timeDiff < (-10f))
+        // {
+        //     GD.Print("Destroyed for being too early");
+        //     QueueFree();
+        // }
     }
 }
