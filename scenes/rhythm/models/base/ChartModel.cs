@@ -8,6 +8,6 @@ public record ChartModel
     public string SelfPath { get; set; }
     public string SongName { get; set; }
     public float ApproachRate { get; set; }
-    public List<BeatModel> Beats { get; set; }
-    public List<TimingSection> TimingSections { get; set; }
+    public List<BeatModel> Beats { get; set; } = new();
+    public List<TimingSection> TimingSections { get; set; } = new();
 }
