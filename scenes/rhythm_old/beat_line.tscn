@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://0gjg6prsbhd7"]
 
 [ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://assets/placeholder/white_square.png" id="1_olf5g"]
-[ext_resource type="Script" path="res://scenes/rhythm/HitObject.cs" id="2_cis2y"]
+[ext_resource type="Script" path="res://scenes/rhythm_old/HitObject.cs" id="2_cis2y"]
 
 [node name="BeatLine" type="Sprite2D"]
 scale = Vector2(0.25, 8)
