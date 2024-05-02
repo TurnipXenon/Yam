@@ -7,7 +7,7 @@ using Yam.scenes.rhythm.services;
 
 public partial class RhythmTestMain : Node
 {
-    private const string RawSongBasePath = "res://scenes/rhythm/songs/";
+    private const string RawSongBasePath = "res://scenes/rhythm_old/songs/";
 
     [Export]
     public Node2D SpawnPoint;
