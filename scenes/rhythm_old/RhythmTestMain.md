@@ -1,4 +1,4 @@
-﻿# Rhythm Test
+# Rhythm Test
 
 ## Overview
 
