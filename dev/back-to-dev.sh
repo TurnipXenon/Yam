@@ -1,2 +1,4 @@
-﻿# This scripts allows us to quickly build on top of the latest branch with our dev branch
-git checkout main && git pull origin main && git branch -d turnip/dev && git checkout -b turnip/dev
+﻿# refresh main and go back to the current branch with the same HEAD as main
+# reference: https://stackoverflow.com/q/1417957/17836168
+turnip_last_branch=$(git branch | awk '/\*/ { print $2; }')
+git checkout main && git pull origin main && git branch -d "$turnip_last_branch" && git checkout -b "$turnip_last_branch"
