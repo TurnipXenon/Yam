@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://bt1qe76771afk"]
 
-[ext_resource type="Script" path="res://scenes/rhythm/RhythmEditorMain.cs" id="1_af2kv"]
-[ext_resource type="JSON" path="res://scenes/rhythm/songs/sunleth_waterscape/chart_meta.json" id="2_yy6yc"]
+[ext_resource type="Script" path="res://Yam.Godot/rhythm/RhythmEditorMain.cs" id="1_af2kv"]
+[ext_resource type="JSON" path="res://Yam.Godot/rhythm/songs/sunleth_waterscape/chart_meta.json" id="2_yy6yc"]
 
 [node name="RhythmEditor" type="Node2D" node_paths=PackedStringArray("AudioStreamPlayer")]
 script = ExtResource("1_af2kv")

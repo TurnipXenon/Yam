@@ -17,11 +17,9 @@ public record ChartModel
 		var lastSlash = chartResourceResourcePath.LastIndexOf("/");
 		if (lastSlash == -1)
 		{
-			Console.WriteLine($"Err: invalid self path format: {chartResourceResourcePath}");
 			return;
 		}
 
 		SelfPath = chartResourceResourcePath.Remove(lastSlash);
-		Console.WriteLine(SelfPath);
 	}
 }

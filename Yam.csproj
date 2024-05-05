@@ -1,13 +1,11 @@
 <Project Sdk="Godot.NET.Sdk/4.2.1">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
-    <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
-    <EnableDynamicLoading>true</EnableDynamicLoading>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include="scenes\rhythm\.gitignore" />
-    <Content Include="scenes\rhythm\songs\sunleth_waterscape\chart_meta.json" />
-    <Content Include="scenes\rhythm\songs\sunleth_waterscape\Final Fantasy XIII - The Sunleth Waterscape.mp3" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'android' ">net7.0</TargetFramework>
+        <TargetFramework Condition=" '$(GodotTargetPlatform)' == 'ios' ">net8.0</TargetFramework>
+        <EnableDynamicLoading>true</EnableDynamicLoading>
+    </PropertyGroup>
+    <ItemGroup>
+        <Folder Include="Yam.Core\"/>
+    </ItemGroup>
 </Project>
