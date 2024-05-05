@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://bbrteryx52skc"]
-
-[ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://assets/placeholder/niko_square.jpg" id="1_0qhtg"]
-[ext_resource type="Script" path="res://scenes/rhythm_old/HitObject.cs" id="2_ffvim"]
-
-[node name="NikoSquare" type="Sprite2D"]
-scale = Vector2(0.25, 0.25)
-texture = ExtResource("1_0qhtg")
-script = ExtResource("2_ffvim")
