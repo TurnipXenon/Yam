@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="b9326b92-d051-4bc6-93cc-efa033d35c13" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/clients/IRhythmGameHost.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/logic/ChartEditor.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/BeatModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/BeatType.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/ChartModel.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/ChartState.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/DirectionBit.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/GeneralState.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/IAudioPosition.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/TimingSection.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/base/VisualizationState.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/game/ChartEditorPlayer.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/game/IInputListener.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Core/rhythm/models/game/IRewindListener.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Godot/rhythm/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Godot/rhythm/RhythmEditorMain.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.Godot/rhythm/rhythm_editor.tscn" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.csproj" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Yam.sln" beforeDir="false" afterPath="$PROJECT_DIR$/Yam.sln" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/placeholder/niko_landscape.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/placeholder/niko_landscape.jpg.import" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/placeholder/niko_square.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/placeholder/niko_square.jpg.import" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/placeholder/white_square.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/placeholder/white_square.png.import" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/components/others/General.cs" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icon.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/icon.svg.import" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/project.godot" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager">
+    <option name="groupingKeys">
+      <option value="directory" />
+    </option>
+  </component>
+  <component name="DpaMonitoringSettings">
+    <option name="autoShow" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="SYNC" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2a06cc2dcdf24eaabb95cdb7ef70db73459400/0e/f8dc3dfe/FileAccess.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/2a06cc2dcdf24eaabb95cdb7ef70db73459400/28/b26afd52/AudioStreamPlayer.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/.godot/mono/temp/obj/Debug/.NETCoreApp,Version=v6.0.AssemblyAttributes.cs" root0="SKIP_HIGHLIGHTING" />
+    <setting file="mock://C:/Users/Pumpkin/Projects/Godot/Yam/Yam.Core/rhythm/clients/IRhythmGameHost.cs" root0="SKIP_HIGHLIGHTING" />
+  </component>
+  <component name="JsbtTreeLayoutManager">
+    <layout place="tools.popupGrunt">
+      <scroll-view-position x="0" y="0" />
+    </layout>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="Toolset" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2cePnBiDLdGcyT1pJIPENkA80D4" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;.NET Executable.Player.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;turnip/dev&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.sourceCode.C#&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;C:\\Users\\Pumpkin\\AppData\\Local\\Programs\\Rider\\plugins\\javascript-impl\\jsLanguageServicesImpl\\external&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;rider.external.source.directories&quot;: [
+      &quot;C:\\Users\\Pumpkin\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\DecompilerCache&quot;,
+      &quot;C:\\Users\\Pumpkin\\AppData\\Roaming\\JetBrains\\Rider2024.1\\resharper-host\\SourcesCache&quot;,
+      &quot;C:\\Users\\Pumpkin\\AppData\\Local\\Symbols\\src&quot;
+    ]
+  }
+}</component>
+  <component name="RunManager" selected=".NET Executable.Player">
+    <configuration name="Editor" type="RunExe" factoryName=".NET Executable">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe" />
+      <option name="PROGRAM_PARAMETERS" value="--path &quot;C:\Users\Pumpkin\Projects\Godot\Yam&quot; --editor" />
+      <option name="WORKING_DIRECTORY" value="C:\Users\Pumpkin\Projects\Godot\Yam" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="RUNTIME_TYPE" value="coreclr" />
+      <method v="2">
+        <option name="Build Solution" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Player" type="RunExe" factoryName=".NET Executable">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/../Godot_v4.2.1-stable_mono_win64/Godot_v4.2.1-stable_mono_win64.exe" />
+      <option name="PROGRAM_PARAMETERS" value="--path &quot;C:\Users\Pumpkin\Projects\Godot\Yam\Yam.Godot&quot;" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="RUNTIME_TYPE" value="coreclr" />
+      <method v="2">
+        <option name="Build Solution" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue=".NET Executable.Editor" />
+      <item itemvalue=".NET Executable.Player" />
+    </list>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="b9326b92-d051-4bc6-93cc-efa033d35c13" name="Changes" comment="" />
+      <created>1708469237844</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1708469237844</updated>
+      <workItem from="1708469240324" duration="82000" />
+      <workItem from="1708469373894" duration="297000" />
+      <workItem from="1708480359959" duration="216000" />
+      <workItem from="1708480600554" duration="71000" />
+      <workItem from="1708480696988" duration="1073000" />
+      <workItem from="1708483350589" duration="351000" />
+      <workItem from="1708484213312" duration="670000" />
+      <workItem from="1708559321028" duration="2643000" />
+      <workItem from="1708633496704" duration="1167000" />
+      <workItem from="1708635162734" duration="607000" />
+      <workItem from="1708648355615" duration="2016000" />
+      <workItem from="1708904114963" duration="2457000" />
+      <workItem from="1709009019774" duration="4722000" />
+      <workItem from="1709187395955" duration="10748000" />
+      <workItem from="1709312405694" duration="7311000" />
+      <workItem from="1709332998697" duration="1169000" />
+      <workItem from="1709449485046" duration="1401000" />
+      <workItem from="1709451287988" duration="23000" />
+      <workItem from="1709452262618" duration="613000" />
+      <workItem from="1709537271547" duration="32000" />
+      <workItem from="1710568229780" duration="35000" />
+      <workItem from="1712920992421" duration="2338000" />
+      <workItem from="1712925630410" duration="955000" />
+      <workItem from="1712928887472" duration="85000" />
+      <workItem from="1712965129836" duration="4511000" />
+      <workItem from="1713005358311" duration="774000" />
+      <workItem from="1713006733039" duration="7756000" />
+      <workItem from="1713020242090" duration="5455000" />
+      <workItem from="1713025773558" duration="585000" />
+      <workItem from="1713026393376" duration="3274000" />
+      <workItem from="1713034993535" duration="14000" />
+      <workItem from="1714179562593" duration="4029000" />
+      <workItem from="1714183632720" duration="1884000" />
+      <workItem from="1714244186662" duration="17000" />
+      <workItem from="1714245668226" duration="25000" />
+      <workItem from="1714278774109" duration="1781000" />
+      <workItem from="1714615381403" duration="262000" />
+      <workItem from="1714615681058" duration="6291000" />
+      <workItem from="1714672057667" duration="3471000" />
+      <workItem from="1714676711077" duration="1901000" />
+      <workItem from="1714810105454" duration="2147000" />
+      <workItem from="1714874182038" duration="2941000" />
+      <workItem from="1714877351552" duration="1037000" />
+      <workItem from="1714878505373" duration="444000" />
+      <workItem from="1714879295434" duration="888000" />
+      <workItem from="1714880534362" duration="493000" />
+      <workItem from="1718160045796" duration="2782000" />
+      <workItem from="1718163051818" duration="197000" />
+      <workItem from="1718163660967" duration="669000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1708483525680</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1708483525680</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Read osu file map">
+      <option name="closed" value="true" />
+      <created>1708906565422</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1708906565422</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Read osu data">
+      <option name="closed" value="true" />
+      <created>1709013783814</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1709013783814</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add reading approach rate and scene references">
+      <option name="closed" value="true" />
+      <created>1709191305798</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1709191305798</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Refactor map reading logic into RhythmData">
+      <option name="closed" value="true" />
+      <created>1709191695275</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1709191695275</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Instantiate HitObject when within preempt zone">
+      <option name="closed" value="true" />
+      <created>1709201486931</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1709201486931</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add audio and destroy old objects">
+      <option name="closed" value="true" />
+      <created>1709317685919</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1709317685919</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Pivot towards away from just mimicking osu">
+      <option name="closed" value="true" />
+      <created>1712967093120</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1712967093120</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Implement data structure (gitignored file)">
+      <option name="closed" value="true" />
+      <created>1712967741719</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1712967741719</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Implement ChartMeta data structure">
+      <option name="closed" value="true" />
+      <created>1712969581527</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1712969581527</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add toggling the music play and pause">
+      <option name="closed" value="true" />
+      <created>1713008300980</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1713008300980</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Sync HitObject with song">
+      <option name="closed" value="true" />
+      <created>1713009721732</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1713009721732</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Switch from queue to indexing for list of HitObjects">
+      <option name="closed" value="true" />
+      <created>1713010038259</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1713010038259</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Clean up code">
+      <option name="closed" value="true" />
+      <created>1713025246005</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1713025246005</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fix scene issues">
+      <option name="closed" value="true" />
+      <created>1713026133727</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1713026133727</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Add preview for prospective beat object">
+      <option name="closed" value="true" />
+      <created>1714180609029</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1714180609029</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Move tech spec to separate repository">
+      <option name="closed" value="true" />
+      <created>1714183952526</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1714183952526</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Add refresh-to-dev.sh">
+      <option name="closed" value="true" />
+      <created>1714184699070</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1714184699070</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Add README.md">
+      <option name="closed" value="true" />
+      <created>1714615513196</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1714615513196</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Update back-to-dev.sh">
+      <option name="closed" value="true" />
+      <created>1714615564458</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1714615564458</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Migrate old rhythm scene to create new directory for new rhythm scene">
+      <option name="closed" value="true" />
+      <created>1714615962196</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1714615962196</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Add data types">
+      <option name="closed" value="true" />
+      <created>1714621043133</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1714621043133</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Figure out JSON serialization with C# Records">
+      <option name="closed" value="true" />
+      <created>1714623466404</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1714623466404</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Add chart parser">
+      <option name="closed" value="true" />
+      <created>1714678043282</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1714678043282</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Add partial chart parser">
+      <option name="closed" value="true" />
+      <created>1714678054249</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1714678054249</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Remove old rhythm editor attempt">
+      <option name="closed" value="true" />
+      <created>1714876134821</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1714876134821</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Play audio described in ChartModel">
+      <option name="closed" value="true" />
+      <created>1714876408088</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1714876408088</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Refactor Godot project to follow C# conventions">
+      <option name="closed" value="true" />
+      <created>1714880725276</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1714880725276</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnityCheckinConfiguration" checkUnsavedScenes="true" />
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="Add reading approach rate and scene references" />
+    <MESSAGE value="Refactor map reading logic into RhythmData" />
+    <MESSAGE value="Instantiate HitObject when within preempt zone" />
+    <MESSAGE value="Add audio and destroy old objects" />
+    <MESSAGE value="Pivot towards away from just mimicking osu" />
+    <MESSAGE value="Implement data structure (gitignored file)" />
+    <MESSAGE value="Implement ChartMeta data structure" />
+    <MESSAGE value="Add toggling the music play and pause" />
+    <MESSAGE value="Sync HitObject with song" />
+    <MESSAGE value="Switch from queue to indexing for list of HitObjects" />
+    <MESSAGE value="Clean up code" />
+    <MESSAGE value="Fix scene issues" />
+    <MESSAGE value="Add preview for prospective beat object" />
+    <MESSAGE value="Move tech spec to separate repository" />
+    <MESSAGE value="Add refresh-to-dev.sh" />
+    <MESSAGE value="Add README.md" />
+    <MESSAGE value="Update back-to-dev.sh" />
+    <MESSAGE value="Migrate old rhythm scene to create new directory for new rhythm scene" />
+    <MESSAGE value="Add data types" />
+    <MESSAGE value="Figure out JSON serialization with C# Records" />
+    <MESSAGE value="Add chart parser" />
+    <MESSAGE value="Add partial chart parser" />
+    <MESSAGE value="Remove old rhythm editor attempt" />
+    <MESSAGE value="Play audio described in ChartModel" />
+    <MESSAGE value="Refactor Godot project to follow C# conventions" />
+    <option name="LAST_COMMIT_MESSAGE" value="Refactor Godot project to follow C# conventions" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
