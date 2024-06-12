@@ -1,4 +1,4 @@
-﻿namespace Yam.scenes.rhythm.game;
+﻿namespace Yam.Core.Rhythm.Clients;
 
 public interface IRhythmGameHost
 {

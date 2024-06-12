@@ -1,4 +1,4 @@
-﻿namespace Yam.scenes.rhythm.models.game;
+﻿namespace Yam.Core.Rhythm.Models.game;
 
 public interface IRewindListener
 {

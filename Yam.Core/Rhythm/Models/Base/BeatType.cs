@@ -1,4 +1,4 @@
-﻿namespace Yam.scenes.rhythm.models.@base;
+﻿namespace Yam.Core.Rhythm.Models.Base;
 
 public enum BeatType
 {

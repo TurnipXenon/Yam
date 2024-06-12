@@ -2,6 +2,8 @@
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yam", "Yam.Godot\Yam.Godot.csproj", "{10B92F72-3DA2-44FD-B8C6-37AF5F1D932C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yam.Core", "Yam.Core\Yam.Core.csproj", "{973C04EB-252F-43B0-A10D-BEFF1843BD3E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 	Debug|Any CPU = Debug|Any CPU
@@ -15,5 +17,11 @@ Global
 		{10B92F72-3DA2-44FD-B8C6-37AF5F1D932C}.ExportDebug|Any CPU.Build.0 = ExportDebug|Any CPU
 		{10B92F72-3DA2-44FD-B8C6-37AF5F1D932C}.ExportRelease|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{10B92F72-3DA2-44FD-B8C6-37AF5F1D932C}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
+		{973C04EB-252F-43B0-A10D-BEFF1843BD3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{973C04EB-252F-43B0-A10D-BEFF1843BD3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{973C04EB-252F-43B0-A10D-BEFF1843BD3E}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{973C04EB-252F-43B0-A10D-BEFF1843BD3E}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{973C04EB-252F-43B0-A10D-BEFF1843BD3E}.ExportRelease|Any CPU.ActiveCfg = Debug|Any CPU
+		{973C04EB-252F-43B0-A10D-BEFF1843BD3E}.ExportRelease|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 EndGlobal

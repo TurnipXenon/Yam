@@ -1,1 +1,13 @@
 .idea
+
+# C#/.Net specific
+*.suo
+*.user
+
+Yam.Core/bin
+Yam.Core/obj
+Yam.Core/packages
+
+Yam.Godot/bin
+Yam.Godot/obj
+Yam.Godot/packages

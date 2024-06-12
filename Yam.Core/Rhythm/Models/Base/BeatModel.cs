@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Godot;
+using System.Numerics;
 
-namespace Yam.scenes.rhythm.models.@base;
+namespace Yam.Core.Rhythm.Models.Base;
 
 public record BeatModel
 {
