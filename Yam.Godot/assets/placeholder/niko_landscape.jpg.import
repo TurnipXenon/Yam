@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://drq8igtro4vi1"
-path="res://.godot/imported/niko_landscape.jpg-73160f78cbec54a2343a60c320f865d2.ctex"
+path="res://.godot/imported/niko_landscape.jpg-4d06a58a18d5527ae4165e212e70c6e3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/placeholder/niko_landscape.jpg"
-dest_files=["res://.godot/imported/niko_landscape.jpg-73160f78cbec54a2343a60c320f865d2.ctex"]
+source_file="res://Assets/Placeholder/niko_landscape.jpg"
+dest_files=["res://.godot/imported/niko_landscape.jpg-4d06a58a18d5527ae4165e212e70c6e3.ctex"]
 
 [params]
 

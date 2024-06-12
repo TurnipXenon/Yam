@@ -5,7 +5,7 @@ using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Logic;
 using Yam.Core.Rhythm.Models.Base;
 
-namespace Yam.Godot.Game.Rhythm;
+namespace Yam.Godot.Scripts.Rhythm;
 
 public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 {
