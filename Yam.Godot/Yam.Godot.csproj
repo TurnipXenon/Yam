@@ -6,6 +6,9 @@
         <EnableDynamicLoading>true</EnableDynamicLoading>
     </PropertyGroup>
     <ItemGroup>
-        <Folder Include="Yam.Core\"/>
+        <Folder Include="Yam.Core\`1"/>
+    </ItemGroup>
+    <ItemGroup>
+      <Content Include=".gitignore" />
     </ItemGroup>
 </Project>
