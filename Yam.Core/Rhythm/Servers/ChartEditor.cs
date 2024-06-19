@@ -8,15 +8,17 @@ namespace Yam.Core.Rhythm.Servers;
 internal class ChartEditor : IChartEditor
 {
 	public IRhythmGameHost? Host;
-	private ChartModel? _chartModel;
+	private ChartModel _chartModel;
 	private ChartVisualizer _visualizer;
+	private ChartState chartState;
 
-	public void Play(ChartModel? chartModel)
+	public void Play(ChartModel chartModel)
 	{
 		_chartModel = chartModel;
-		
+
 		Debug.Assert(Host != null);
-		this._visualizer = new ChartVisualizer(Host);
-		Host?.PlaySong($"{_chartModel?.SelfPath}/{_chartModel?.AudioRelativePath}");
+		this.chartState = new ChartState(_chartModel, Host);
+		this._visualizer = new ChartVisualizer(Host, this.chartState);
+		Host?.PlaySong($"{_chartModel.SelfPath}/{_chartModel?.AudioRelativePath}");
 	}
 }

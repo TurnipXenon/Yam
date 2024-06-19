@@ -63,4 +63,9 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 	{
 		this._listeners.ForEach(l => l.Tick(delta));
 	}
+
+	public float GetPlaybackPosition()
+	{
+		return this.AudioStreamPlayer.GetPlaybackPosition();
+	}
 }
