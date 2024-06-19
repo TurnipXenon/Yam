@@ -24,18 +24,15 @@ public record ChartState
 			this.PreemptTime = 1.2f + .75f * (5 - this.Chart.ApproachRate) / 5;
 		}
 
-		this._player = player;
+		this.Player = player;
+		
+		// todo: recreate the beats from the model and give them states, such that we know whether they are visualized or not, use the GeneralState enum to track this
 	}
 
 	// todo: time calculated based on the current zoom distance and the Chart Model’s Approach rate
 	public float PreemptTime { get; set; }
 
-	public float AudioPosition => _player?.GetPlaybackPosition() ?? 0;
+	public float AudioPosition => Player?.GetPlaybackPosition() ?? 0;
 
-	private IAudioPosition _player;
-
-	public void SetAudioPositionSource(IAudioPosition player)
-	{
-		_player = player;
-	}
+	public IAudioPosition Player { get; set; }
 }

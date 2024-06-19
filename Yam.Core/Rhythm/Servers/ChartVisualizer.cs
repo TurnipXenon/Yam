@@ -9,6 +9,7 @@ internal class ChartVisualizer : IGameListeners
 	private readonly IRhythmGameHost _host;
 	private readonly ChartState _chartState;
 
+	// todo: add pooler
 	public ChartVisualizer(IRhythmGameHost host, ChartState chartState)
 	{
 		this._host = host;
