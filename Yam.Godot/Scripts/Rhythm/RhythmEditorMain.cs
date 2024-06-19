@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
 using Godot;
 using Yam.Core.Rhythm.Clients;
-using Yam.Core.Rhythm.Logic;
 using Yam.Core.Rhythm.Models.Base;
+using Yam.Core.Rhythm.Services;
 
 namespace Yam.Godot.Scripts.Rhythm;
 
@@ -12,7 +13,8 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 	[Export] public Resource ChartResource { get; set; }
 	[Export] public AudioStreamPlayer AudioStreamPlayer { get; set; }
 
-	private ChartEditor _editor;
+	private IChartEditor _editor;
+	private List<IGameListeners> _listeners = new();
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -33,10 +35,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 
 		var chartModel = JsonSerializer.Deserialize<ChartModel>(f.GetAsText());
 		chartModel.SetSelfPath(ChartResource.ResourcePath);
-		_editor = new ChartEditor
-		{
-			Host = this
-		};
+		_editor = ServiceInitializers.CreateEditor(this);
 		_editor.Play(chartModel);
 	}
 
@@ -53,5 +52,15 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 		sound.Data = file.GetBuffer((long)file.GetLength());
 		AudioStreamPlayer.Stream = sound;
 		AudioStreamPlayer.Play();
+	}
+
+	public void RegisterListener(IGameListeners listener)
+	{
+		this._listeners.Add(listener);
+	}
+
+	public override void _Process(double delta)
+	{
+		this._listeners.ForEach(l => l.Tick(delta));
 	}
 }
