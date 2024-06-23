@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Yam.Core.Rhythm.Models.Base;
+using Yam.Core.Rhythm.Services;
 
 namespace Yam.Core.Rhythm.Models.Wrappers;
 

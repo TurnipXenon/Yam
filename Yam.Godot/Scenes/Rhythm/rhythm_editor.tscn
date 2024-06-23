@@ -1,13 +1,29 @@
-[gd_scene load_steps=4 format=3 uid="uid://bt1qe76771afk"]
+[gd_scene load_steps=5 format=3 uid="uid://bt1qe76771afk"]
 
 [ext_resource type="Script" path="res://Scripts/Rhythm/RhythmEditorMain.cs" id="1_af2kv"]
 [ext_resource type="JSON" path="res://Scenes/Rhythm/Songs/sunleth_waterscape/chart_meta.json" id="2_yy6yc"]
 [ext_resource type="PackedScene" uid="uid://bh8con8llm0d7" path="res://Scenes/Rhythm/pooled_beat.tscn" id="3_ev2oq"]
+[ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="4_skhgu"]
 
-[node name="RhythmEditor" type="Node2D" node_paths=PackedStringArray("AudioStreamPlayer")]
+[node name="RhythmEditor" type="Node2D" node_paths=PackedStringArray("AudioStreamPlayer", "SpawningPoint", "TriggerPoint", "DestructionPoint")]
 script = ExtResource("1_af2kv")
 ChartResource = ExtResource("2_yy6yc")
 AudioStreamPlayer = NodePath("AudioStreamPlayer")
 GodotPooledBeat = ExtResource("3_ev2oq")
+SpawningPoint = NodePath("SpawningPoint")
+TriggerPoint = NodePath("TriggerPoint")
+DestructionPoint = NodePath("DestructionPoint")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="TriggerPoint" type="Sprite2D" parent="."]
+position = Vector2(920, 325)
+texture = ExtResource("4_skhgu")
+
+[node name="SpawningPoint" type="Sprite2D" parent="."]
+position = Vector2(-210, 325)
+texture = ExtResource("4_skhgu")
+
+[node name="DestructionPoint" type="Sprite2D" parent="."]
+position = Vector2(1312, 325)
+texture = ExtResource("4_skhgu")
