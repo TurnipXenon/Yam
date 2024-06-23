@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
+using Yam.Core.Rhythm.Models.Wrappers;
 using Yam.Core.Rhythm.Services;
 
 namespace Yam.Core.Rhythm.Servers;
@@ -18,7 +19,12 @@ internal class ChartEditor : IChartEditor
 
 		Debug.Assert(Host != null);
 		this.chartState = new ChartState(_chartModel, Host);
-		this._visualizer = new ChartVisualizer(Host, this.chartState);
+		this._visualizer = new ChartVisualizer(new ChartVisualizer.Props
+		{
+			Host = Host,
+			ChartState = chartState,
+			Pooler = new BeatPooler()
+		});
 		Host?.PlaySong($"{_chartModel.SelfPath}/{_chartModel?.AudioRelativePath}");
 	}
 }

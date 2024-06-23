@@ -15,6 +15,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 
 	private IChartEditor _editor;
 	private List<IGameListeners> _listeners = new();
+	private float _currentAudioTime;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -39,11 +40,6 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 		_editor.Play(chartModel);
 	}
 
-	public float GetAudioPosition()
-	{
-		return AudioStreamPlayer?.GetPlaybackPosition() ?? 0;
-	}
-
 	public void PlaySong(string songPath)
 	{
 		GD.Print(songPath);
@@ -61,11 +57,18 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 
 	public override void _Process(double delta)
 	{
-		this._listeners.ForEach(l => l.Tick(delta));
+		// from https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
+		_currentAudioTime = (float)(AudioStreamPlayer.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() -
+		                           AudioServer.GetOutputLatency());
+
+		// this should be after currentAudioTime update
+		_listeners.ForEach(l => l.Tick(delta));
 	}
 
+	// this is called multiple times during listeners are ticking inside _process so cache the same result for all of
+	// them for consistency
 	public float GetPlaybackPosition()
 	{
-		return this.AudioStreamPlayer.GetPlaybackPosition();
+		return _currentAudioTime;
 	}
 }
