@@ -1,5 +1,4 @@
-﻿using Yam.Core.Rhythm.Models.Base;
-using Yam.Core.Rhythm.Services;
+﻿using Yam.Core.Rhythm.Services;
 
 namespace Yam.Core.Rhythm.Clients;
 

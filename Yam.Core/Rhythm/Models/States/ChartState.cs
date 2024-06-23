@@ -1,12 +1,14 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Services;
 
-namespace Yam.Core.Rhythm.Models.Wrappers;
+namespace Yam.Core.Rhythm.Models.States;
 
 internal interface IChartState
 {
 	BeatState GetBeatOrDefault(int index);
+	TimingSection GetTimingSectionOrDefault(int index);
 }
 
 internal record ChartState : IChartState
@@ -22,6 +24,20 @@ internal record ChartState : IChartState
 	{
 		Chart = model;
 		State = GeneralState.Active;
+
+		if (model.TimingSections.Count == 0)
+		{
+			// placeholder
+			// todo: replace with logging system
+			Console.WriteLine("Warning: current chart has no timing section. Creating a default timing section.");
+			model.TimingSections.Add(new TimingSection
+			{
+				Timing = 0,
+				BPM = 132,
+				BeatsPerMeter = 4
+			});
+		}
+
 		ActiveTimingSection = model.TimingSections[0];
 		ActiveTimingSection.ApproachRate = this.Chart.ApproachRate;
 		ActiveTimingIndex = 0;
@@ -46,5 +62,15 @@ internal record ChartState : IChartState
 		}
 
 		return BeatState.DefaultBeatState;
+	}
+
+	public TimingSection GetTimingSectionOrDefault(int index)
+	{
+		if (0 <= index && index < Chart.TimingSections.Count)
+		{
+			return Chart.TimingSections[index];
+		}
+
+		return TimingSection.DefaultTimingSection;
 	}
 }

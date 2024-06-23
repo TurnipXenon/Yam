@@ -1,6 +1,6 @@
 using Yam.Core.Rhythm.Models.Base;
 
-namespace Yam.Core.Rhythm.Models.Wrappers;
+namespace Yam.Core.Rhythm.Models.States;
 
 internal class BeatState
 {

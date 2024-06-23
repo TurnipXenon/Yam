@@ -1,4 +1,4 @@
-﻿namespace Yam.Core.Rhythm.Models.Wrappers;
+﻿namespace Yam.Core.Rhythm.Models.States;
 
 public enum VisualizationState
 {

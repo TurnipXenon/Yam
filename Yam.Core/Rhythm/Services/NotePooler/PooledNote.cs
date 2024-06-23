@@ -2,7 +2,7 @@ using System;
 using System.Numerics;
 using Yam.Core.Rhythm.Models.States;
 
-namespace Yam.Core.Rhythm.Services.BeatPooler;
+namespace Yam.Core.Rhythm.Services.NotePooler;
 
 /**
  * <code>
@@ -15,23 +15,24 @@ namespace Yam.Core.Rhythm.Services.BeatPooler;
  * }
  * </code>
  */
-public class PooledBeat
+public class PooledNote
 {
-	private readonly IPooledBeatHost _host;
+	private readonly IPooledNoteHost _host;
 	private BeatState? _beat;
-	private Servers.BeatPooler _beatPooler;
-	private IPooledBeatResource _hostResource;
+	private Servers.BeatTickPooler _pooler;
+	private IPooledNoteResource _hostResource;
 	private Vector2 _destructionPoint;
 	private Vector2 _triggerPoint;
 	private Vector2 _spawningPoint;
 	private bool _isLtr;
 	private Vector2 _precalculatedLerp;
 
-	public PooledBeat(IPooledBeatHost host)
+	public PooledNote(IPooledNoteHost host)
 	{
 		_host = host;
 	}
 
+	// todo: change to tick
 	internal void SetActive(BeatState beat)
 	{
 		_beat = beat;
@@ -50,11 +51,11 @@ public class PooledBeat
 		_host.Activate();
 	}
 
-	internal void Initialize(Servers.BeatPooler beatPooler, IPooledBeatResource beatResource)
+	internal void Initialize(Servers.BeatTickPooler beatPooler, IPooledNoteResource beatResource)
 	{
 		_host.Deactivate();
 		_hostResource = beatResource;
-		_beatPooler = beatPooler;
+		_pooler = beatPooler;
 	}
 
 	public void Tick()
@@ -91,7 +92,7 @@ public class PooledBeat
 		}
 
 		_host.Deactivate();
-		_beatPooler.Release(this);
+		_pooler.Release(this);
 	}
 
 	public void DestroyResource()

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
-using Yam.Core.Rhythm.Models.Wrappers;
+using Yam.Core.Rhythm.Models.States;
 using Yam.Core.Rhythm.Services;
 using Yam.Core.Rhythm.Services.BeatPooler;
 

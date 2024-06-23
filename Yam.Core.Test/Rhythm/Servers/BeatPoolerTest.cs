@@ -1,7 +1,7 @@
 using JetBrains.Annotations;
 using Moq;
 using NuGet.Frameworks;
-using Yam.Core.Rhythm.Models.Wrappers;
+using Yam.Core.Rhythm.Models.States;
 using Yam.Core.Rhythm.Servers;
 using Yam.Core.Rhythm.Services.BeatPooler;
 using Yam.Core.Test.Utils;
