@@ -25,6 +25,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	private Vector2 _spawningPosition;
 	private Vector2 _triggerPosition;
 	private Vector2 _destructionPosition;
+	private float _streamLength;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -63,6 +64,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 		var sound = new AudioStreamMP3();
 		sound.Data = file.GetBuffer((long)file.GetLength());
 		AudioStreamPlayer.Stream = sound;
+		_streamLength = (float)sound.GetLength();
 		AudioStreamPlayer.Play();
 	}
 
@@ -86,6 +88,11 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	public float GetPlaybackPosition()
 	{
 		return _currentAudioTime;
+	}
+
+	public float GetStreamLength()
+	{
+		return _streamLength;
 	}
 
 	public PooledBeat RequestResource()
