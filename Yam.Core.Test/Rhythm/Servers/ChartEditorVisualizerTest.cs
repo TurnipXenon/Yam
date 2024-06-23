@@ -23,10 +23,12 @@ public static class ChartEditorVisualizerTest
 			{
 				ApproachRate = 5, // preempt time is 1.2f for approach rate of 5
 			};
+			var timingSection1 = new TimingSection { Timing = 1f, BPM = 60, BeatsPerMeter = 4 };
+			var timingSection2 = new TimingSection { Timing = 2.1f, BPM = 80, BeatsPerMeter = 3 };
 			model.TimingSections = new List<TimingSection>
 			{
-				new() { Timing = 1f, BPM = 60, BeatsPerMeter = 4 },
-				new() { Timing = 2.1f, BPM = 80, BeatsPerMeter = 3 }
+				timingSection1,
+				timingSection2
 			};
 			var chart = new Mock<ChartState>(model, host.Object);
 
@@ -39,14 +41,14 @@ public static class ChartEditorVisualizerTest
 
 			var expectedSections = new List<NoteState>
 			{
-				new() { Timing = 1f, Type = NoteType.Downbeat },
-				new() { Timing = 1.25f },
-				new() { Timing = 1.5f },
-				new() { Timing = 1.75f },
-				new() { Timing = 2f, Type = NoteType.Downbeat },
-				new() { Timing = 2.1f, Type = NoteType.Downbeat },
-				new() { Timing = 2.35f },
-				new() { Timing = 2.6f },
+				new(timingSection1) { Timing = 1f, Type = NoteType.Downbeat },
+				new(timingSection1) { Timing = 1.25f },
+				new(timingSection1) { Timing = 1.5f },
+				new(timingSection1) { Timing = 1.75f },
+				new(timingSection1) { Timing = 2f, Type = NoteType.Downbeat },
+				new(timingSection2) { Timing = 2.1f, Type = NoteType.Downbeat },
+				new(timingSection2) { Timing = 2.35f },
+				new(timingSection2) { Timing = 2.6f },
 			};
 			Assert.Equal(expectedSections.Count, actualResults.Count);
 

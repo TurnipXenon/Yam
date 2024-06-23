@@ -1,6 +1,6 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Yam.Core.Rhythm.Clients;
-using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Models.States;
 using Yam.Core.Rhythm.Services;
 using Yam.Core.Rhythm.Services.NotePooler;
@@ -13,9 +13,9 @@ internal class ChartEditorVisualizer : IGameListeners
 
 	private readonly IChartState _chartState;
 
-	// private int currentLowerBound;
-	internal List<NoteState> _tickStates = new();
-	private BeatTickPooler _pooler;
+	private int _currentLowerBound;
+	internal List<NoteState> _noteStates = new();
+	private NotePooler _pooler;
 	private bool isReady = false;
 
 	// todo: add pooler
@@ -30,18 +30,20 @@ internal class ChartEditorVisualizer : IGameListeners
 
 		// todo: initialize all beat ticks
 
-		_pooler = new BeatTickPooler(resource);
+		_pooler = new NotePooler(resource);
 		CreateTicks();
 	}
 
 	private async void CreateTicks()
 	{
-		CreateTicksTask(_tickStates);
+		isReady = false;
+		await Task.Yield(); // force async
+		CreateTicksTask(_noteStates);
+		isReady = true;
 	}
 
 	internal List<NoteState> CreateTicksTask(List<NoteState> tickStates)
 	{
-		isReady = false;
 		tickStates.Clear();
 		var currentSectionIndex = -1;
 		var currentTSLowerBound = _chartState.GetTimingSectionOrDefault(0);
@@ -65,7 +67,7 @@ internal class ChartEditorVisualizer : IGameListeners
 				maxNotesPerMeasure = currentTSLowerBound.BeatsPerMeter;
 			}
 
-			tickStates.Add(new NoteState
+			tickStates.Add(new NoteState(currentTSLowerBound)
 			{
 				Timing = currentTime,
 				Type = currentNoteIndex == 0 ? NoteType.Downbeat : NoteType.Normal
@@ -74,8 +76,17 @@ internal class ChartEditorVisualizer : IGameListeners
 			currentNoteIndex = (currentNoteIndex + 1) % maxNotesPerMeasure;
 		}
 
-		isReady = true;
 		return tickStates;
+	}
+
+	private NoteState GetNoteOrDefault(int index)
+	{
+		if (0 <= index && index < _noteStates.Count)
+		{
+			return _noteStates[index];
+		}
+
+		return NoteState.DefaultNoteState;
 	}
 
 
@@ -85,21 +96,22 @@ internal class ChartEditorVisualizer : IGameListeners
 		{
 			return;
 		}
+
 		// todo: let's run it in a couroutine or should our package should even know that implementation detail?
-		// for (var i = 0; i < 5; i++)
-		// {
-		// 	var beat = _chartState.GetBeatOrDefault(currentLowerBound + i);
-		// 	if (beat.ShouldBePreEmpted(_host.GetPlaybackPosition()))
-		// 	{
-		// 		_pooler.RequestBeat(beat);
-		// 		if (i == 0)
-		// 		{
-		// 			// only increase lower bound if the requested beat was the lower bound
-		// 			// a beat is lower bound if i = 0
-		// 			currentLowerBound++;
-		// 			i--;
-		// 		}
-		// 	}
-		// }
+		for (var i = 0; i < 5; i++)
+		{
+			var note = GetNoteOrDefault(_currentLowerBound + i);
+			if (note.ShouldBePreEmpted(_host.GetPlaybackPosition()))
+			{
+				_pooler.RequestNote(note);
+				if (i == 0)
+				{
+					// only increase lower bound if the requested beat was the lower bound
+					// a beat is lower bound if i = 0
+					_currentLowerBound++;
+					i--;
+				}
+			}
+		}
 	}
 }

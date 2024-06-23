@@ -18,8 +18,8 @@ namespace Yam.Core.Rhythm.Services.NotePooler;
 public class PooledNote
 {
 	private readonly IPooledNoteHost _host;
-	private BeatState? _beat;
-	private Servers.BeatTickPooler _pooler;
+	private NoteState? _note;
+	private Servers.NotePooler _pooler;
 	private IPooledNoteResource _hostResource;
 	private Vector2 _destructionPoint;
 	private Vector2 _triggerPoint;
@@ -33,9 +33,9 @@ public class PooledNote
 	}
 
 	// todo: change to tick
-	internal void SetActive(BeatState beat)
+	internal void SetActive(NoteState note)
 	{
-		_beat = beat;
+		_note = note;
 		_spawningPoint = _hostResource.GetSpawningPoint();
 		_triggerPoint = _hostResource.GetTriggerPoint();
 		_destructionPoint = _hostResource.GetDestructionPoint();
@@ -46,12 +46,12 @@ public class PooledNote
 		// precalculating linear interpolation
 		// v = v_spawning + [(v_trigger - v_spawning)/(timing - preempt_time)]*(current_time - preeempt_time)
 		// we can precalculate everything inside []
-		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _beat.PreemptDuration;
+		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _note.PreemptDuration;
 
 		_host.Activate();
 	}
 
-	internal void Initialize(Servers.BeatTickPooler beatPooler, IPooledNoteResource beatResource)
+	internal void Initialize(Servers.NotePooler beatPooler, IPooledNoteResource beatResource)
 	{
 		_host.Deactivate();
 		_hostResource = beatResource;
@@ -60,7 +60,7 @@ public class PooledNote
 
 	public void Tick()
 	{
-		if (_beat == null)
+		if (_note == null)
 		{
 			return;
 		}
@@ -68,7 +68,7 @@ public class PooledNote
 		// linear interpolation
 		// see SetActive to learn the full equation
 		var v = _spawningPoint + _precalculatedLerp
-			* (_hostResource.GetPlaybackPosition() - _beat.PreemptTime);
+			* (_hostResource.GetPlaybackPosition() - _note.PreemptTime);
 		_host.SetPosition(v);
 
 		if ((_isLtr && v.X > _destructionPoint.X)
@@ -80,15 +80,15 @@ public class PooledNote
 
 	public void Deactivate()
 	{
-		if (_beat == null)
+		if (_note == null)
 		{
 			// todo: migrate to logging system
 			Console.WriteLine("Error: _beat is null when deactivating");
 		}
 		else
 		{
-			_beat.VisualizationState = VisualizationState.Unowned;
-			_beat = null;
+			_note.VisualizationState = VisualizationState.Unowned;
+			_note = null;
 		}
 
 		_host.Deactivate();
