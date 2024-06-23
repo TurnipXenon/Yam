@@ -6,6 +6,7 @@ using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Services;
 using Yam.Core.Rhythm.Services.BeatPooler;
+using Vector2 = System.Numerics.Vector2;
 
 namespace Yam.Godot.Scripts.Rhythm;
 
@@ -14,14 +15,27 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	[Export] public Resource ChartResource { get; set; }
 	[Export] public AudioStreamPlayer AudioStreamPlayer { get; set; }
 	[Export] public PackedScene GodotPooledBeat { get; set; }
+	[Export] public Node2D SpawningPoint { get; set; }
+	[Export] public Node2D TriggerPoint { get; set; }
+	[Export] public Node2D DestructionPoint { get; set; }
 
 	private IChartEditor _editor;
 	private List<IGameListeners> _listeners = new();
 	private float _currentAudioTime;
+	private Vector2 _spawningPosition;
+	private Vector2 _triggerPosition;
+	private Vector2 _destructionPosition;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		var spawningGVector = SpawningPoint.Position;
+		_spawningPosition = new Vector2(spawningGVector.X, spawningGVector.Y);
+		var triggerGVector = TriggerPoint.Position;
+		_triggerPosition = new Vector2(triggerGVector.X, triggerGVector.Y);
+		var destructionGVector = DestructionPoint.Position;
+		_destructionPosition = new Vector2(destructionGVector.X, destructionGVector.Y);
+
 		ParseAndPlayChart();
 	}
 
@@ -79,5 +93,20 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 		var pooledBeat = GodotPooledBeat.Instantiate<GodotPooledBeat>();
 		AddChild(pooledBeat);
 		return pooledBeat.PooledBeat;
+	}
+
+	public Vector2 GetSpawningPoint()
+	{
+		return _spawningPosition;
+	}
+
+	public Vector2 GetTriggerPoint()
+	{
+		return _triggerPosition;
+	}
+
+	public Vector2 GetDestructionPoint()
+	{
+		return _destructionPosition;
 	}
 }
