@@ -4,6 +4,7 @@ using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Models.Wrappers;
 using Yam.Core.Rhythm.Servers;
+using Yam.Core.Rhythm.Services.BeatPooler;
 
 namespace Yam.Core.Test.Rhythm.Servers;
 
@@ -27,7 +28,9 @@ public class ChartVisualizerTest
 
 			// setup pooler stub to make sure the correct order of beats are called
 			var host = new Mock<IRhythmGameHost>();
-			var pooler = new Mock<BeatPooler>();
+			var resource = new Mock<IPooledBeatResource>();
+			resource.Setup(r => r.RequestResource());
+			var pooler = new Mock<BeatPooler>(resource.Object);
 			var calledBeats = new List<BeatState>();
 			pooler.Setup(p => p.RequestBeat(It.IsAny<BeatState>()))
 				.Callback((BeatState b) => { calledBeats.Add(b); });
@@ -43,12 +46,11 @@ public class ChartVisualizerTest
 			};
 			model.TimingSections.Add(new TimingSection());
 			var chartState = new Mock<ChartState>(model, host.Object);
-			var visualizer = new ChartVisualizer(new ChartVisualizer.Props
-			{
-				Host = host.Object,
-				ChartState = chartState.Object,
-				Pooler = pooler.Object
-			});
+			var visualizer = new ChartVisualizer(
+				host: host.Object,
+				chartState: chartState.Object,
+				pooler: pooler.Object
+			);
 
 			// test at 0, and it should not call RequestBeat
 			host.Setup(a => a.GetPlaybackPosition()).Returns(0);

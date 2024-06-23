@@ -7,10 +7,9 @@ public static class TestingUtils
 {
 	internal static BeatState NewBeatState()
 	{
-		return new BeatState(new BeatState.Props
-		{
-			TimingSection = new TimingSection(),
-			BeatModel = new BeatModel()
-		});
+		return new BeatState(
+			timingSection: new TimingSection(),
+			beatModel: new BeatModel()
+		);
 	}
 }
