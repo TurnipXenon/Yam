@@ -1,13 +1,16 @@
+using JetBrains.Annotations;
 using Moq;
 using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Models.Wrappers;
 using Yam.Core.Rhythm.Servers;
 
-namespace Yam.Core.Test.Rhythm;
+namespace Yam.Core.Test.Rhythm.Servers;
 
 // structure inspired by https://haacked.com/archive/2012/01/02/structuring-unit-tests.aspx/
-public class ChartVisualizerFacts
+
+[TestSubject(typeof(ChartVisualizer))]
+public class ChartVisualizerTest
 {
 	public class Tick
 	{

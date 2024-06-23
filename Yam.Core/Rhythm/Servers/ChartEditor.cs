@@ -3,12 +3,15 @@ using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Models.Wrappers;
 using Yam.Core.Rhythm.Services;
+using Yam.Core.Rhythm.Services.BeatPooler;
 
 namespace Yam.Core.Rhythm.Servers;
 
 internal class ChartEditor : IChartEditor
 {
 	public IRhythmGameHost? Host;
+	public IPooledBeatResource BeatResource;
+	
 	private ChartModel _chartModel;
 	private ChartVisualizer _visualizer;
 	private ChartState chartState;
@@ -18,12 +21,12 @@ internal class ChartEditor : IChartEditor
 		_chartModel = chartModel;
 
 		Debug.Assert(Host != null);
-		this.chartState = new ChartState(_chartModel, Host);
-		this._visualizer = new ChartVisualizer(new ChartVisualizer.Props
+		chartState = new ChartState(_chartModel, Host);
+		_visualizer = new ChartVisualizer(new ChartVisualizer.Props
 		{
 			Host = Host,
 			ChartState = chartState,
-			Pooler = new BeatPooler()
+			Pooler = new BeatPooler(BeatResource)
 		});
 		Host?.PlaySong($"{_chartModel.SelfPath}/{_chartModel?.AudioRelativePath}");
 	}
