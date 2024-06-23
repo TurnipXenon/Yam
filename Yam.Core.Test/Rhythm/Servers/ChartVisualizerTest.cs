@@ -11,7 +11,7 @@ namespace Yam.Core.Test.Rhythm.Servers;
 // structure inspired by https://haacked.com/archive/2012/01/02/structuring-unit-tests.aspx/
 
 [TestSubject(typeof(ChartVisualizer))]
-public class ChartVisualizerTest
+public static class ChartVisualizerTest
 {
 	public class Tick
 	{
