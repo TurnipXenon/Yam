@@ -17,26 +17,25 @@ internal class BeatState
 		internal TimingSection TimingSection;
 	}
 
-	private BeatModel Beat { get; set; }
-	private TimingSection Timing { get; set; }
+	internal BeatModel Beat { get; set; }
+	private TimingSection TimingSection { get; set; }
 	internal float PreemptTime { get; set; }
 	internal VisualizationState VisualizationState { get; set; }
-
-
+	
 	internal BeatState(Props props)
 	{
 		Beat = props.BeatModel;
-		Timing = props.TimingSection;
+		TimingSection = props.TimingSection;
 
 		// calculation from osu: https://osu.ppy.sh/wiki/en/Beatmap/Approach_rate
 		var preemptDuration = 0f;
-		if (Timing.ApproachRate > 5)
+		if (TimingSection.ApproachRate > 5)
 		{
-			preemptDuration = 1.2f - .75f * (Timing.ApproachRate - 5) / 5;
+			preemptDuration = 1.2f - .75f * (TimingSection.ApproachRate - 5) / 5;
 		}
 		else
 		{
-			preemptDuration = 1.2f + .75f * (5 - Timing.ApproachRate) / 5;
+			preemptDuration = 1.2f + .75f * (5 - TimingSection.ApproachRate) / 5;
 		}
 
 		PreemptTime = Beat.Timing - preemptDuration;
