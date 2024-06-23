@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bh8con8llm0d7"]
+
+[ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://Assets/Placeholder/niko_square.jpg" id="1_fhjyu"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/GodotPooledBeat.cs" id="2_r1mbw"]
+
+[node name="PooledBeat" type="Sprite2D"]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_fhjyu")
+script = ExtResource("2_r1mbw")

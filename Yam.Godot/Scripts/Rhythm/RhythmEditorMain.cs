@@ -5,13 +5,15 @@ using Godot;
 using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Services;
+using Yam.Core.Rhythm.Services.BeatPooler;
 
 namespace Yam.Godot.Scripts.Rhythm;
 
-public partial class RhythmEditorMain : Node2D, IRhythmGameHost
+public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatResource
 {
 	[Export] public Resource ChartResource { get; set; }
 	[Export] public AudioStreamPlayer AudioStreamPlayer { get; set; }
+	[Export] public PackedScene GodotPooledBeat { get; set; }
 
 	private IChartEditor _editor;
 	private List<IGameListeners> _listeners = new();
@@ -36,7 +38,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 
 		var chartModel = JsonSerializer.Deserialize<ChartModel>(f.GetAsText());
 		chartModel.SetSelfPath(ChartResource.ResourcePath);
-		_editor = ServiceInitializers.CreateEditor(this);
+		_editor = ServiceInitializers.CreateEditor(this, this);
 		_editor.Play(chartModel);
 	}
 
@@ -59,7 +61,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 	{
 		// from https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
 		_currentAudioTime = (float)(AudioStreamPlayer.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() -
-		                           AudioServer.GetOutputLatency());
+		                            AudioServer.GetOutputLatency());
 
 		// this should be after currentAudioTime update
 		_listeners.ForEach(l => l.Tick(delta));
@@ -70,5 +72,12 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost
 	public float GetPlaybackPosition()
 	{
 		return _currentAudioTime;
+	}
+
+	public PooledBeat RequestResource()
+	{
+		var pooledBeat = GodotPooledBeat.Instantiate<GodotPooledBeat>();
+		AddChild(pooledBeat);
+		return pooledBeat.PooledBeat;
 	}
 }
