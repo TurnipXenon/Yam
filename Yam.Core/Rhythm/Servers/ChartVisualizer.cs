@@ -7,12 +7,12 @@ namespace Yam.Core.Rhythm.Servers;
 internal class ChartVisualizer : IGameListeners
 {
 	private readonly IRhythmGameHost _host;
-	private readonly ChartState _chartState;
+	private readonly IChartState _chartState;
 	private int currentLowerBound;
 	private BeatPooler _pooler;
 
 	// todo: add pooler
-	public ChartVisualizer(IRhythmGameHost host, ChartState chartState, BeatPooler pooler)
+	public ChartVisualizer(IRhythmGameHost host, IChartState chartState, BeatPooler pooler)
 	{
 		_host = host;
 		_host.RegisterListener(this);

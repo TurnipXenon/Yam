@@ -7,7 +7,7 @@ using Yam.Core.Test.Utils;
 namespace Yam.Core.Test.Rhythm.Services.BeatPooler;
 
 [TestSubject(typeof(PooledBeat))]
-public class PooledBeatTest
+public static class PooledBeatTest
 {
 	public class Tick
 	{

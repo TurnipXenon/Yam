@@ -9,7 +9,7 @@ using Yam.Core.Test.Utils;
 namespace Yam.Core.Test.Rhythm.Servers;
 
 [TestSubject(typeof(BeatPooler))]
-public class BeatPoolerTest
+public static class BeatPoolerTest
 {
 	public class RequestBeat
 	{
