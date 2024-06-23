@@ -25,7 +25,7 @@ internal class BeatPooler
 			return null;
 		}
 
-		beat.VisualizationState = VisualizationState.QueuedToBeOwned;
+		beat.VisualizationState = VisualizationState.Visualized;
 
 		PooledBeat newPooledBeat;
 		if (_available.Count > 0)
