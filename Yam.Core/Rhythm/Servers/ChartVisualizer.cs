@@ -13,7 +13,7 @@ internal class ChartVisualizer : IGameListeners
 		internal ChartState ChartState;
 		internal BeatPooler Pooler;
 	}
-	
+
 	private readonly IRhythmGameHost _host;
 	private readonly ChartState _chartState;
 	private int currentLowerBound;
@@ -31,11 +31,20 @@ internal class ChartVisualizer : IGameListeners
 
 	public void Tick(double delta)
 	{
-		// todo: create new Beats
-		var beat = _chartState.GetBeatOrDefault(currentLowerBound);
-		if (beat.ShouldBePreEmpted(_host.GetPlaybackPosition()))
+		for (var i = 0; i < 5; i++)
 		{
-			_pooler.RequestBeat(beat);
+			var beat = _chartState.GetBeatOrDefault(currentLowerBound + i);
+			if (beat.ShouldBePreEmpted(_host.GetPlaybackPosition()))
+			{
+				_pooler.RequestBeat(beat);
+				if (i == 0)
+				{
+					// only increase lower bound if the requested beat was the lower bound
+					// a beat is lower bound if i = 0
+					currentLowerBound++;
+					i--;
+				}
+			}
 		}
 	}
 }
