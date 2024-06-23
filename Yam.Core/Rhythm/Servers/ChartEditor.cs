@@ -14,7 +14,7 @@ internal class ChartEditor : IChartEditor
 
 	private ChartModel _chartModel;
 	private ChartVisualizer _visualizer;
-	private ChartState chartState;
+	private IChartState chartState;
 
 	public void Play(ChartModel chartModel)
 	{
