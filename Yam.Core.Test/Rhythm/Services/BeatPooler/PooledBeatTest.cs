@@ -18,10 +18,12 @@ public class PooledBeatTest
 			Vector2 currentPosition = Vector2.Zero;
 			host.Setup(h => h.SetPosition(It.IsAny<Vector2>()))
 				.Callback((Vector2 v) => currentPosition = v);
+			host.Setup(h => h.Deactivate()).Verifiable();
 			var pooledBeat = new PooledBeat(host.Object);
 
 			pooledBeat.Tick();
 			host.Verify(h => h.SetPosition(It.IsAny<Vector2>()), Times.Never);
+			host.Verify(h => h.Deactivate(), Times.Never);
 
 			var resource = new Mock<IPooledBeatResource>();
 			resource.Setup(r => r.GetSpawningPoint())
@@ -35,6 +37,7 @@ public class PooledBeatTest
 			pooledBeat.Initialize(pooler.Object, resource.Object);
 
 			pooledBeat.Tick();
+			host.Verify(h => h.Deactivate(), Times.Once);
 			host.Verify(h => h.SetPosition(It.IsAny<Vector2>()), Times.Never);
 
 			// 1.2f is preempt time so at time 0, it should be around the spawning point
@@ -58,7 +61,15 @@ public class PooledBeatTest
 				.Returns(1.2f);
 			pooledBeat.Tick();
 			host.Verify(h => h.SetPosition(It.IsAny<Vector2>()), Times.Exactly(3));
+			host.Verify(h => h.Deactivate(), Times.Once);
 			Assert.Equal(Vector2.One * 10f, currentPosition);
+
+			resource.Setup(r => r.GetPlaybackPosition())
+				.Returns(2.4f);
+			pooledBeat.Tick();
+			host.Verify(h => h.SetPosition(It.IsAny<Vector2>()), Times.Exactly(4));
+			host.Verify(h => h.Deactivate(), Times.Exactly(2));
+			Assert.True(currentPosition.X > 15f);
 		}
 	}
 }

@@ -24,6 +24,7 @@ public class PooledBeat
 	private Vector2 _destructionPoint;
 	private Vector2 _triggerPoint;
 	private Vector2 _spawningPoint;
+	private bool _isLtr;
 
 	public PooledBeat(IPooledBeatHost host)
 	{
@@ -36,6 +37,9 @@ public class PooledBeat
 		_spawningPoint = _hostResource.GetSpawningPoint();
 		_triggerPoint = _hostResource.GetTriggerPoint();
 		_destructionPoint = _hostResource.GetDestructionPoint();
+
+		// todo: possibly support up and down points
+		_isLtr = _triggerPoint.X < _destructionPoint.X;
 
 		// precalculating linear interpolation
 		// v = v_spawning + [(v_trigger - v_spawning)/(timing - preempt_time)]*(current_time - preeempt_time)
@@ -62,6 +66,12 @@ public class PooledBeat
 		var v = _spawningPoint + ((_triggerPoint - _spawningPoint) / _beat.PreemptDuration)
 			* (_hostResource.GetPlaybackPosition() - _beat.PreemptTime);
 		_host.SetPosition(v);
+
+		if ((_isLtr && v.X > _destructionPoint.X)
+		    || (!_isLtr && v.X < _destructionPoint.X))
+		{
+			Deactivate();
+		}
 	}
 
 	public void Deactivate()
