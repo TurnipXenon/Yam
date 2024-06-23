@@ -39,7 +39,7 @@ internal class NoteState
 	}
 
 	public static readonly NoteState DefaultNoteState = new(TimingSection.DefaultTimingSection)
-		{ Timing = NullTiming - Single.Epsilon };
+		{ Timing = NullTiming - 1f }; // make sure the timing is below null timing
 
 	private float _preemptTime;
 

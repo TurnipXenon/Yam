@@ -16,33 +16,34 @@ internal class ChartEditorVisualizer : IGameListeners
 	private int _currentLowerBound;
 	internal List<NoteState> _noteStates = new();
 	private NotePooler _pooler;
-	private bool isReady = false;
+	public bool IsReady => _isReady;
+	private bool _isReady = false;
 
 	// todo: add pooler
-	public ChartEditorVisualizer(IRhythmGameHost host, IChartState chartState, IPooledNoteResource resource)
+	public ChartEditorVisualizer(
+		IRhythmGameHost host,
+		IChartState chartState,
+		IPooledNoteResource resource,
+		NotePooler? notePooler = null
+	)
 	{
 		_host = host;
 		_host.RegisterListener(this);
 		_chartState = chartState; // todo: do we still need this?
 
-		// todo: run everything below here in a coroutine
-		// 
-
-		// todo: initialize all beat ticks
-
-		_pooler = new NotePooler(resource);
-		CreateTicks();
+		_pooler = notePooler ?? new NotePooler(resource);
+		CreateNotes();
 	}
 
-	private async void CreateTicks()
+	private async void CreateNotes()
 	{
-		isReady = false;
+		_isReady = false;
 		await Task.Yield(); // force async
-		CreateTicksTask(_noteStates);
-		isReady = true;
+		CreateNotesTask(_noteStates);
+		_isReady = true;
 	}
 
-	internal List<NoteState> CreateTicksTask(List<NoteState> tickStates)
+	internal List<NoteState> CreateNotesTask(List<NoteState> tickStates)
 	{
 		tickStates.Clear();
 		var currentSectionIndex = -1;
@@ -92,7 +93,7 @@ internal class ChartEditorVisualizer : IGameListeners
 
 	public void Tick(double delta)
 	{
-		if (!isReady)
+		if (!_isReady)
 		{
 			return;
 		}
