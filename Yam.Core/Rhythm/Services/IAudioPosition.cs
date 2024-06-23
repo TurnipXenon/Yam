@@ -1,4 +1,4 @@
-﻿namespace Yam.Core.Rhythm.Models.Base;
+﻿namespace Yam.Core.Rhythm.Services;
 
 public interface IAudioPosition
 {

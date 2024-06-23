@@ -35,7 +35,7 @@ internal class BeatPooler
 		else
 		{
 			newPooledBeat = _beatResource.RequestResource();
-			newPooledBeat.Initialize(this);
+			newPooledBeat.Initialize(this, _beatResource);
 		}
 
 		_inUse.Add(newPooledBeat);
