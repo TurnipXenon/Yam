@@ -25,6 +25,7 @@ public class PooledBeat
 	private Vector2 _triggerPoint;
 	private Vector2 _spawningPoint;
 	private bool _isLtr;
+	private Vector2 _precalculatedLerp;
 
 	public PooledBeat(IPooledBeatHost host)
 	{
@@ -43,7 +44,8 @@ public class PooledBeat
 
 		// precalculating linear interpolation
 		// v = v_spawning + [(v_trigger - v_spawning)/(timing - preempt_time)]*(current_time - preeempt_time)
-		// todo: let's first test it out live
+		// we can precalculate everything inside []
+		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _beat.PreemptDuration;
 
 		_host.Activate();
 	}
@@ -63,7 +65,8 @@ public class PooledBeat
 		}
 
 		// linear interpolation
-		var v = _spawningPoint + ((_triggerPoint - _spawningPoint) / _beat.PreemptDuration)
+		// see SetActive to learn the full equation
+		var v = _spawningPoint + _precalculatedLerp
 			* (_hostResource.GetPlaybackPosition() - _beat.PreemptTime);
 		_host.SetPosition(v);
 
