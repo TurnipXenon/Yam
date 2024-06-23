@@ -1,5 +1,5 @@
 using Yam.Core.Rhythm.Clients;
-using Yam.Core.Rhythm.Models.Wrappers;
+using Yam.Core.Rhythm.Models.States;
 using Yam.Core.Rhythm.Services;
 
 namespace Yam.Core.Rhythm.Servers;

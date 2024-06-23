@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Yam.Core.Rhythm.Models.Wrappers;
+using Yam.Core.Rhythm.Models.States;
 using Yam.Core.Rhythm.Services.BeatPooler;
 
 namespace Yam.Core.Rhythm.Servers;
@@ -27,26 +27,26 @@ internal class BeatPooler
 
 		beat.VisualizationState = VisualizationState.Visualized;
 
-		PooledBeat newPooledBeat;
+		PooledBeat newPooledBeatTick;
 		if (_available.Count > 0)
 		{
-			newPooledBeat = _available.Pop();
+			newPooledBeatTick = _available.Pop();
 		}
 		else
 		{
-			newPooledBeat = _beatResource.RequestResource();
-			newPooledBeat.Initialize(this, _beatResource);
+			newPooledBeatTick = _beatResource.RequestResource();
+			newPooledBeatTick.Initialize(this, _beatResource);
 		}
 
-		_inUse.Add(newPooledBeat);
-		newPooledBeat.SetActive(beat);
-		return newPooledBeat;
+		_inUse.Add(newPooledBeatTick);
+		newPooledBeatTick.SetActive(beat);
+		return newPooledBeatTick;
 	}
 
-	public void Release(PooledBeat pooledBeat)
+	public void Release(PooledBeat pooledBeatTick)
 	{
-		_inUse.Remove(pooledBeat);
-		_available.Push(pooledBeat);
+		_inUse.Remove(pooledBeatTick);
+		_available.Push(pooledBeatTick);
 	}
 
 	public void DestroyAllResources()

@@ -1,6 +1,6 @@
 using Yam.Core.Rhythm.Models.Base;
 
-namespace Yam.Core.Rhythm.Models.Wrappers;
+namespace Yam.Core.Rhythm.Models.States;
 
 internal class BeatState
 {
@@ -20,19 +20,9 @@ internal class BeatState
 	internal BeatState(BeatModel beatModel, TimingSection timingSection)
 	{
 		Beat = beatModel;
-		TimingSection = timingSection;
-
-		// calculation from osu: https://osu.ppy.sh/wiki/en/Beatmap/Approach_rate
-		PreemptDuration = 0f;
-		if (TimingSection.ApproachRate > 5)
-		{
-			PreemptDuration = 1.2f - .75f * (TimingSection.ApproachRate - 5) / 5;
-		}
-		else
-		{
-			PreemptDuration = 1.2f + .75f * (5 - TimingSection.ApproachRate) / 5;
-		}
-
+		this.TimingSection = timingSection;
+		
+		PreemptDuration = this.TimingSection.GetPreemptDuration();
 		PreemptTime = Beat.Timing - PreemptDuration;
 	}
 

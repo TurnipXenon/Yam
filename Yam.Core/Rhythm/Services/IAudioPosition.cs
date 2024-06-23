@@ -3,4 +3,5 @@
 public interface IAudioPosition
 {
     float GetPlaybackPosition();
+    float GetStreamLength();
 }

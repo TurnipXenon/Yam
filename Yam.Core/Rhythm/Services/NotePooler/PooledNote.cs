@@ -2,7 +2,7 @@ using System;
 using System.Numerics;
 using Yam.Core.Rhythm.Models.States;
 
-namespace Yam.Core.Rhythm.Services.BeatPooler;
+namespace Yam.Core.Rhythm.Services.NotePooler;
 
 /**
  * <code>
@@ -15,26 +15,27 @@ namespace Yam.Core.Rhythm.Services.BeatPooler;
  * }
  * </code>
  */
-public class PooledBeat
+public class PooledNote
 {
-	private readonly IPooledBeatHost _host;
-	private BeatState? _beat;
-	private Servers.BeatPooler _beatPooler;
-	private IPooledBeatResource _hostResource;
+	private readonly IPooledNoteHost _host;
+	private NoteState? _note;
+	private Servers.NotePooler _pooler;
+	private IPooledNoteResource _hostResource;
 	private Vector2 _destructionPoint;
 	private Vector2 _triggerPoint;
 	private Vector2 _spawningPoint;
 	private bool _isLtr;
 	private Vector2 _precalculatedLerp;
 
-	public PooledBeat(IPooledBeatHost host)
+	public PooledNote(IPooledNoteHost host)
 	{
 		_host = host;
 	}
 
-	internal void SetActive(BeatState beat)
+	// todo: change to tick
+	internal void SetActive(NoteState note)
 	{
-		_beat = beat;
+		_note = note;
 		_spawningPoint = _hostResource.GetSpawningPoint();
 		_triggerPoint = _hostResource.GetTriggerPoint();
 		_destructionPoint = _hostResource.GetDestructionPoint();
@@ -45,21 +46,21 @@ public class PooledBeat
 		// precalculating linear interpolation
 		// v = v_spawning + [(v_trigger - v_spawning)/(timing - preempt_time)]*(current_time - preeempt_time)
 		// we can precalculate everything inside []
-		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _beat.PreemptDuration;
+		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _note.PreemptDuration;
 
 		_host.Activate();
 	}
 
-	internal void Initialize(Servers.BeatPooler beatPooler, IPooledBeatResource beatResource)
+	internal void Initialize(Servers.NotePooler beatPooler, IPooledNoteResource beatResource)
 	{
 		_host.Deactivate();
 		_hostResource = beatResource;
-		_beatPooler = beatPooler;
+		_pooler = beatPooler;
 	}
 
 	public void Tick()
 	{
-		if (_beat == null)
+		if (_note == null)
 		{
 			return;
 		}
@@ -67,7 +68,7 @@ public class PooledBeat
 		// linear interpolation
 		// see SetActive to learn the full equation
 		var v = _spawningPoint + _precalculatedLerp
-			* (_hostResource.GetPlaybackPosition() - _beat.PreemptTime);
+			* (_hostResource.GetPlaybackPosition() - _note.PreemptTime);
 		_host.SetPosition(v);
 
 		if ((_isLtr && v.X > _destructionPoint.X)
@@ -79,19 +80,19 @@ public class PooledBeat
 
 	public void Deactivate()
 	{
-		if (_beat == null)
+		if (_note == null)
 		{
 			// todo: migrate to logging system
 			Console.WriteLine("Error: _beat is null when deactivating");
 		}
 		else
 		{
-			_beat.VisualizationState = VisualizationState.Unowned;
-			_beat = null;
+			_note.VisualizationState = VisualizationState.Unowned;
+			_note = null;
 		}
 
 		_host.Deactivate();
-		_beatPooler.Release(this);
+		_pooler.Release(this);
 	}
 
 	public void DestroyResource()
