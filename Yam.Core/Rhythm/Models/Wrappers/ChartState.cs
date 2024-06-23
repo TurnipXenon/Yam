@@ -38,11 +38,10 @@ public record ChartState
 		Chart.Beats.ForEach(beatModel =>
 		{
 			// todo: in the future we might have timing sections
-			BeatStateList.Add(new BeatState(new BeatState.Props
-			{
-				BeatModel = beatModel,
-				TimingSection = ActiveTimingSection
-			}));
+			BeatStateList.Add(new BeatState(
+				beatModel: beatModel,
+				timingSection: ActiveTimingSection
+			));
 		});
 	}
 

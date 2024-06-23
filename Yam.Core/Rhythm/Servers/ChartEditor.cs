@@ -11,7 +11,7 @@ internal class ChartEditor : IChartEditor
 {
 	public IRhythmGameHost? Host;
 	public IPooledBeatResource BeatResource;
-	
+
 	private ChartModel _chartModel;
 	private ChartVisualizer _visualizer;
 	private ChartState chartState;
@@ -22,12 +22,11 @@ internal class ChartEditor : IChartEditor
 
 		Debug.Assert(Host != null);
 		chartState = new ChartState(_chartModel, Host);
-		_visualizer = new ChartVisualizer(new ChartVisualizer.Props
-		{
-			Host = Host,
-			ChartState = chartState,
-			Pooler = new BeatPooler(BeatResource)
-		});
+		_visualizer = new ChartVisualizer(
+			host: Host,
+			chartState: chartState,
+			pooler: new BeatPooler(BeatResource)
+		);
 		Host?.PlaySong($"{_chartModel.SelfPath}/{_chartModel?.AudioRelativePath}");
 	}
 }
