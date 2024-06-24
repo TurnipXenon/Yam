@@ -13,7 +13,12 @@ public partial class AudioHandler : AudioStreamPlayer
 
 	public new void Play(float position = -1f)
 	{
+		var wasRewind = position < _currentAudioTime && position >= 0f;
 		base.Play(position < 0f ? _currentAudioTime : position);
+		if (wasRewind)
+		{
+			EmitSignal(SignalName.OnRewind);
+		}
 	}
 
 	public override void _Process(double delta)
@@ -35,4 +40,7 @@ public partial class AudioHandler : AudioStreamPlayer
 	{
 		Stop();
 	}
+
+	[Signal]
+	public delegate void OnRewindEventHandler();
 }

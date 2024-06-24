@@ -54,5 +54,6 @@ SceneManager = NodePath("../../..")
 script = ExtResource("6_mjsfn")
 SceneManager = NodePath("..")
 
+[connection signal="OnRewind" from="AudioStreamPlayer" to="." method="OnRewind"]
 [connection signal="drag_ended" from="VBoxContainer/MarginContainer/HSlider" to="VBoxContainer/MarginContainer/HSlider" method="OnDragEnded"]
 [connection signal="drag_started" from="VBoxContainer/MarginContainer/HSlider" to="VBoxContainer/MarginContainer/HSlider" method="OnDragStarted"]

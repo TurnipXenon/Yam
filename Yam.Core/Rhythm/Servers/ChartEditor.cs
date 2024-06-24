@@ -29,4 +29,10 @@ internal class ChartEditor : IChartEditor
 		);
 		Host?.PlaySong($"{_chartModel.SelfPath}/{_chartModel?.AudioRelativePath}");
 	}
+
+	public void OnRewind()
+	{
+		// todo:
+		throw new System.NotImplementedException();
+	}
 }

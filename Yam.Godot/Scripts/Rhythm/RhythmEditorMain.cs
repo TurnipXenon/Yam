@@ -93,12 +93,6 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 		return _streamLength;
 	}
 
-	public void OnAudioRewind()
-	{
-		// todo: now
-		throw new System.NotImplementedException();
-	}
-
 	public PooledBeat RequestResource()
 	{
 		var pooledBeat = GodotPooledBeat.Instantiate<GodotPooledBeat>();
@@ -119,5 +113,10 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	public Vector2 GetDestructionPoint()
 	{
 		return _destructionPosition;
+	}
+
+	private void OnRewind()
+	{
+		_editor.OnRewind();
 	}
 }
