@@ -29,4 +29,9 @@ internal class ChartEditor : IChartEditor
 		);
 		Host?.PlaySong($"{_chartModel.SelfPath}/{_chartModel?.AudioRelativePath}");
 	}
+
+	public void OnRewind()
+	{
+		_visualizer.OnRewind();
+	}
 }

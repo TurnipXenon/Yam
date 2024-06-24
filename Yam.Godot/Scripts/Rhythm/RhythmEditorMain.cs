@@ -13,15 +13,15 @@ namespace Yam.Godot.Scripts.Rhythm;
 public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatResource
 {
 	[Export] public Resource ChartResource { get; set; }
-	[Export] public AudioStreamPlayer AudioStreamPlayer { get; set; }
+	[Export] public AudioHandler AudioHandler { get; set; }
 	[Export] public PackedScene GodotPooledBeat { get; set; }
 	[Export] public Node2D SpawningPoint { get; set; }
 	[Export] public Node2D TriggerPoint { get; set; }
 	[Export] public Node2D DestructionPoint { get; set; }
 
+	public bool IsReady { get; private set; }
 	private IChartEditor _editor;
 	private List<IGameListeners> _listeners = new();
-	private float _currentAudioTime;
 	private Vector2 _spawningPosition;
 	private Vector2 _triggerPosition;
 	private Vector2 _destructionPosition;
@@ -42,7 +42,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 
 	private void ParseAndPlayChart()
 	{
-		Debug.Assert(AudioStreamPlayer != null);
+		Debug.Assert(AudioHandler != null);
 		Debug.Assert(ChartResource != null);
 		using var f = FileAccess.Open(ChartResource.ResourcePath, FileAccess.ModeFlags.Read);
 		if (f == null)
@@ -63,10 +63,12 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 		using var file = FileAccess.Open(songPath, FileAccess.ModeFlags.Read);
 		var sound = new AudioStreamMP3();
 		sound.Data = file.GetBuffer((long)file.GetLength());
-		AudioStreamPlayer.Stream = sound;
+		AudioHandler.SetStream(sound);
 		_streamLength = (float)sound.GetLength();
-		AudioStreamPlayer.Play();
+		AudioHandler.Play();
+		IsReady = true;
 	}
+
 
 	public void RegisterListener(IGameListeners listener)
 	{
@@ -75,10 +77,6 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 
 	public override void _Process(double delta)
 	{
-		// from https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
-		_currentAudioTime = (float)(AudioStreamPlayer.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() -
-		                            AudioServer.GetOutputLatency());
-
 		// this should be after currentAudioTime update
 		_listeners.ForEach(l => l.Tick(delta));
 	}
@@ -87,7 +85,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	// them for consistency
 	public float GetPlaybackPosition()
 	{
-		return _currentAudioTime;
+		return AudioHandler.GetPlaybackPosition();
 	}
 
 	public float GetStreamLength()
@@ -115,5 +113,10 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	public Vector2 GetDestructionPoint()
 	{
 		return _destructionPosition;
+	}
+
+	private void OnRewind()
+	{
+		_editor.OnRewind();
 	}
 }
