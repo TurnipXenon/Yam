@@ -48,7 +48,7 @@ public class PooledNote
 		// we can precalculate everything inside []
 		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _note.PreemptDuration;
 
-		_host.Activate();
+		_host.Activate(_note.Type);
 	}
 
 	internal void Initialize(Servers.NotePooler beatPooler, IPooledNoteResource beatResource)

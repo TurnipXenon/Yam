@@ -18,6 +18,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	[Export] public Node2D SpawningPoint { get; set; }
 	[Export] public Node2D TriggerPoint { get; set; }
 	[Export] public Node2D DestructionPoint { get; set; }
+	[Export] public EditorResource EditorResource { get; set; }
 
 	public bool IsReady { get; private set; }
 	private IChartEditor _editor;
@@ -53,7 +54,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 
 		var chartModel = JsonSerializer.Deserialize<ChartModel>(f.GetAsText());
 		chartModel.SetSelfPath(ChartResource.ResourcePath);
-		_editor = ServiceInitializers.CreateEditor(this, this);
+		_editor = ServiceInitializers.CreateEditor(this, this, EditorResource);
 		_editor.Play(chartModel);
 	}
 

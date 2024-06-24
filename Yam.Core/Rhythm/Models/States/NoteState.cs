@@ -3,7 +3,7 @@ using Yam.Core.Rhythm.Models.Base;
 
 namespace Yam.Core.Rhythm.Models.States;
 
-internal enum NoteType
+public enum NoteType
 {
 	Normal,
 	Downbeat // first note of a beat
