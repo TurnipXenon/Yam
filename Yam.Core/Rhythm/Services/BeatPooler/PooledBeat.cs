@@ -57,6 +57,11 @@ public class PooledBeat
 		_beatPooler = beatPooler;
 	}
 
+	// linear interpolation
+	// see SetActive to learn the full equation
+	private Vector2 GetLerpedPosition => _spawningPoint + _precalculatedLerp
+		* (_hostResource.GetPlaybackPosition() - _beat.PreemptTime);
+
 	public void Tick()
 	{
 		if (_beat == null)
@@ -64,17 +69,24 @@ public class PooledBeat
 			return;
 		}
 
-		// linear interpolation
-		// see SetActive to learn the full equation
-		var v = _spawningPoint + _precalculatedLerp
-			* (_hostResource.GetPlaybackPosition() - _beat.PreemptTime);
+		var v = GetLerpedPosition;
 		_host.SetPosition(v);
 
-		if ((_isLtr && v.X > _destructionPoint.X)
-		    || (!_isLtr && v.X < _destructionPoint.X))
+		if (_IsDestroyable(v))
 		{
 			Deactivate();
 		}
+	}
+
+	private bool _IsDestroyable(Vector2 v)
+		=> (_isLtr && v.X > _destructionPoint.X)
+		   || (!_isLtr && v.X < _destructionPoint.X);
+
+	// used for rewinding
+	public bool IsDestroyable()
+	{
+		var v = GetLerpedPosition;
+		return _IsDestroyable(v);
 	}
 
 	public void Deactivate()

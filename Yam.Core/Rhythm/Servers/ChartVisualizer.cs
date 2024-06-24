@@ -1,6 +1,7 @@
 using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.States;
 using Yam.Core.Rhythm.Services;
+using Yam.Core.Rhythm.Services.BeatPooler;
 
 namespace Yam.Core.Rhythm.Servers;
 
@@ -36,6 +37,33 @@ internal class ChartVisualizer : IGameListeners
 					currentLowerBound++;
 					i--;
 				}
+			}
+		}
+	}
+
+	public void OnRewind()
+	{
+		// todo: add test
+		// we want to find either the first beat visualized or the first beat that should be destroyed
+		currentLowerBound = 0;
+		PooledBeat? lastBeat = null;
+		while (lastBeat == null || !lastBeat.IsDestroyable())
+		{
+			var beat = _chartState.GetBeatOrDefault(currentLowerBound);
+			if (beat.VisualizationState == VisualizationState.Visualized)
+			{
+				// it already exists so, let's just skip
+				break;
+			}
+
+			if (beat.ShouldBePreEmpted(_host.GetPlaybackPosition()))
+			{
+				lastBeat = _pooler.RequestBeat(beat);
+			}
+			else if (beat == BeatState.DefaultBeatState)
+			{
+				// we ran out of beats to show so just break
+				break;
 			}
 		}
 	}

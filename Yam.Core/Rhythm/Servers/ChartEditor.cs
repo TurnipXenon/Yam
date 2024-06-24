@@ -32,7 +32,6 @@ internal class ChartEditor : IChartEditor
 
 	public void OnRewind()
 	{
-		// todo:
-		throw new System.NotImplementedException();
+		_visualizer.OnRewind();
 	}
 }
