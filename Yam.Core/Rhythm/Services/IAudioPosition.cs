@@ -4,4 +4,5 @@ public interface IAudioPosition
 {
     float GetPlaybackPosition();
     float GetStreamLength();
+    void OnAudioRewind();
 }

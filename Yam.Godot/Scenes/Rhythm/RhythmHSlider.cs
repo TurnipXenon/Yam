@@ -21,13 +21,13 @@ public partial class RhythmHSlider : HSlider
 
 	public void OnDragEnded(bool valueChanged)
 	{
-		SceneManager.AudioStreamPlayer.Play(SceneManager.GetStreamLength() * (float)Value / 100f);
+		SceneManager.AudioHandler.Play(SceneManager.GetStreamLength() * (float)Value / 100f);
 		_isDragging = false;
 	}
 
 	public void OnDragStarted()
 	{
-		SceneManager.AudioStreamPlayer.Stop();
+		SceneManager.AudioHandler.Pause();
 		_isDragging = true;
 	}
 }

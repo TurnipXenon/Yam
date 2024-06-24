@@ -7,20 +7,17 @@ public partial class InputNode : Node
 {
 	[Export] public RhythmEditorMain SceneManager;
 
-	private float lastTime;
-
 	public override void _Input(InputEvent @event)
 	{
 		if (@event.IsActionReleased("toggle_pause"))
 		{
-			if (SceneManager.AudioStreamPlayer.Playing)
+			if (SceneManager.AudioHandler.Playing)
 			{
-				lastTime = SceneManager.GetPlaybackPosition();
-				SceneManager.AudioStreamPlayer.Stop();
+				SceneManager.AudioHandler.Pause();
 			}
 			else
 			{
-				SceneManager.AudioStreamPlayer.Play(lastTime);
+				SceneManager.AudioHandler.Play();
 			}
 		}
 	}
