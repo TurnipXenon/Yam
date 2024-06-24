@@ -19,6 +19,7 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 	[Export] public Node2D TriggerPoint { get; set; }
 	[Export] public Node2D DestructionPoint { get; set; }
 
+	public bool IsReady { get; private set; }
 	private IChartEditor _editor;
 	private List<IGameListeners> _listeners = new();
 	private float _currentAudioTime;
@@ -66,7 +67,9 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 		AudioStreamPlayer.Stream = sound;
 		_streamLength = (float)sound.GetLength();
 		AudioStreamPlayer.Play();
+		IsReady = true;
 	}
+
 
 	public void RegisterListener(IGameListeners listener)
 	{
@@ -75,9 +78,12 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 
 	public override void _Process(double delta)
 	{
-		// from https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
-		_currentAudioTime = (float)(AudioStreamPlayer.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() -
-		                            AudioServer.GetOutputLatency());
+		if (AudioStreamPlayer.Playing)
+		{
+			// from https://docs.godotengine.org/en/stable/tutorials/audio/sync_with_audio.html
+			_currentAudioTime = (float)(AudioStreamPlayer.GetPlaybackPosition() + AudioServer.GetTimeSinceLastMix() -
+			                            AudioServer.GetOutputLatency());
+		}
 
 		// this should be after currentAudioTime update
 		_listeners.ForEach(l => l.Tick(delta));
