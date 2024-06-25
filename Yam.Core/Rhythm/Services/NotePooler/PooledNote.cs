@@ -48,7 +48,7 @@ public class PooledNote
 		// we can precalculate everything inside []
 		_precalculatedLerp = (_triggerPoint - _spawningPoint) / _note.PreemptDuration;
 
-		_host.Activate();
+		_host.Activate(_note.Type);
 	}
 
 	internal void Initialize(Servers.NotePooler beatPooler, IPooledNoteResource beatResource)
@@ -58,6 +58,12 @@ public class PooledNote
 		_pooler = beatPooler;
 	}
 
+
+	// linear interpolation
+	// see SetActive to learn the full equation
+	private Vector2 GetLerpedPosition => _spawningPoint + _precalculatedLerp
+		* (_hostResource.GetPlaybackPosition() - _note.PreemptTime);
+
 	public void Tick()
 	{
 		if (_note == null)
@@ -65,17 +71,24 @@ public class PooledNote
 			return;
 		}
 
-		// linear interpolation
-		// see SetActive to learn the full equation
-		var v = _spawningPoint + _precalculatedLerp
-			* (_hostResource.GetPlaybackPosition() - _note.PreemptTime);
+		var v = GetLerpedPosition;
 		_host.SetPosition(v);
 
-		if ((_isLtr && v.X > _destructionPoint.X)
-		    || (!_isLtr && v.X < _destructionPoint.X))
+		if (_IsDestroyable(v))
 		{
 			Deactivate();
 		}
+	}
+
+	private bool _IsDestroyable(Vector2 v)
+		=> (_isLtr && v.X > _destructionPoint.X)
+		   || (!_isLtr && v.X < _destructionPoint.X);
+
+	// used for rewinding
+	public bool IsDestroyable()
+	{
+		var v = GetLerpedPosition;
+		return _IsDestroyable(v);
 	}
 
 	public void Deactivate()
