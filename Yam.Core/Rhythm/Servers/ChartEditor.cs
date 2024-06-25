@@ -41,5 +41,6 @@ internal class ChartEditor : IChartEditor
 	public void OnRewind()
 	{
 		_visualizer.OnRewind();
+		_editorVisualizer.OnRewind();
 	}
 }

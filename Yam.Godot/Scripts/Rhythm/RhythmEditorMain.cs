@@ -60,7 +60,6 @@ public partial class RhythmEditorMain : Node2D, IRhythmGameHost, IPooledBeatReso
 
 	public void PlaySong(string songPath)
 	{
-		GD.Print(songPath);
 		using var file = FileAccess.Open(songPath, FileAccess.ModeFlags.Read);
 		var sound = new AudioStreamMP3();
 		sound.Data = file.GetBuffer((long)file.GetLength());

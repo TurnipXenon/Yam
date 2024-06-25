@@ -115,4 +115,32 @@ internal class ChartEditorVisualizer : IGameListeners
 			}
 		}
 	}
+
+
+	public void OnRewind()
+	{
+		// todo: add test
+		// we want to find either the first beat visualized or the first beat that should be destroyed
+		_currentLowerBound = 0;
+		PooledNote? lastNote = null;
+		while (lastNote == null || !lastNote.IsDestroyable())
+		{
+			var note = GetNoteOrDefault(_currentLowerBound);
+			if (note.VisualizationState == VisualizationState.Visualized)
+			{
+				// it already exists so, let's just skip
+				break;
+			}
+
+			if (note.ShouldBePreEmpted(_host.GetPlaybackPosition()))
+			{
+				lastNote = _pooler.RequestNote(note);
+			}
+			else if (note == NoteState.DefaultNoteState)
+			{
+				// we ran out of beats to show so just break
+				break;
+			}
+		}
+	}
 }
