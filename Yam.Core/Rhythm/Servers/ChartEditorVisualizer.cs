@@ -18,18 +18,24 @@ internal class ChartEditorVisualizer : IGameListeners
 	private NotePooler _pooler;
 	public bool IsReady => _isReady;
 	private bool _isReady = false;
+	private GhostBeatHandler _ghostHandler;
+	private readonly IPooledNoteResource _resource;
+	private readonly IGhostBeat? _ghostBeat;
 
 	// todo: add pooler
 	public ChartEditorVisualizer(
 		IRhythmGameHost host,
 		IChartState chartState,
 		IPooledNoteResource resource,
-		NotePooler? notePooler = null
+		NotePooler? notePooler = null,
+		IGhostBeat? ghostBeat = null
 	)
 	{
 		_host = host;
 		_host.RegisterListener(this);
 		_chartState = chartState; // todo: do we still need this?
+		_resource = resource;
+		_ghostBeat = ghostBeat;
 
 		_pooler = notePooler ?? new NotePooler(resource);
 		CreateNotes();
@@ -41,6 +47,7 @@ internal class ChartEditorVisualizer : IGameListeners
 		await Task.Yield(); // force async
 		CreateNotesTask(_noteStates);
 		_isReady = true;
+		_ghostHandler = new GhostBeatHandler(this, _host, _resource, _ghostBeat);
 	}
 
 	internal List<NoteState> CreateNotesTask(List<NoteState> tickStates)
@@ -53,6 +60,7 @@ internal class ChartEditorVisualizer : IGameListeners
 		float currentBeatLength = 1f;
 		int currentNoteIndex = 0;
 		int maxNotesPerMeasure = 4;
+		NoteState lastNote = null;
 		// todo: possibly add a yield here somewhere
 		while (currentTime < _host.GetStreamLength())
 		{
@@ -68,13 +76,23 @@ internal class ChartEditorVisualizer : IGameListeners
 				maxNotesPerMeasure = currentTSLowerBound.BeatsPerMeter;
 			}
 
-			tickStates.Add(new NoteState(currentTSLowerBound)
+			var newNote = new NoteState(currentTSLowerBound)
 			{
 				Timing = currentTime,
-				Type = currentNoteIndex == 0 ? NoteType.Downbeat : NoteType.Normal
-			});
+				Type = currentNoteIndex == 0 ? NoteType.Downbeat : NoteType.Normal,
+				PreviousNote = lastNote
+			};
+			tickStates.Add(newNote);
 			currentTime += currentBeatLength;
 			currentNoteIndex = (currentNoteIndex + 1) % maxNotesPerMeasure;
+
+			// for allowing GhostBeatHandler to figure out next note without costing log(N)
+			if (lastNote != null)
+			{
+				lastNote.NextNote = newNote;
+			}
+
+			lastNote = newNote;
 		}
 
 		return tickStates;

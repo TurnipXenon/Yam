@@ -9,6 +9,8 @@ public enum NoteType
 	Downbeat // first note of a beat
 }
 
+// todo: make NoteStates bi-directional
+// todo: don't let the DefaultNoteState to be influenced
 internal class NoteState
 {
 	private const float NullTiming = -10f;
@@ -18,6 +20,8 @@ internal class NoteState
 	public NoteType Type { get; set; } = NoteType.Normal;
 	public float PreemptDuration { get; }
 	private bool preemptTimeCalculated = false;
+	internal NoteState? NextNote = null;
+	public NoteState? PreviousNote = null;
 
 	public float PreemptTime
 	{
@@ -33,6 +37,7 @@ internal class NoteState
 		}
 	}
 
+
 	internal NoteState(TimingSection timingSection)
 	{
 		PreemptDuration = timingSection.GetPreemptDuration();
@@ -45,7 +50,7 @@ internal class NoteState
 
 	public bool ShouldBePreEmpted(float playbackPosition)
 	{
-		if (Timing < NullTiming)
+		if (this == DefaultNoteState)
 		{
 			return false;
 		}

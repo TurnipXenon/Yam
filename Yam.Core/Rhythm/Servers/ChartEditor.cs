@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Numerics;
 using Yam.Core.Rhythm.Clients;
 using Yam.Core.Rhythm.Models.Base;
 using Yam.Core.Rhythm.Models.States;
@@ -18,6 +19,8 @@ internal class ChartEditor : IChartEditor
 	private ChartVisualizer _visualizer;
 	private IChartState chartState;
 	private ChartEditorVisualizer _editorVisualizer;
+	private Vector2 _cursorPosition;
+	private GhostBeatHandler _ghostHandler;
 
 	public void Play(ChartModel chartModel)
 	{
@@ -42,5 +45,10 @@ internal class ChartEditor : IChartEditor
 	{
 		_visualizer.OnRewind();
 		_editorVisualizer.OnRewind();
+	}
+
+	public void SetCursorPosition(Vector2 cursorPosition)
+	{
+		_cursorPosition = cursorPosition;
 	}
 }
