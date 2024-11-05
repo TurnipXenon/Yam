@@ -27,4 +27,9 @@
       <ProjectReference Include="..\Yam.Core\Yam.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Rhythm\" />
+      <Folder Include="Utils\" />
+    </ItemGroup>
+
 </Project>
