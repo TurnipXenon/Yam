@@ -1,17 +1,6 @@
 .idea
+.vscode
 
 # C#/.Net specific
 *.suo
 *.user
-
-Yam.Core/bin
-Yam.Core/obj
-Yam.Core/packages
-
-Yam.Core.Test/bin
-Yam.Core.Test/obj
-Yam.Core.Test/packages
-
-Yam.Godot/bin
-Yam.Godot/obj
-Yam.Godot/packages
