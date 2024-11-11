@@ -24,6 +24,10 @@ window/size/viewport_height=540
 
 project/assembly_name="Yam.Godot"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/simple_tool_button/plugin.cfg")
+
 [input]
 
 toggle_pause={
