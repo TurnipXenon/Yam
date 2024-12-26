@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Rhythm/Schemas/data-point.schema.json",
+  "title": "DataPoint",
+  "description": "A point represented in time-u coordinate in our data space, as opposed to x-y coordinate in our game space",
+  "type": "object",
+  "properties": {
+    "time": {
+      "description": "The time at which a beat is expected to trigger. This usually translates to the x coordinate in our game space.",
+      "type": "number"
+    },
+    "uCoordinate": {
+      "description": "Represents user input on the y-axis. This usually roughly translates to the y coordinate in our game space.",
+      "type": "number"
+    }
+  },
+  "required": ["time", "uCoordinate"]
+}

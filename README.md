@@ -2,6 +2,8 @@
 
 [![.NET](https://github.com/TurnipXenon/Yam/actions/workflows/dotnet.yml/badge.svg)](https://github.com/TurnipXenon/Yam/actions/workflows/dotnet.yml)
 
+PLEASE DON"T READ NOT YET DONE!!! WE'RE PROTOTYPING :P
+
 ## OLD README
 
 todo(turnip): remember to modify this part and tell the history

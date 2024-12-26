@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Yam"
-run/main_scene="res://Scenes/Rhythm/rhythm_editor.tscn"
+run/main_scene="res://Scenes/Rhythm/rhythm_playground.tscn"
 config/features=PackedStringArray("4.2", "C#", "Mobile")
 config/icon="res://icon.svg"
 
@@ -23,6 +23,10 @@ window/size/viewport_height=540
 [dotnet]
 
 project/assembly_name="Yam.Godot"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/simple_tool_button/plugin.cfg")
 
 [input]
 

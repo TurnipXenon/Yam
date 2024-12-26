@@ -10,7 +10,12 @@
 
     <ItemGroup>
         <Folder Include="Rhythm\*"/>
+        <Folder Include="Rhythm\Schemas\bezier-data-point.schema.json\" />
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
         <InternalsVisibleTo Include="Yam.Core.Test"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="GodotSharp" Version="4.2.1" />
     </ItemGroup>
 </Project>
