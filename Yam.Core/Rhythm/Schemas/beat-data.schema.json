@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "Rhythm/Schemas/beat-data.schema.json",
+  "title": "BeatData",
+  "description": "A singular beat object in a rhythm chart, represented in data space. It does not represent the exact units in game space.",
+  "type": "object",
+  "properties": {
+    "pointList": {
+      "type": "array",
+      "description": "A list of points forming a beat object",
+      "items": {
+        "$ref": "bezier-data-point.schema.json"
+      }
+    }
+  },
+  "required": ["pointList"]
+}

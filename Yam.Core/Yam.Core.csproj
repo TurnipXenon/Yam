@@ -10,6 +10,7 @@
 
     <ItemGroup>
         <Folder Include="Rhythm\*"/>
+        <Folder Include="Rhythm\Schemas\bezier-data-point.schema.json\" />
         <InternalsVisibleTo Include="DynamicProxyGenAssembly2"/>
         <InternalsVisibleTo Include="Yam.Core.Test"/>
     </ItemGroup>

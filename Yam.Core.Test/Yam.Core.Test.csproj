@@ -28,7 +28,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Rhythm\" />
+      <Folder Include="Utility\" />
       <Folder Include="Utils\" />
     </ItemGroup>
 
