@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using Godot;
 
 namespace Yam.Godot.Scripts.Rhythm.Dev;
 
@@ -10,8 +11,8 @@ public class ParsedBeatObject : IParsedTick
 
     public ParsedBeatObject(string startTime, string endTime)
     {
-        parsedTickList.Add(new ParsedTick(startTime));
-        parsedTickList.Add(new ParsedTick(endTime.Split(':')[0]));
+        parsedTickList.Add(new ParsedTick(startTime, "0"));
+        parsedTickList.Add(new ParsedTick(endTime.Split(':')[0], "0"));
     }
 
     public float GetTime()
@@ -22,6 +23,16 @@ public class ParsedBeatObject : IParsedTick
         }
 
         return parsedTickList[0].GetTime();
+    }
+    
+    public float GetUCoord()
+    {
+        if (parsedTickList.Count == 0)
+        {
+            return -1;
+        }
+
+        return parsedTickList[0].GetUCoord();
     }
 
     public bool IsComplex()
@@ -60,15 +71,22 @@ public class ParsedBeatObject : IParsedTick
 public class ParsedTick : IParsedTick
 {
     public float Time;
+    public float UCoord;
 
-    public ParsedTick(string time)
+    public ParsedTick(string time, string x)
     {
         Time = float.Parse(time, CultureInfo.InvariantCulture);
+        UCoord = Mathf.Round(float.Parse(x, CultureInfo.InvariantCulture) / 103f);
     }
 
     public float GetTime()
     {
         return Time;
+    }
+
+    public float GetUCoord()
+    {
+        return UCoord;
     }
 
     public bool IsComplex()
@@ -90,6 +108,7 @@ public class ParsedTick : IParsedTick
 public interface IParsedTick
 {
     float GetTime();
+    float GetUCoord();
     bool IsComplex();
     bool TryContainTick(IParsedTick tick);
     List<IParsedTick> GetTickList();

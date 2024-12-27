@@ -9,5 +9,6 @@ namespace Yam.Core.Rhythm.Chart;
 public class BeatEntity
 {
     public float Time { get; set; }
+    public float UCoord { get; set; }
     public List<BeatEntity> BeatList { get; set; } = new();
 }

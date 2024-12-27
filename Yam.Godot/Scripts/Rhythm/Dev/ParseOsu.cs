@@ -45,7 +45,7 @@ public partial class ParseOsu : Node
         var readingState = ReadingState.Scanning;
         var rawBeatStrings = new List<string>();
         var beatList = new List<IParsedTick>();
-        char[] charsToTrim = {',', '\n'};
+        char[] charsToTrim = { ',', '\n' };
 
         while (!f.EofReached())
         {
@@ -84,7 +84,7 @@ public partial class ParseOsu : Node
                             // they are not individual beat objects in our game but are only
                             // ticks in holds, which are aesthetic reasons in linear holds
                             // but hold more scoring weight in bezier curved hold beats
-                            var tick = new ParsedTick(lineParts[2]);
+                            var tick = new ParsedTick(lineParts[2], lineParts[0]);
                             foreach (var candidateBeat in beatList)
                             {
                                 if (candidateBeat.TryContainTick(tick))
@@ -96,7 +96,7 @@ public partial class ParseOsu : Node
                         else
                         {
                             // this is just a normal beat object
-                            beatList.Add(new ParsedTick(lineParts[2]));
+                            beatList.Add(new ParsedTick(lineParts[2], lineParts[0]));
                         }
                     }
 
@@ -106,18 +106,18 @@ public partial class ParseOsu : Node
             }
         }
 
-        // todo(turnip): iterate through the items collected from parsing and turn it into text
         beatList.ForEach((beat) =>
         {
-            var s = "\t{\n" +
-                    $"\t\t\"Time\": {beat.GetTime().ToString(CultureInfo.InvariantCulture)}";
+            var s = "\t{\n"
+                    + $"\t\t\"Time\": {beat.GetTime().ToString(CultureInfo.InvariantCulture)},"
+                    + $"\t\t\"UCoord\": {beat.GetUCoord().ToString(CultureInfo.InvariantCulture)}";
             if (beat.IsComplex())
             {
                 s += ",\n" +
                      "\t\t\"BeatList\": [\n";
                 beat.GetTickList().ForEach((tick) =>
                 {
-                    s += $"\t\t\t{{ \"Time\": {tick.GetTime().ToString(CultureInfo.InvariantCulture)} }},\n";
+                    s += $"\t\t\t{{ \"Time\": {tick.GetTime().ToString(CultureInfo.InvariantCulture)}, \"UCoord\": {tick.GetUCoord().ToString(CultureInfo.InvariantCulture)} }},\n";
                 });
                 s = s.TrimEnd(charsToTrim);
                 s += "\n\t\t]\n";
