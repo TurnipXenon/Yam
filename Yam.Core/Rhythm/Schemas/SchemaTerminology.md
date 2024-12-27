@@ -36,7 +36,7 @@
 - [x] Mock data
   - Stick to hit and hold types (based on osu data)
   - Think about bezier holds later (based on possible sketches based on existing osu data. check out the gameplay for Sunleth Waterscape???)
-  - Ticks within (bezier) holds are represented as indiviudal beats in the osu mock up file. We've assigned x=103 (1st property in the HitObjects) as these inert parts.
+  - Ticks within (bezier) holds are represented as individual beats in the osu mock up file. We've assigned x=103 (1st property in the HitObjects) as these inert parts.
 - [x] Parse data from beat-test.rhythm.json
   - Start with RhythmPlayer.cs and mirroring the data in that json. Don't look ahead too much
 - [ ] Channels for parallel beats should be calculated on load (one during runtime) and you do some sort of logic where you group beats that overlap with each other

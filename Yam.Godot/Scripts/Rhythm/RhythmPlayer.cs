@@ -34,7 +34,6 @@ public partial class RhythmPlayer : Node
         }
 
         var chartEntity = JsonSerializer.Deserialize<ChartEntity>(f.GetAsText());
-        // todo: chartEntity to chart; we will have to process channels
         var chart = ChartModel.FromEntity(chartEntity);
         GD.Print("Done");
     }

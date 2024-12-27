@@ -9,6 +9,7 @@ public class Beat
     private const float InputEpsilon = (1f / 60f) * 0.75f;
 
     public float Time { get; set; }
+    public float UCoord { get; set; }
     public List<Beat> BeatList { get; set; } = new();
 
     public float EndTime => BeatList.Count == 0 ? Time : BeatList.Last().Time;
@@ -17,7 +18,8 @@ public class Beat
     {
         var beat = new Beat
         {
-            Time = beatEntity.Time
+            Time = beatEntity.Time,
+            UCoord = beatEntity.UCoord
         };
         beatEntity.BeatList.ForEach(childEntity => { beat.BeatList.Add(FromEntity(childEntity)); });
         return beat;
