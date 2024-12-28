@@ -1,0 +1,36 @@
+[gd_scene load_steps=6 format=3 uid="uid://bt1qe76771afk"]
+
+[ext_resource type="Script" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_eqm04"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/RhythmPlayer.cs" id="2_8txw6"]
+[ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-test.rhythm.json" id="3_8oy4n"]
+[ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="4_ps70p"]
+[ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://Assets/Placeholder/niko_square.jpg" id="5_xgr6j"]
+
+[node name="RhythmEditor" type="Node2D"]
+
+[node name="ParseOsu" type="Node" parent="."]
+script = ExtResource("1_eqm04")
+
+[node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("TriggerPoint", "SpawnPoint", "DestructionPoint")]
+script = ExtResource("2_8txw6")
+Chart = ExtResource("3_8oy4n")
+TriggerPoint = NodePath("../Trigger point")
+SpawnPoint = NodePath("../Spawn point")
+DestructionPoint = NodePath("../Destruction point")
+
+[node name="Trigger point" type="Sprite2D" parent="."]
+position = Vector2(614, 244)
+texture = ExtResource("4_ps70p")
+
+[node name="Spawn point" type="Sprite2D" parent="."]
+position = Vector2(-130, 244)
+texture = ExtResource("4_ps70p")
+
+[node name="Destruction point" type="Sprite2D" parent="."]
+position = Vector2(1100, 244)
+texture = ExtResource("4_ps70p")
+
+[node name="Placeholder beat prefab" type="Sprite2D" parent="."]
+position = Vector2(-130, 242.75)
+scale = Vector2(0.302198, 0.302198)
+texture = ExtResource("5_xgr6j")

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c6ec38sjb66lf"
-path="res://.godot/imported/downbeat_bar.png-78fdbeebd5deed1783649d315d0425b9.ctex"
+uid="uid://bwdqjj1r7s5gq"
+path="res://.godot/imported/normal_beat_bar.png-91cb442f5ef6d32f181eef7f31f4d047.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Scenes/Rhythm/downbeat_bar.png"
-dest_files=["res://.godot/imported/downbeat_bar.png-78fdbeebd5deed1783649d315d0425b9.ctex"]
+source_file="res://Scenes/Rhythm/RhythmPlayground/normal_beat_bar.png"
+dest_files=["res://.godot/imported/normal_beat_bar.png-91cb442f5ef6d32f181eef7f31f4d047.ctex"]
 
 [params]
 

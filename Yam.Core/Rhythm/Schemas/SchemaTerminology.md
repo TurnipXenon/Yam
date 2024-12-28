@@ -40,3 +40,8 @@
 - [x] Parse data from beat-test.rhythm.json
   - Start with RhythmPlayer.cs and mirroring the data in that json. Don't look ahead too much
 - [ ] Channels for parallel beats should be calculated on load (one during runtime) and you do some sort of logic where you group beats that overlap with each other
+
+**How to figure out which beats to visualize**
+
+- Each channel should have a top index
+- Reminder: the reason why we have different channels is for parallel inputs, i.e. we have to press A and B together
