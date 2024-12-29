@@ -75,7 +75,7 @@ public class ParsedTick : IParsedTick
 
     public ParsedTick(string time, string x)
     {
-        Time = float.Parse(time, CultureInfo.InvariantCulture);
+        Time = float.Parse(time, CultureInfo.InvariantCulture) / 1000f;
         UCoord = Mathf.Round(float.Parse(x, CultureInfo.InvariantCulture) / 103f);
     }
 

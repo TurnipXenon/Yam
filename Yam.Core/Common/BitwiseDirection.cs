@@ -1,6 +1,6 @@
 using System;
 
-namespace Yam.Godot.Scripts.Rhythm.RhythmData;
+namespace Yam.Core.Common;
 
 [Flags]
 public enum BitwiseDirection

@@ -49,4 +49,18 @@ public class Chart
         
         return chart;
     }
+
+    public List<Beat> GetVisualizableBeats(IRhythmPlayer rhythmPlayer)
+    {
+        List<Beat> beats = new();
+        ChannelList.ForEach(b =>
+        {
+            var nb = b.TryToGetBeatToVisualize(rhythmPlayer);
+            if (nb != null)
+            {
+                beats.Add(nb);
+            }
+        });
+        return beats;
+    }
 }

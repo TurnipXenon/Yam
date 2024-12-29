@@ -1,36 +1,40 @@
-[gd_scene load_steps=6 format=3 uid="uid://bt1qe76771afk"]
+[gd_scene load_steps=7 format=3 uid="uid://bt1qe76771afk"]
 
-[ext_resource type="Script" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_eqm04"]
-[ext_resource type="Script" path="res://Scripts/Rhythm/RhythmPlayer.cs" id="2_8txw6"]
-[ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-test.rhythm.json" id="3_8oy4n"]
-[ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="4_ps70p"]
-[ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://Assets/Placeholder/niko_square.jpg" id="5_xgr6j"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/RhythmPlayer.cs" id="2_hdbk4"]
+[ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-test.rhythm.json" id="3_2dqin"]
+[ext_resource type="AudioStream" uid="uid://bjopcy3y4o24c" path="res://Scenes/Rhythm/Songs/sunleth_waterscape/Final Fantasy XIII - The Sunleth Waterscape.mp3" id="4_kql7o"]
+[ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="4_rd1fy"]
+[ext_resource type="PackedScene" uid="uid://cwlyq1np8ldmr" path="res://Scenes/Rhythm/RhythmPlayground/single_beat.tscn" id="5_711h0"]
 
 [node name="RhythmEditor" type="Node2D"]
 
 [node name="ParseOsu" type="Node" parent="."]
-script = ExtResource("1_eqm04")
+script = ExtResource("1_vddvi")
 
-[node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("TriggerPoint", "SpawnPoint", "DestructionPoint")]
-script = ExtResource("2_8txw6")
-Chart = ExtResource("3_8oy4n")
+[node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("AudioStreamPlayer", "TriggerPoint", "SpawnPoint", "DestructionPoint", "Parent")]
+script = ExtResource("2_hdbk4")
+Chart = ExtResource("3_2dqin")
+AudioStreamPlayer = NodePath("../AudioStreamPlayer")
+AudioStream = ExtResource("4_kql7o")
 TriggerPoint = NodePath("../Trigger point")
 SpawnPoint = NodePath("../Spawn point")
 DestructionPoint = NodePath("../Destruction point")
+SingleBeatPrefab = ExtResource("5_711h0")
+Parent = NodePath("..")
 
 [node name="Trigger point" type="Sprite2D" parent="."]
 position = Vector2(614, 244)
-texture = ExtResource("4_ps70p")
+texture = ExtResource("4_rd1fy")
 
 [node name="Spawn point" type="Sprite2D" parent="."]
 position = Vector2(-130, 244)
-texture = ExtResource("4_ps70p")
+texture = ExtResource("4_rd1fy")
 
 [node name="Destruction point" type="Sprite2D" parent="."]
 position = Vector2(1100, 244)
-texture = ExtResource("4_ps70p")
+texture = ExtResource("4_rd1fy")
 
-[node name="Placeholder beat prefab" type="Sprite2D" parent="."]
-position = Vector2(-130, 242.75)
-scale = Vector2(0.302198, 0.302198)
-texture = ExtResource("5_xgr6j")
+[node name="single_beat" parent="." instance=ExtResource("5_711h0")]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
