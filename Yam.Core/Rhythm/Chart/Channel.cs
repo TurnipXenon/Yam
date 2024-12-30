@@ -22,8 +22,9 @@ public class Channel : List<Beat>
         }
 
         var currentBeat = this[CurrentIndex];
-
-        if (currentBeat.Time > rhythmPlayer.GetPreEmptTime())
+        
+        if (rhythmPlayer.GetCurrentSongTime() > currentBeat.Time - rhythmPlayer.GetPreEmptTime()
+            && rhythmPlayer.GetCurrentSongTime() < currentBeat.Time + rhythmPlayer.GetPreEmptTime())
         {
             CurrentIndex++;
             return currentBeat;

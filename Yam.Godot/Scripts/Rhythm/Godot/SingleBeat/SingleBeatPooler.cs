@@ -21,6 +21,7 @@ public class SingleBeatPooler : GenericPooler<SingleBeat, SinglePooledBeatArgs>
         singleBeat.Beat = args.Beat;
         singleBeat.IsActive = true;
         singleBeat.RhythmPlayer.Parent.AddChild(singleBeat);
+        singleBeat.Pooler = this;
         return singleBeat;
     }
 
