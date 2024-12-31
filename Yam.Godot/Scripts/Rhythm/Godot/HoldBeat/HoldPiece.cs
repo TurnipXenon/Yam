@@ -12,7 +12,9 @@ public partial class HoldPiece : Node2D
     private float _increment;
     private const float DivisionMultiplier = 0.1f;
     private Vector2 _ogP1;
+    private Vector2 _ogP1Out;
     private Vector2 _ogP2;
+    private Vector2 _ogP2In;
 
     public void Initialize(RhythmPlayer rhythmPlayer,
         Beat startBeat,
@@ -37,8 +39,20 @@ public partial class HoldPiece : Node2D
         // todo: find a better place
         _ogP1 = StartBeat.Beat.GetVector();
         _ogP1.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, startBeat.Time);
+        if (startBeat.POut != null)
+        {
+            _ogP1Out = startBeat.POut.ToVector();
+            _ogP1Out.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, _ogP1Out.X);
+        }
+
         _ogP2 = _endBeat.GetVector();
         _ogP2.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, _endBeat.Time);
+        if (endBeat.PIn != null)
+        {
+            _ogP2In = endBeat.PIn.ToVector();
+            _ogP2In.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, _ogP2In.X);
+        }
+        
         var p1DiffVector = _ogP1; // todo: reduce with outward p1 p1_out
         var p2DiffVector = _endBeat.GetVector(); // todo: reduce with inward p2 p2_out
         var pointDiffVector = StartBeat.Beat.GetVector() - _endBeat.GetVector();
@@ -47,7 +61,8 @@ public partial class HoldPiece : Node2D
                      * DivisionMultiplier;
         _increment = 1f / _divisions;
 
-        Position = new Vector2(_ogP1.X - SingleBeat.SingleBeat.TimeToX(rhythmPlayer, parentBeat.Time), startBeat.UCoord);
+        Position = new Vector2(_ogP1.X - SingleBeat.SingleBeat.TimeToX(rhythmPlayer, parentBeat.Time),
+            startBeat.UCoord);
     }
 
 
@@ -65,14 +80,13 @@ public partial class HoldPiece : Node2D
     public override void _Draw()
     {
         var p1 = Vector2.Zero;
-        var p1Out = p1;
+        var p1Out = StartBeat.Beat.POut == null ? Vector2.Zero : _ogP1Out - _ogP1;
         var p2 = _ogP2 - _ogP1;
-        // var p2 = _p2 - _p1;
-        var p2In = p2;
+        var p2In = _endBeat.PIn == null ? p2 : _ogP2In - _ogP1;
         var prevPoint = Vector2.Zero;
         for (var t = _increment; t < 1f + _increment; t += _increment)
         {
-            var nextPoint = CubicBezier(p1, p1, p2, p2, t);
+            var nextPoint = CubicBezier(p1, p1Out, p2In, p2, t);
             DrawLine(prevPoint, nextPoint, Colors.Green, 8f);
             prevPoint = nextPoint;
         }

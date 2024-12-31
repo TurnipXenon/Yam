@@ -6,9 +6,9 @@ namespace Yam.Core.Rhythm.Chart;
  * todo(turnip): better documentation
  * Reflects the JSON structure
  */
-public class BeatEntity
+public class BeatEntity : TimeUCoordVector
 {
-    public float Time { get; set; }
-    public float UCoord { get; set; }
+    public TimeUCoordVector? PIn { get; set; }
+    public TimeUCoordVector? POut { get; set; }
     public List<BeatEntity> BeatList { get; set; } = new();
 }

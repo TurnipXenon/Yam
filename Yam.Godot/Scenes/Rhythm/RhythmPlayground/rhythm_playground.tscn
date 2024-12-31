@@ -25,6 +25,7 @@ SpawnPoint = NodePath("../Spawn point")
 DestructionPoint = NodePath("../Destruction point")
 SingleBeatPrefab = ExtResource("5_711h0")
 TickPrefab = ExtResource("6_n4de7")
+PreEmptDuration = 1.5
 Parent = NodePath("..")
 
 [node name="Trigger point" type="Sprite2D" parent="."]

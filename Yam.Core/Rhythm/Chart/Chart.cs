@@ -42,11 +42,11 @@ public class Chart
             {
                 GD.PrintErr($"Beat not added: {beat.Time}");
             }
-            
+
             // todo: take note of this logic
             // if the last beat in the list overlaps with the beat, add to another channel
         });
-        
+
         return chart;
     }
 

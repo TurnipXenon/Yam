@@ -1,16 +1,22 @@
 {
   "BeatList": [
 	{
-	  "Time": 4.654,
-	  "UCoord": 0,
 	  "BeatList": [
 		{
 		  "Time": 4.654,
-		  "UCoord": 0
+		  "UCoord": 0,
+		  "POut": {
+			"Time": 5.109,
+			"UCoord": 0
+		  }
 		},
 		{
 		  "Time": 5.563,
-		  "UCoord": 0
+		  "UCoord": 128,
+		  "PIn": {
+			"Time": 5.109,
+			"UCoord": 128
+		  }
 		}
 	  ]
 	},
@@ -28,11 +34,11 @@
 		},
 		{
 		  "Time": 6.245,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 6.473,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 7.723,
@@ -42,7 +48,7 @@
 	},
 	{
 	  "Time": 8.177,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 8.632,
@@ -64,7 +70,7 @@
 	},
 	{
 	  "Time": 9.541,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 9.995,
@@ -100,7 +106,7 @@
 	},
 	{
 	  "Time": 13.632,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 14.086,
@@ -146,7 +152,7 @@
 	},
 	{
 	  "Time": 16.813,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 17.041,
@@ -158,15 +164,15 @@
 		},
 		{
 		  "Time": 17.268,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 17.495,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 17.95,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 18.404,
@@ -184,7 +190,7 @@
 		},
 		{
 		  "Time": 19.541,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 20.223,
@@ -206,19 +212,19 @@
 		},
 		{
 		  "Time": 20.904,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 21.132,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 21.586,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 22.041,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 22.495,
@@ -242,7 +248,7 @@
 	},
 	{
 	  "Time": 24.086,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 24.086,
@@ -264,7 +270,7 @@
 	},
 	{
 	  "Time": 24.995,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 26.359,
@@ -276,19 +282,19 @@
 		},
 		{
 		  "Time": 26.813,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 27.268,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 27.723,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 28.177,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 28.632,
@@ -306,7 +312,7 @@
 	},
 	{
 	  "Time": 29.313,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 29.541,
@@ -314,7 +320,7 @@
 	},
 	{
 	  "Time": 29.541,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 29.768,
@@ -322,7 +328,7 @@
 	},
 	{
 	  "Time": 29.768,
-	  "UCoord": 512
+	  "UCoord": 256
 	},
 	{
 	  "Time": 29.995,
@@ -334,27 +340,27 @@
 		},
 		{
 		  "Time": 30.45,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 30.904,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 31.132,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 31.586,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 31.813,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 32.041,
-		  "UCoord": 256
+		  "UCoord": 128
 		},
 		{
 		  "Time": 32.609,

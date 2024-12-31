@@ -61,6 +61,7 @@ public partial class SingleBeat : Node2D
         Beat = args.Beat;
         Position = Position with { Y = RhythmPlayer.TriggerPoint.Position.Y + _beat.UCoord };
         IsActive = true;
+        Name = $"SingleBeat: {Beat.GetVector()}";
     }
 
     public static float TimeToX(RhythmPlayer rhythmPlayer, float time)

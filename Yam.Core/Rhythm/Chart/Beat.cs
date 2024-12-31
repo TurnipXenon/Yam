@@ -5,13 +5,13 @@ using Yam.Core.Common;
 
 namespace Yam.Core.Rhythm.Chart;
 
-public class Beat
+public class Beat : TimeUCoordVector
 {
     /** Based on 1/75th of an input frame */
     private const float InputEpsilon = (1f / 60f) * 0.75f;
 
-    public float Time { get; set; }
-    public float UCoord { get; set; }
+    public TimeUCoordVector? PIn { get; set; }
+    public TimeUCoordVector? POut { get; set; }
     public BitwiseDirection Direction { get; set; }
     public List<Beat> BeatList { get; set; } = new();
 
@@ -23,9 +23,20 @@ public class Beat
         var beat = new Beat
         {
             Time = beatEntity.Time,
-            UCoord = beatEntity.UCoord
+            UCoord = beatEntity.UCoord,
+            PIn = beatEntity.PIn,
+            POut = beatEntity.POut
         };
         beatEntity.BeatList.ForEach(childEntity => { beat.BeatList.Add(FromEntity(childEntity)); });
+
+        // double checking
+        if (beat.BeatList.Count > 0)
+        {
+            var firstBeat = beat.BeatList[0];
+            beat.Time = firstBeat.Time;
+            beat.UCoord = firstBeat.UCoord;
+        }
+
         return beat;
     }
 

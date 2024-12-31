@@ -20,8 +20,10 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     [Export] public PackedScene SingleBeatPrefab { get; set; }
     [Export] public PackedScene TickPrefab { get; set; }
     [Export] public float PreEmptDuration { get; set; } = 2f;
+
     /** Parent node where all the children beats will be parented to */
-    [Export] public Node Parent { get; set; }
+    [Export]
+    public Node Parent { get; set; }
 
     public SingleBeatPooler SingleBeatPooler;
     public SingleBeatPooler TickPooler;
@@ -40,7 +42,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         Debug.Assert(Parent != null, "Parent != null");
 
         SingleBeatPooler = new SingleBeatPooler(this, SingleBeatPrefab);
-        TickPooler = new SingleBeatPooler( this, TickPrefab);
+        TickPooler = new SingleBeatPooler(this, TickPrefab);
 
         // todo(turnip): remove and make it situational in the future
         // such that it is not triggered by events in here but called externally
@@ -59,7 +61,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         }
 
         _currentSongTime = AudioStreamPlayer.GetPlaybackPosition();
-        
+
         // todo(turnip): if the updating or processing logic here becomes too complex
         // extract the logic elsewhere???
 
@@ -67,6 +69,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
 
         // todo: give this to the pooler and let it decide which ones idle vs instantiate
         var currentBeats = _chartModel.GetVisualizableBeats(this);
+
         foreach (var beat in currentBeats)
         {
             switch (beat.GetBeatType())
@@ -78,17 +81,17 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
                         RhythmPlayer = this
                     });
                     break;
-                
+
                 case BeatType.Slide:
                     // todo
                     break;
-                
+
                 case BeatType.Hold:
                     var holdBeat = new HoldBeat();
                     holdBeat.Initialize(this, beat);
                     Parent.AddChild(holdBeat);
                     break;
-                
+
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -132,7 +135,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     {
         return _currentSongTime - PreEmptDuration;
     }
-    
+
     public float GetPreEmptDuration()
     {
         return PreEmptDuration;
