@@ -28,11 +28,11 @@
 		},
 		{
 		  "Time": 6.245,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 6.473,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 7.723,
@@ -42,7 +42,7 @@
 	},
 	{
 	  "Time": 8.177,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 8.632,
@@ -64,7 +64,7 @@
 	},
 	{
 	  "Time": 9.541,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 9.995,
@@ -100,7 +100,7 @@
 	},
 	{
 	  "Time": 13.632,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 14.086,
@@ -146,7 +146,7 @@
 	},
 	{
 	  "Time": 16.813,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 17.041,
@@ -158,15 +158,15 @@
 		},
 		{
 		  "Time": 17.268,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 17.495,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 17.95,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 18.404,
@@ -184,7 +184,7 @@
 		},
 		{
 		  "Time": 19.541,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 20.223,
@@ -206,19 +206,19 @@
 		},
 		{
 		  "Time": 20.904,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 21.132,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 21.586,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 22.041,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 22.495,
@@ -242,7 +242,7 @@
 	},
 	{
 	  "Time": 24.086,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 24.086,
@@ -264,7 +264,7 @@
 	},
 	{
 	  "Time": 24.995,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 26.359,
@@ -276,19 +276,19 @@
 		},
 		{
 		  "Time": 26.813,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 27.268,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 27.723,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 28.177,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 28.632,
@@ -306,7 +306,7 @@
 	},
 	{
 	  "Time": 29.313,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 29.541,
@@ -314,7 +314,7 @@
 	},
 	{
 	  "Time": 29.541,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 29.768,
@@ -322,7 +322,7 @@
 	},
 	{
 	  "Time": 29.768,
-	  "UCoord": 2
+	  "UCoord": 512
 	},
 	{
 	  "Time": 29.995,
@@ -334,27 +334,27 @@
 		},
 		{
 		  "Time": 30.45,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 30.904,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 31.132,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 31.586,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 31.813,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 32.041,
-		  "UCoord": 1
+		  "UCoord": 256
 		},
 		{
 		  "Time": 32.609,

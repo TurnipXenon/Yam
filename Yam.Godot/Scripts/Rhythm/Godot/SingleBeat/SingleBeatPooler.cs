@@ -1,36 +1,37 @@
 #nullable enable
 using System;
+using Godot;
 using Yam.Core.Common;
 
 namespace Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
 
-public class SingleBeatPooler : GenericPooler<SingleBeat, SinglePooledBeatArgs>
+public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 {
     private readonly RhythmPlayer _rhythmPlayer;
+    private readonly PackedScene _prefab;
 
-    protected override SingleBeat? InstantiatePooledObject(SinglePooledBeatArgs args)
+    protected override SingleBeat? InstantiatePooledObject(PooledSingleBeatArgs args)
     {
         if (args.Beat.Active)
         {
             return null;
         }
 
-        var singleBeat = _rhythmPlayer.SingleBeatPrefab.Instantiate<SingleBeat>();
-        args.Beat.Active = true;
-        singleBeat.RhythmPlayer = args.RhythmPlayer;
-        singleBeat.Beat = args.Beat;
-        singleBeat.IsActive = true;
+        var singleBeat = _prefab.Instantiate<SingleBeat>();
+        singleBeat.Initialize(args);
+        
         singleBeat.RhythmPlayer.Parent.AddChild(singleBeat);
         singleBeat.Pooler = this;
         return singleBeat;
     }
 
-    public SingleBeatPooler(RhythmPlayer rhythmPlayer)
+    public SingleBeatPooler(RhythmPlayer rhythmPlayer, PackedScene prefab)
     {
         _rhythmPlayer = rhythmPlayer;
+        _prefab = prefab;
     }
 
-    protected override SingleBeat? RevivePooledObject(SinglePooledBeatArgs args)
+    protected override SingleBeat? RevivePooledObject(PooledSingleBeatArgs args)
     {
         if (args.Beat.Active)
         {
@@ -38,10 +39,7 @@ public class SingleBeatPooler : GenericPooler<SingleBeat, SinglePooledBeatArgs>
         }
 
         var singleBeat = Available.Pop();
-        args.Beat.Active = true;
-        singleBeat.RhythmPlayer = args.RhythmPlayer;
-        singleBeat.Beat = args.Beat;
-        singleBeat.IsActive = true;
+        singleBeat.Initialize(args);
         return singleBeat;
     }
 

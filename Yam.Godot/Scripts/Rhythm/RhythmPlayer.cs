@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Godot;
 using Yam.Core.Rhythm.Chart;
+using Yam.Godot.Scripts.Rhythm.Godot.HoldBeat;
 using Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
 using ChartModel = Yam.Core.Rhythm.Chart.Chart;
 
@@ -17,11 +18,13 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     [Export] public Node2D SpawnPoint { get; set; }
     [Export] public Node2D DestructionPoint { get; set; }
     [Export] public PackedScene SingleBeatPrefab { get; set; }
+    [Export] public PackedScene TickPrefab { get; set; }
     [Export] public float PreEmptDuration { get; set; } = 2f;
     /** Parent node where all the children beats will be parented to */
     [Export] public Node Parent { get; set; }
 
-    private SingleBeatPooler _singleBeatPooler;
+    public SingleBeatPooler SingleBeatPooler;
+    public SingleBeatPooler TickPooler;
     private bool _isPlaying = false;
     private ChartModel _chartModel;
     private float _currentSongTime;
@@ -36,7 +39,8 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         Debug.Assert(AudioStreamPlayer != null, "AudioStreamPlayer != null");
         Debug.Assert(Parent != null, "Parent != null");
 
-        _singleBeatPooler = new SingleBeatPooler(this);
+        SingleBeatPooler = new SingleBeatPooler(this, SingleBeatPrefab);
+        TickPooler = new SingleBeatPooler( this, TickPrefab);
 
         // todo(turnip): remove and make it situational in the future
         // such that it is not triggered by events in here but called externally
@@ -68,18 +72,23 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
             switch (beat.GetBeatType())
             {
                 case BeatType.Single:
-                    _singleBeatPooler.Request(new SinglePooledBeatArgs()
+                    SingleBeatPooler.Request(new PooledSingleBeatArgs()
                     {
                         Beat = beat,
                         RhythmPlayer = this
                     });
                     break;
+                
                 case BeatType.Slide:
                     // todo
                     break;
+                
                 case BeatType.Hold:
-                    // todo
+                    var holdBeat = new HoldBeat();
+                    holdBeat.Initialize(this, beat);
+                    Parent.AddChild(holdBeat);
                     break;
+                
                 default:
                     throw new ArgumentOutOfRangeException();
             }

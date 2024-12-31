@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using Godot;
 using Yam.Core.Common;
 
 namespace Yam.Core.Rhythm.Chart;
@@ -45,5 +46,10 @@ public class Beat
         return Direction != BitwiseDirection.None
             ? BeatType.Slide
             : BeatType.Single;
+    }
+
+    public Vector2 GetVector()
+    {
+        return new Vector2(Time, UCoord);
     }
 }

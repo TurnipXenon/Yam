@@ -5,6 +5,6 @@
 
 [node name="single_beat" type="Sprite2D"]
 position = Vector2(-130, 242.75)
-scale = Vector2(0.302198, 0.302198)
+scale = Vector2(0.151, 0.151)
 texture = ExtResource("1_yrf83")
 script = ExtResource("2_t0byk")

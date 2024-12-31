@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bh1kbt58r72bx"]
+
+[ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://Assets/Placeholder/niko_square.jpg" id="1_v60g0"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/Godot/SingleBeat/SingleBeat.cs" id="2_3s6b2"]
+
+[node name="single_beat" type="Sprite2D"]
+position = Vector2(-130, 242.75)
+scale = Vector2(0.076, 0.076)
+texture = ExtResource("1_v60g0")
+script = ExtResource("2_3s6b2")

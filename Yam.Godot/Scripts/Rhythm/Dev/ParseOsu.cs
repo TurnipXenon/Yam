@@ -11,14 +11,24 @@ public partial class ParseOsu : Node
     private const string OsuSourceFile = "res://Scenes/Rhythm/Songs/source.osu";
     private const string JsonResultFile = "res://Scenes/Rhythm/Songs/result.json";
 
+    private bool _firstRunCheck = true;
+
     [Export]
     public bool btn_ParseOsuFile
     {
         get => false;
-        set => ParseOsuTiming();
+        set
+        {
+            if (_firstRunCheck)
+            {
+                _firstRunCheck = false;
+            }
+            else
+            {
+                ParseOsuTiming();
+            }
+        }
     }
-
-    [Export(PropertyHint.MultilineText)] public string ParsedResult;
 
     private enum ReadingState
     {
@@ -117,7 +127,8 @@ public partial class ParseOsu : Node
                      "\t\t\"BeatList\": [\n";
                 beat.GetTickList().ForEach((tick) =>
                 {
-                    s += $"\t\t\t{{ \"Time\": {tick.GetTime().ToString(CultureInfo.InvariantCulture)}, \"UCoord\": {tick.GetUCoord().ToString(CultureInfo.InvariantCulture)} }},\n";
+                    s += $"\t\t\t{{ \"Time\": {tick.GetTime().ToString(CultureInfo.InvariantCulture)}, " +
+                         $"\"UCoord\": {tick.GetUCoord().ToString(CultureInfo.InvariantCulture)} }},\n";
                 });
                 s = s.TrimEnd(charsToTrim);
                 s += "\n\t\t]\n";
