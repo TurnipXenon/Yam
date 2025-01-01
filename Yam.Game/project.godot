@@ -22,7 +22,7 @@ window/size/viewport_height=540
 
 [dotnet]
 
-project/assembly_name="Yam.Godot"
+project/assembly_name="Yam.Game"
 
 [editor_plugins]
 

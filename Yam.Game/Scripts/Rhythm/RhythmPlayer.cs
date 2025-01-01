@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text.Json;
 using Godot;
 using Yam.Core.Rhythm.Chart;
-using Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
-using Yam.Godot.Scripts.Rhythm.Input;
+using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
+using Yam.Game.Scripts.Rhythm.Input;
 using ChartModel = Yam.Core.Rhythm.Chart.Chart;
-using HoldBeat = Yam.Godot.Scripts.Rhythm.Game.HoldBeat.HoldBeat;
+using HoldBeat = Yam.Game.Scripts.Rhythm.Game.HoldBeat.HoldBeat;
 
-namespace Yam.Godot.Scripts.Rhythm;
+namespace Yam.Game.Scripts.Rhythm;
 
 public partial class RhythmPlayer : Node, IRhythmPlayer
 {
@@ -27,7 +27,6 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     /// <summary>
     /// Ordered from most narrow (better) to widest (worse)
     /// </summary>
-    [Export]
     public List<ReactionWindow> RelativeReactionWindow { get; set; } = new() {
         new ReactionWindow(0.2f, BeatInputResult.Excellent),
         new ReactionWindow(0.5f, BeatInputResult.Good),

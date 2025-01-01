@@ -3,7 +3,7 @@ using System;
 using Godot;
 using Yam.Core.Common;
 
-namespace Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
+namespace Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
 public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 {

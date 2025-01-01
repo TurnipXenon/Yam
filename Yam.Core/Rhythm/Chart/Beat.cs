@@ -76,10 +76,13 @@ public class Beat : TimeUCoordVector
         {
             _beatType = BeatType.Hold;
         }
+        else
+        {
+            _beatType = Direction != BitwiseDirection.None
+                ? BeatType.Slide
+                : BeatType.Single;
+        }
 
-        _beatType = Direction != BitwiseDirection.None
-            ? BeatType.Slide
-            : BeatType.Single;
 
         _typeDecided = true;
         return _beatType;
@@ -104,7 +107,7 @@ public class Beat : TimeUCoordVector
                 throw new ArgumentOutOfRangeException();
         }
 
-        GD.PrintErr("Not implemented beat type");
+        // GD.PrintErr("Not implemented beat type");
         return BeatInputResult.Ignore;
     }
 
@@ -131,7 +134,7 @@ public class Beat : TimeUCoordVector
             GD.PrintErr($"Not expected result: ({Time},{UCoord})");
             return BeatInputResult.Ignore;
         }
-        
+
         if (currentTime < missReaction.Range.X)
         {
             return BeatInputResult.Waiting;
@@ -142,11 +145,11 @@ public class Beat : TimeUCoordVector
             _state = State.Finished;
             return BeatInputResult.Miss;
         }
-        
+
         // find matching input, if there is execute
         // todo: release condition for input is if the beat gives up or the player releases the input
         var gameInputList = inputProvider.GetSingularInputList();
-        
+
         // find free gameInput and claim it
         var wasInputDetected = false;
         foreach (var gameInput in gameInputList.Where(gameInput => gameInput.GetClaimingChannel() == null))
@@ -155,10 +158,11 @@ public class Beat : TimeUCoordVector
             wasInputDetected = true;
             break;
         }
-        
+
         if (wasInputDetected)
         {
-            foreach (var reactionWindow in reactionWindowList.Where(reactionWindow => reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
+            foreach (var reactionWindow in reactionWindowList.Where(reactionWindow =>
+                         reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {
                 GD.PrintErr(reactionWindow.BeatInputResult);
                 return reactionWindow.BeatInputResult;

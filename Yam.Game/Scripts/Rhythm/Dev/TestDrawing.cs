@@ -1,6 +1,6 @@
 using Godot;
 
-namespace Yam.Godot.Scripts.Rhythm.Dev;
+namespace Yam.Game.Scripts.Rhythm.Dev;
 
 public partial class TestDrawing : Node2D
 {

@@ -3,7 +3,7 @@ using Godot;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
-namespace Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
+namespace Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
 public partial class SingleBeat : Node2D
 {

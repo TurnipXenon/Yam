@@ -65,6 +65,8 @@ public class BeatChannel : List<Beat>
             case BeatInputResult.Holding:
                 break;
             case BeatInputResult.Ignore:
+                GD.Print($"IGNORE: Moving to ({currentBeat!.Time}, {currentBeat.UCoord})");
+                _currentInputIndex++;
                 break;
             case null:
                 break;

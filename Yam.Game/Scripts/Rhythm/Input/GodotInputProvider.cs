@@ -3,7 +3,7 @@ using Godot;
 using Yam.Core.Rhythm.Input;
 using In = Godot.Input;
 
-namespace Yam.Godot.Scripts.Rhythm.Input;
+namespace Yam.Game.Scripts.Rhythm.Input;
 
 public class GodotInputProvider : IRhythmInputProvider
 {

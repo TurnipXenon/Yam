@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://cwlyq1np8ldmr"]
 
 [ext_resource type="Texture2D" uid="uid://d20r0jj4f5va4" path="res://Assets/Placeholder/niko_square.jpg" id="1_yrf83"]
-[ext_resource type="Script" path="res://Scripts/Rhythm/Godot/SingleBeat/SingleBeat.cs" id="2_t0byk"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/Game/SingleBeat/SingleBeat.cs" id="2_t0byk"]
 
 [node name="single_beat" type="Sprite2D"]
 position = Vector2(-130, 242.75)

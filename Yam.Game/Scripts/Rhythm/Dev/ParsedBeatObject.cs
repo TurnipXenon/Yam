@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using Godot;
 
-namespace Yam.Godot.Scripts.Rhythm.Dev;
+namespace Yam.Game.Scripts.Rhythm.Dev;
 
 public class ParsedBeatObject : IParsedTick
 {

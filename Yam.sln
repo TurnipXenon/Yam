@@ -1,6 +1,6 @@
 ﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yam", "Yam.Godot\Yam.Godot.csproj", "{10B92F72-3DA2-44FD-B8C6-37AF5F1D932C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yam", "Yam.Game\Yam.Game.csproj", "{10B92F72-3DA2-44FD-B8C6-37AF5F1D932C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Yam.Core", "Yam.Core\Yam.Core.csproj", "{973C04EB-252F-43B0-A10D-BEFF1843BD3E}"
 EndProject
