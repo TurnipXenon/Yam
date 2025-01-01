@@ -1,11 +1,10 @@
-using System.Collections.Generic;
 using System.Linq;
 using Godot;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
-using Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
+using Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
 
-namespace Yam.Godot.Scripts.Rhythm.Godot.HoldBeat;
+namespace Yam.Godot.Scripts.Rhythm.Game.HoldBeat;
 
 public partial class HoldBeat : Node2D, IBasicListener
 {

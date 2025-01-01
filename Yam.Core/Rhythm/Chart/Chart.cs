@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Yam.Core.Rhythm.Input;
 
 namespace Yam.Core.Rhythm.Chart;
 
@@ -8,13 +9,13 @@ public class Chart
 {
     public const int ChannelSize = 5;
 
-    public List<Channel> ChannelList { get; set; } = new(ChannelSize);
+    public List<BeatChannel> ChannelList { get; set; } = new(ChannelSize);
 
     private Chart()
     {
         for (var i = 0; i < ChannelSize; i++)
         {
-            ChannelList.Add(new Channel());
+            ChannelList.Add(new BeatChannel());
         }
     }
 
@@ -62,5 +63,10 @@ public class Chart
             }
         });
         return beats;
+    }
+
+    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInputProvider inputProvider)
+    {
+        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmPlayer, inputProvider));
     }
 }

@@ -1,6 +1,6 @@
 using Yam.Core.Rhythm.Chart;
 
-namespace Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
+namespace Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
 
 public class PooledSingleBeatArgs
 {

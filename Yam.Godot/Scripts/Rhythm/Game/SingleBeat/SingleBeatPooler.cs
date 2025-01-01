@@ -3,7 +3,7 @@ using System;
 using Godot;
 using Yam.Core.Common;
 
-namespace Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
+namespace Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
 
 public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 {
@@ -12,7 +12,7 @@ public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 
     protected override SingleBeat? InstantiatePooledObject(PooledSingleBeatArgs args)
     {
-        if (args.Beat.Active)
+        if (args.Beat.IsVisualized)
         {
             return null;
         }
@@ -33,7 +33,7 @@ public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 
     protected override SingleBeat? RevivePooledObject(PooledSingleBeatArgs args)
     {
-        if (args.Beat.Active)
+        if (args.Beat.IsVisualized)
         {
             return null;
         }

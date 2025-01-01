@@ -3,7 +3,7 @@ using Godot;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
-namespace Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
+namespace Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
 
 public partial class SingleBeat : Node2D
 {
@@ -56,7 +56,7 @@ public partial class SingleBeat : Node2D
 
     public void Initialize(PooledSingleBeatArgs args)
     {
-        args.Beat.Active = true;
+        args.Beat.IsVisualized = true;
         RhythmPlayer = args.RhythmPlayer;
         Beat = args.Beat;
         Position = Position with { Y = RhythmPlayer.TriggerPoint.Position.Y + _beat.UCoord };

@@ -1,11 +1,14 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Text.Json;
 using Godot;
 using Yam.Core.Rhythm.Chart;
-using Yam.Godot.Scripts.Rhythm.Godot.HoldBeat;
-using Yam.Godot.Scripts.Rhythm.Godot.SingleBeat;
+using Yam.Godot.Scripts.Rhythm.Game.SingleBeat;
+using Yam.Godot.Scripts.Rhythm.Input;
 using ChartModel = Yam.Core.Rhythm.Chart.Chart;
+using HoldBeat = Yam.Godot.Scripts.Rhythm.Game.HoldBeat.HoldBeat;
 
 namespace Yam.Godot.Scripts.Rhythm;
 
@@ -21,6 +24,17 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     [Export] public PackedScene TickPrefab { get; set; }
     [Export] public float PreEmptDuration { get; set; } = 2f;
 
+    /// <summary>
+    /// Ordered from most narrow (better) to widest (worse)
+    /// </summary>
+    [Export]
+    public List<ReactionWindow> RelativeReactionWindow { get; set; } = new() {
+        new ReactionWindow(0.2f, BeatInputResult.Excellent),
+        new ReactionWindow(0.5f, BeatInputResult.Good),
+        new ReactionWindow(0.75f, BeatInputResult.Ok),
+        new ReactionWindow(1f, BeatInputResult.TooEarly),
+    };
+
     /** Parent node where all the children beats will be parented to */
     [Export]
     public Node Parent { get; set; }
@@ -30,6 +44,9 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     private bool _isPlaying = false;
     private ChartModel _chartModel;
     private float _currentSongTime;
+    private GodotInputProvider _inputProvider;
+    private float _lastReactionUpdate;
+    private List<ReactionWindow> _processedReactionWindow = new();
 
     public override void _Ready()
     {
@@ -43,6 +60,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
 
         SingleBeatPooler = new SingleBeatPooler(this, SingleBeatPrefab);
         TickPooler = new SingleBeatPooler(this, TickPrefab);
+        _inputProvider = new GodotInputProvider();
 
         // todo(turnip): remove and make it situational in the future
         // such that it is not triggered by events in here but called externally
@@ -62,15 +80,24 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
 
         _currentSongTime = AudioStreamPlayer.GetPlaybackPosition();
 
+        // Input should be near time poll so we're
+
+        #region input
+
+        _inputProvider.PollInput();
+        _chartModel.SimulateBeatInput(this, _inputProvider);
+
+        #endregion input
+
         // todo(turnip): if the updating or processing logic here becomes too complex
         // extract the logic elsewhere???
 
         // todo: determine which beats should be visible
 
         // todo: give this to the pooler and let it decide which ones idle vs instantiate
-        var currentBeats = _chartModel.GetVisualizableBeats(this);
+        var visualizableBeats = _chartModel.GetVisualizableBeats(this);
 
-        foreach (var beat in currentBeats)
+        foreach (var beat in visualizableBeats)
         {
             switch (beat.GetBeatType())
             {
@@ -100,7 +127,6 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
 
     private void ParseChart()
     {
-        // todo(turnip): implement
         using var f = FileAccess.Open(Chart.ResourcePath, FileAccess.ModeFlags.Read);
         if (f == null)
         {
@@ -139,5 +165,18 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     public float GetPreEmptDuration()
     {
         return PreEmptDuration;
+    }
+
+    public List<ReactionWindow> GetReactionWindowList()
+    {
+        if (Math.Abs(_lastReactionUpdate - _currentSongTime) > 0.001)
+        {
+            _processedReactionWindow =
+                RelativeReactionWindow.Select(w => new ReactionWindow(w.Threshold, w.BeatInputResult, _currentSongTime))
+                    .ToList();
+            _lastReactionUpdate = _currentSongTime;
+        }
+
+        return _processedReactionWindow;
     }
 }
