@@ -27,9 +27,4 @@
       <ProjectReference Include="..\Yam.Core\Yam.Core.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Utility\" />
-      <Folder Include="Utils\" />
-    </ItemGroup>
-
 </Project>

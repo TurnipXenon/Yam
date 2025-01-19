@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://b4qgmtd1nn3m6"]
+
+[node name="hold_line" type="Line2D"]
+position = Vector2(-162, 60)
+points = PackedVector2Array(0, 0, 100, 0)
+width = 8.0

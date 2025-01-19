@@ -40,3 +40,29 @@
 - [x] Parse data from beat-test.rhythm.json
   - Start with RhythmPlayer.cs and mirroring the data in that json. Don't look ahead too much
 - [ ] Channels for parallel beats should be calculated on load (one during runtime) and you do some sort of logic where you group beats that overlap with each other
+
+**How to figure out which beats to visualize**
+
+- Each channel should have a top index
+- Reminder: the reason why we have different channels is for parallel inputs, i.e. we have to press A and B together
+
+**Design decision: how to figure out when to instantiate beats as Godot objects**
+
+1. Create inactive objects during instantiation
+2. Rely on pooled objects, and slowly figure out which beats to instantiate. This assumes that time moves forward and we don't ever need to look back
+3. Alt: approach 2 but our index makes sure we are in the correct window???
+  - Consider when we're at the end of the song, we should check a time window early. Pre-empting??
+
+Considerations: we might want a looping feature???
+
+**Rough bezier curve notes**
+
+- Ideally we want to have an equal spacing for our x values and we may want to increase our increments with steep y's. Our rough formulate for getting increments needed would rely on the difference between the two points in terms of manhattan distance?
+```
+distance or number of increments = (abs(P1 - P1_in)
+  + abs(P2 - P2_out) 
+  + abs(P1 - P2) // considers linear holds and their visualization
+  ) * 5 // aribtrary value we want to test
+```
+
+TODO: Set hold line pooler and tick pooler. Then we create hold beat object which manages hold line and tick pool. It returns these items to the pooler later too
