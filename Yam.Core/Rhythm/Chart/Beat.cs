@@ -51,6 +51,8 @@ public class Beat : TimeUCoordVector, IBeat
 
     #endregion Beat State
 
+    private IBeatVisualizer? _visualizer;
+
     public static List<ReactionWindow> ReactionWindowsFromRelative(List<ReactionWindow> reactionWindow, float time)
     {
         return reactionWindow
@@ -137,21 +139,29 @@ public class Beat : TimeUCoordVector, IBeat
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        _state = result switch
+        switch (result)
         {
-            BeatInputResult.Idle
-                or BeatInputResult.Anticipating => State.Waiting,
-            BeatInputResult.Ignore
+            case BeatInputResult.Idle or BeatInputResult.Anticipating:
+                _state = State.Waiting;
+                break;
+            case BeatInputResult.Ignore
                 or BeatInputResult.Done
                 or BeatInputResult.TooEarly
                 or BeatInputResult.Miss
                 or BeatInputResult.Bad
                 or BeatInputResult.Ok
                 or BeatInputResult.Good
-                or BeatInputResult.Excellent => State.Done,
-            BeatInputResult.Holding => State.Holding,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+                or BeatInputResult.Excellent:
+                _state = State.Done;
+                _visualizer?.InformEndResult(result);
+                _visualizer = null;
+                break;
+            case BeatInputResult.Holding:
+                _state = State.Holding;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
 
         return result;
     }
@@ -207,5 +217,10 @@ public class Beat : TimeUCoordVector, IBeat
     public void InformRelease()
     {
         // todo(turnip)
+    }
+
+    public void SetVisualizer(IBeatVisualizer visualizer)
+    {
+        _visualizer = visualizer;
     }
 }
