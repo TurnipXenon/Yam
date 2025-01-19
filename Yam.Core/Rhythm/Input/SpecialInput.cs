@@ -62,7 +62,7 @@ public class SpecialInput : IRhythmInput
         return RhythmActionType.Invalid;
     }
 
-    public void Start()
+    public void Activate()
     {
         throw new NotImplementedException();
     }

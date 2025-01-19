@@ -67,7 +67,7 @@ public class KeyboardSingularInput : ISingularInput
 
     private SingularInputState _singularInputState = SingularInputState.Free;
 
-    public void Start()
+    public void Activate()
     {
         _singularInputState = _singularInputState switch
         {
@@ -84,6 +84,8 @@ public class KeyboardSingularInput : ISingularInput
 
     public void Release()
     {
+        _singularInputState = SingularInputState.Free;
         _claimingBeat?.InformRelease();
+        _claimingBeat = null;
     }
 }

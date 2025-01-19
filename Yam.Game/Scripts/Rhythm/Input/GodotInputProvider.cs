@@ -48,9 +48,9 @@ public class GodotInputProvider : IRhythmInputProvider
             {
                 singularInput.Release();
                 return singularInput;
-            } else if ((@event.IsActionReleased(keyCode)))
+            } else if ((@event.IsActionPressed(keyCode)))
             {
-                singularInput.Start();
+                singularInput.Activate();
                 return singularInput;
             }
         }
