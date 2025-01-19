@@ -29,7 +29,7 @@ public abstract class GenericPooler<TPooledObject, TPooledObjectArgs>
 
         if (newObject == null)
         {
-            GD.PrintErr("Instantiating Pooled Object failed");
+            GameLogger.PrintErr("Instantiating Pooled Object failed");
         }
         else
         {

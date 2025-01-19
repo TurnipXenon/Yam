@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
 namespace Yam.Core.Rhythm.Chart;
@@ -41,7 +42,7 @@ public class Chart
 
             if (!wasAdded)
             {
-                GD.PrintErr($"Beat not added: {beat.Time}");
+                GameLogger.PrintErr($"Beat not added: {beat.Time}");
             }
 
             // todo: take note of this logic

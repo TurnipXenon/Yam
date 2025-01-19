@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using Godot;
+using Yam.Core.Common;
 
 namespace Yam.Game.Scripts.Rhythm.Dev;
 
@@ -41,14 +42,14 @@ public partial class ParseOsu : Node
         using var f = FileAccess.Open(OsuSourceFile, FileAccess.ModeFlags.Read);
         if (f == null)
         {
-            GD.PrintErr("ParseOsu: Missing osu file");
+            GameLogger.PrintErr("ParseOsu: Missing osu file");
             return;
         }
 
         using var resultFile = FileAccess.Open(JsonResultFile, FileAccess.ModeFlags.Write);
         if (resultFile == null)
         {
-            GD.PrintErr("ParseOsu: Missing target result file");
+            GameLogger.PrintErr("ParseOsu: Missing target result file");
             return;
         }
 
@@ -143,6 +144,6 @@ public partial class ParseOsu : Node
         });
 
         resultFile.StoreString($"[\n{string.Join(",\n", rawBeatStrings.ToArray())}\n]");
-        GD.Print("Finished parsing osu file");
+        GameLogger.Print("Finished parsing osu file");
     }
 }

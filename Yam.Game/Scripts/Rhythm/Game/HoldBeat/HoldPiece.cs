@@ -1,4 +1,5 @@
 using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
@@ -30,7 +31,7 @@ public partial class HoldPiece : Node2D
 
         if (StartBeat == null)
         {
-            GD.PrintErr($"Failed creating start beat: {startBeat.Time}");
+            GameLogger.PrintErr($"Failed creating start beat: {startBeat.Time}");
             return;
         }
 

@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
@@ -127,7 +128,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         using var f = FileAccess.Open(Chart.ResourcePath, FileAccess.ModeFlags.Read);
         if (f == null)
         {
-            GD.PrintErr("Chart: Missing Chart file");
+            GameLogger.PrintErr("Chart: Missing Chart file");
             return;
         }
 
@@ -135,7 +136,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         _chartModel = ChartModel.FromEntity(chartEntity, RelativeReactionWindow);
 
         // todo(turnip): remove
-        GD.Print("Done parsing");
+        GameLogger.Print("Done parsing");
 
         // todo(turnip): choose music based on chart instead of hardcoded-ish here
     }

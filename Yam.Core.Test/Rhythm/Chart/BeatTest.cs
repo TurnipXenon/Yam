@@ -1,5 +1,7 @@
 using JetBrains.Annotations;
 using Moq;
+using Xunit.Abstractions;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
 using Yam.Core.Test.Utility;
@@ -50,6 +52,11 @@ public abstract class BeatTest
 
     public class SimulateSingleBeat
     {
+        public SimulateSingleBeat(ITestOutputHelper output)
+        {
+            GameLogger.Output = output;
+        }
+        
         [Fact]
         public void BeatLifecycle()
         {

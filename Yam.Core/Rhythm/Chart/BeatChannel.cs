@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
 namespace Yam.Core.Rhythm.Chart;
@@ -59,13 +59,13 @@ public class BeatChannel : List<Beat>
             case BeatInputResult.Ok:
             case BeatInputResult.Good:
             case BeatInputResult.Excellent:
-                GD.Print($"Finished with ({currentBeat!.Time}, {currentBeat.UCoord}): {result.ToString()}");
+                GameLogger.Print($"Finished with ({currentBeat!.Time}, {currentBeat.UCoord}): {result.ToString()}");
                 _currentInputIndex++;
                 break;
             case BeatInputResult.Holding:
                 break;
             case BeatInputResult.Ignore:
-                GD.Print($"IGNORE: Finished with ({currentBeat!.Time}, {currentBeat.UCoord})");
+                GameLogger.Print($"IGNORE: Finished with ({currentBeat!.Time}, {currentBeat.UCoord})");
                 _currentInputIndex++;
                 break;
             case null:

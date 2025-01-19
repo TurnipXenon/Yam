@@ -83,7 +83,7 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
     public void InformEndResult(BeatInputResult result)
     {
         // todo(turnip): add effects
-        GD.Print("Result received in Godot: ", result.ToString());
+        GameLogger.Print("Result received in Godot: ", result.ToString());
         ReleaseSelf();
     }
 }

@@ -1,6 +1,7 @@
 #nullable enable
 using System;
 using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
 namespace Yam.Core.Rhythm.Input;
@@ -46,12 +47,14 @@ public class KeyboardSingularInput : ISingularInput
             return false;
         }
 
+        GameLogger.Print("Successfully claimed");
         _claimingBeat = claimingBeat;
         return true;
     }
 
     public void ReleaseInput()
     {
+        GameLogger.Print("Released ", _keyCode);
         _claimingBeat = null;
     }
 

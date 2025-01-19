@@ -27,6 +27,13 @@ public interface IRhythmInput
     public void ReleaseInput();
     public InputSource GetSource();
     RhythmActionType GetRhythmActionType();
-    public void Start();
+    
+    /// <summary>
+    /// Activate is a generic term to indicate that the input's state has become active
+    /// For buttons, this means they've been pressed
+    /// For mouse, this means they've been moved
+    /// For direction pads, this means they've been moved out of Vector2.Zero
+    /// </summary>
+    public void Activate();
     public void Release();
 }

@@ -177,7 +177,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (_state != State.Waiting)
         {
             // todo(turnip): add test for this case
-            GD.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            GameLogger.PrintErr($"Not expected result: ({Time}, {UCoord})");
             return BeatInputResult.Ignore;
         }
 
@@ -190,7 +190,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            GD.Print($"Missed ({Time}, {UCoord})");
+            GameLogger.Print($"Missed ({Time}, {UCoord})");
             return BeatInputResult.Miss;
         }
 
@@ -200,9 +200,8 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Anticipating;
         }
 
-        if (playerInput.GetClaimingChannel() == null)
+        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
         {
-            playerInput.ClaimOnStart(this);
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {

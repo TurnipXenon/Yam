@@ -1,5 +1,6 @@
 #nullable enable
 using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
 namespace Yam.Core.Rhythm.Input;
@@ -28,7 +29,7 @@ public class KeyboardDirectionInput
             return false;
         }
 
-        GD.Print("Input Claimed");
+        GameLogger.Print("Input Claimed");
         _claimingBeat = claimingBeat;
         return true;
     }

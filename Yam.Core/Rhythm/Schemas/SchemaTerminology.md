@@ -1,11 +1,19 @@
 # Schema Terminology and Discussion
 
+## Rhythm terminology
+
 1. The rhythm game looks at **Charts**.
 2. **Charts** are composed of metadata and a list of **Beats**.
 3. A **Beat** is the smallest unit of player interaction with a combined singular judgment for all its parts. A **Beat** is *exclusively either*: (Hint to self: use oneOf https://stackoverflow.com/a/25033301/17836168)
    1. A metadata about what it is so the game knows how to parse it AND a list of **Ticks**.
    2. A metadata about what it is AND properties in a **Tick** (Hint: use allOf https://stackoverflow.com/a/52579526/17836168)
 4. A **Tick** is the smallest unit of player interaction. It's composed of the origin point, and an optional two anchor points for **Beats** that use Bézier curves.
+
+## Game terminology
+
+1. Game refers to functions that are implemented or set in Godot. Do not use the term Godot due to naming conflict.
+2. Player refers to the source of human input. The person playing the game. It should not be confused with simulator.
+3. Simulator refers to systems that players do not have direct control of, and are invoked by the game loop or game events.
 
 **Types of Beat**
 
