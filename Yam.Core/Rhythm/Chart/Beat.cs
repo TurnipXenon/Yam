@@ -51,6 +51,8 @@ public class Beat : TimeUCoordVector, IBeat
 
     #endregion Beat State
 
+    private IBeatVisualizer? _visualizer;
+
     public static List<ReactionWindow> ReactionWindowsFromRelative(List<ReactionWindow> reactionWindow, float time)
     {
         return reactionWindow
@@ -137,21 +139,29 @@ public class Beat : TimeUCoordVector, IBeat
             _ => throw new ArgumentOutOfRangeException()
         };
 
-        _state = result switch
+        switch (result)
         {
-            BeatInputResult.Idle
-                or BeatInputResult.Anticipating => State.Waiting,
-            BeatInputResult.Ignore
+            case BeatInputResult.Idle or BeatInputResult.Anticipating:
+                _state = State.Waiting;
+                break;
+            case BeatInputResult.Ignore
                 or BeatInputResult.Done
                 or BeatInputResult.TooEarly
                 or BeatInputResult.Miss
                 or BeatInputResult.Bad
                 or BeatInputResult.Ok
                 or BeatInputResult.Good
-                or BeatInputResult.Excellent => State.Done,
-            BeatInputResult.Holding => State.Holding,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+                or BeatInputResult.Excellent:
+                _state = State.Done;
+                _visualizer?.InformEndResult(result);
+                _visualizer = null;
+                break;
+            case BeatInputResult.Holding:
+                _state = State.Holding;
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
 
         return result;
     }
@@ -167,7 +177,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (_state != State.Waiting)
         {
             // todo(turnip): add test for this case
-            GD.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            GameLogger.PrintErr($"Not expected result: ({Time}, {UCoord})");
             return BeatInputResult.Ignore;
         }
 
@@ -180,7 +190,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            GD.Print($"Missed ({Time}, {UCoord})");
+            GameLogger.Print($"Missed ({Time}, {UCoord})");
             return BeatInputResult.Miss;
         }
 
@@ -190,9 +200,8 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Anticipating;
         }
 
-        if (playerInput.GetClaimingChannel() == null)
+        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
         {
-            playerInput.ClaimOnStart(this);
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {
@@ -207,5 +216,10 @@ public class Beat : TimeUCoordVector, IBeat
     public void InformRelease()
     {
         // todo(turnip)
+    }
+
+    public void SetVisualizer(IBeatVisualizer visualizer)
+    {
+        _visualizer = visualizer;
     }
 }

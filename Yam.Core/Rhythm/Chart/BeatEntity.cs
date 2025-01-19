@@ -8,6 +8,15 @@ namespace Yam.Core.Rhythm.Chart;
  */
 public class BeatEntity : TimeUCoordVector
 {
+    public BeatEntity()
+    {
+    }
+
+    public BeatEntity(float time)
+    {
+        Time = time;
+    }
+
     public TimeUCoordVector? PIn { get; set; }
     public TimeUCoordVector? POut { get; set; }
     public List<BeatEntity> BeatList { get; set; } = new();

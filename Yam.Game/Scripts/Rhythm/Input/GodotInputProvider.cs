@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using Godot;
 using Yam.Core.Rhythm.Input;
-using In = Godot.Input;
 
 namespace Yam.Game.Scripts.Rhythm.Input;
 
 public class GodotInputProvider : IRhythmInputProvider
 {
-    public const string Keyboard1Up = "keyboard1_up";
+    private const string Keyboard1Up = "keyboard1_up";
 
     // 2 slides + input combo then 6 more solo input combos
     private List<IRhythmInput> _activeInputList = new();
@@ -37,58 +36,25 @@ public class GodotInputProvider : IRhythmInputProvider
 
     public List<ISingularInput> GetSingularInputList()
     {
-        // todo: fix
         return _keyboardSingularInputList;
-    }
-
-    public void PollInput()
-    {
-        // because it's complex
-        // _keyboardDirectionInput.Direction = Vector2.Zero;
-        //
-        // if (In.IsActionPressed("keyboard1_up"))
-        // {
-        //     _keyboardDirectionInput.Direction = Vector2.Up;
-        // }
-        // else if (In.IsActionPressed("keyboard1_down"))
-        // {
-        //     _keyboardDirectionInput.Direction = Vector2.Down;
-        // }
-        //
-        // if (In.IsActionPressed("keyboard1_left"))
-        // {
-        //     _keyboardDirectionInput.Direction += Vector2.Left;
-        // } else if (In.IsActionPressed("keyboard1_right"))
-        // {
-        //     _keyboardDirectionInput.Direction += Vector2.Right;
-        // }
-
-        // if (_keyboardDirectionInput.GetClaimingChannel() != null)
-        // {
-        //     foreach (var code in _keyboardSingularInputList)
-        //     {
-        //         // todo(turnip): 
-        //     }
-        // }
     }
 
     public IRhythmInput ProcessEvent(InputEvent @event)
     {
-        if (@event.IsAction(Keyboard1Up, true))
+        foreach (var singularInput in _keyboardSingularInputList)
         {
-            // todo(turnip): consider difference with just pressed and held state buffer?
-            if (@event.IsActionReleased(Keyboard1Up))
+            var keyCode = singularInput.GetInputCode();
+            if (@event.IsActionReleased(keyCode))
             {
-                _keyboardUp.Release();
-            }
-            else
+                singularInput.Release();
+                return singularInput;
+            } else if ((@event.IsActionPressed(keyCode)))
             {
-                _keyboardUp.Press();
+                singularInput.Activate();
+                return singularInput;
             }
-
-            return _keyboardUp;
         }
-
+        
         return SpecialInput.UnknownInput;
     }
 }

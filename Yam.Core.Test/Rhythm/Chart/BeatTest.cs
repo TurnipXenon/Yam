@@ -1,5 +1,7 @@
 using JetBrains.Annotations;
 using Moq;
+using Xunit.Abstractions;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
 using Yam.Core.Test.Utility;
@@ -50,14 +52,16 @@ public abstract class BeatTest
 
     public class SimulateSingleBeat
     {
+        public SimulateSingleBeat(ITestOutputHelper output)
+        {
+            GameLogger.Output = output;
+        }
+        
         [Fact]
         public void BeatLifecycle()
         {
             var beatTime = 10f;
-            var beat = BeatUtil.NewSingleBeat(new BeatEntity
-            {
-                Time = beatTime,
-            });
+            var beat = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime));
 
             var rhythmPlayer = new Mock<IRhythmPlayer>();
             var playerInput = new Mock<IRhythmInput>();
@@ -75,12 +79,41 @@ public abstract class BeatTest
             
             // within range of excellent with input
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
+            playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
             var excellentInput = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
             
             // check the beat after it's done
             Assert.Equal(BeatInputResult.Done, beat.SimulateInput(rhythmPlayer.Object, playerInput.Object));
         }
+        
+        
+        [Fact]
+        public void InputCannotBeClaimedTwice()
+        {
+            var beatTime = 10f;
+            var beat1 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime));
+            var beat2 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime));
+
+            var rhythmPlayer = new Mock<IRhythmPlayer>();
+            var playerInput = new Mock<IRhythmInput>();
+            playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+            
+            // within range of excellent with input
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
+            playerInput.Setup(i => i.ClaimOnStart(beat1)).Returns(true);
+            var excellentInput = beat1.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Excellent, excellentInput);
+            playerInput.Setup(i => i.GetClaimingChannel()).Returns(beat1);
+            
+            var anticipating = beat2.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Anticipating, anticipating);
+            
+            // check the beat after it's done
+            Assert.Equal(BeatInputResult.Done, beat1.SimulateInput(rhythmPlayer.Object, playerInput.Object));
+        }
+        
+        // todo(turnip): cannot claim a beat when in held or release state
         
         // todo(turnip): no input and miss
         
