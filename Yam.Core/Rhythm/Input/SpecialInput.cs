@@ -61,4 +61,14 @@ public class SpecialInput : IRhythmInput
     {
         return RhythmActionType.Invalid;
     }
+
+    public void Start()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Release()
+    {
+        throw new NotImplementedException();
+    }
 }

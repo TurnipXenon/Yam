@@ -21,7 +21,7 @@ public abstract class KeyboardSingularInputTest
             Assert.Null(input.GetClaimingChannel());
 
             // you can claim a button only on start, for now
-            input.Press();
+            input.Start();
             Assert.Equal(SingularInputState.Started, input.GetState());
             Assert.True(input.ClaimOnStart(beat.Object));
             Assert.Equal(beat.Object, input.GetClaimingChannel());
@@ -48,11 +48,11 @@ public abstract class KeyboardSingularInputTest
             Assert.Null(input.GetClaimingChannel());
 
             // you can claim a button only on start, for now
-            input.Press();
+            input.Start();
             Assert.Equal(SingularInputState.Started, input.GetState());
             
             // you cannot claim a button outside on start
-            input.Press();
+            input.Start();
             Assert.Equal(SingularInputState.Held, input.GetState());
             Assert.False(input.ClaimOnStart(beat.Object));
             Assert.Null(input.GetClaimingChannel());
@@ -69,13 +69,13 @@ public abstract class KeyboardSingularInputTest
             Assert.Null(input.GetClaimingChannel());
 
             // you can claim a button only on start, for now
-            input.Press();
+            input.Start();
             Assert.Equal(SingularInputState.Started, input.GetState());
             Assert.True(input.ClaimOnStart(beat.Object));
             Assert.Equal(beat.Object, input.GetClaimingChannel());
 
             // hold status
-            input.Press();
+            input.Start();
             Assert.Equal(SingularInputState.Held, input.GetState());
             var differentBeat = new Mock<IBeat>();
             Assert.False(input.ClaimOnStart(differentBeat.Object));

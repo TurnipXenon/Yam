@@ -27,4 +27,6 @@ public interface IRhythmInput
     public void ReleaseInput();
     public InputSource GetSource();
     RhythmActionType GetRhythmActionType();
+    public void Start();
+    public void Release();
 }

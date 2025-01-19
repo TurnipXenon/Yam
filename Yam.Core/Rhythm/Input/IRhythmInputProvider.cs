@@ -13,5 +13,4 @@ public interface IRhythmInputProvider
 {
     public List<ISingularInput> GetDirectionInputList();
     public List<ISingularInput> GetSingularInputList();
-    public void PollInput();
 }

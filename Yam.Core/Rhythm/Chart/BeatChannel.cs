@@ -42,10 +42,10 @@ public class BeatChannel : List<Beat>
         return _currentInputIndex >= Count ? null : this[_currentInputIndex];
     }
 
-    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput inputProvider)
+    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
     {
         var currentBeat = TryToGetBeatForInput();
-        var result = currentBeat?.SimulateInput(rhythmPlayer, inputProvider);
+        var result = currentBeat?.SimulateInput(rhythmPlayer, playerInput);
 
         switch (result)
         {
@@ -59,7 +59,7 @@ public class BeatChannel : List<Beat>
             case BeatInputResult.Ok:
             case BeatInputResult.Good:
             case BeatInputResult.Excellent:
-                GD.Print($"Finished with ({currentBeat!.Time}, {currentBeat.UCoord})");
+                GD.Print($"Finished with ({currentBeat!.Time}, {currentBeat.UCoord}): {result.ToString()}");
                 _currentInputIndex++;
                 break;
             case BeatInputResult.Holding:
