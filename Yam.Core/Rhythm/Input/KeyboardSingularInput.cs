@@ -9,7 +9,7 @@ namespace Yam.Core.Rhythm.Input;
 // note to self: knows the implementation?
 // todo(turnip): create ISingularInput. this is a keyboard implementation
 // todo(turnip): OnStarted, OnHold, OnRelease (document differences)
-public partial class KeyboardSingularInput
+public class KeyboardSingularInput : ISingularInput
 {
     // todo(turnip): see if we can combine them into the details class below
     private IBeat? _claimingBeat;
@@ -53,6 +53,16 @@ public partial class KeyboardSingularInput
     public void ReleaseInput()
     {
         _claimingBeat = null;
+    }
+
+    public InputSource GetSource()
+    {
+        return InputSource.Game;
+    }
+
+    public RhythmActionType GetRhythmActionType()
+    {
+        return RhythmActionType.Singular;
     }
 
     private SingularInputState _singularInputState = SingularInputState.Free;

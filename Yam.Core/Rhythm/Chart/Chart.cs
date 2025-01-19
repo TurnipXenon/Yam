@@ -65,8 +65,8 @@ public class Chart
         return beats;
     }
 
-    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInputProvider inputProvider)
+    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput input)
     {
-        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmPlayer, inputProvider));
+        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmPlayer, input));
     }
 }

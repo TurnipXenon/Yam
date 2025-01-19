@@ -1,3 +1,4 @@
+#nullable enable
 using System.Collections.Generic;
 using Godot;
 using Yam.Core.Rhythm.Input;
@@ -7,26 +8,34 @@ namespace Yam.Game.Scripts.Rhythm.Input;
 
 public class GodotInputProvider : IRhythmInputProvider
 {
+    public const string Keyboard1Up = "keyboard1_up";
+
     // 2 slides + input combo then 6 more solo input combos
     private List<IRhythmInput> _activeInputList = new();
 
     private KeyboardDirectionInput _keyboardDirectionInput = new();
+    private readonly KeyboardSingularInput _keyboardUp = new(Keyboard1Up);
 
-    private List<KeyboardSingularInput> _keyboardSingularInputList = new()
-    {
-        new KeyboardSingularInput("keyboard1_up"),
-        new KeyboardSingularInput("keyboard1_down"),
-        new KeyboardSingularInput("keyboard1_left"),
-        new KeyboardSingularInput("keyboard1_right")
-    };
+    private readonly List<ISingularInput> _keyboardSingularInputList;
 
-    public List<KeyboardDirectionInput> GetDirectionInputList()
+    public GodotInputProvider()
     {
-        // todo(turnip): do something
-        return new ();
+        _keyboardSingularInputList = new List<ISingularInput>
+        {
+            _keyboardUp,
+            new KeyboardSingularInput("keyboard1_down"),
+            new KeyboardSingularInput("keyboard1_left"),
+            new KeyboardSingularInput("keyboard1_right")
+        };
     }
 
-    public List<KeyboardSingularInput> GetSingularInputList()
+    public List<ISingularInput> GetDirectionInputList()
+    {
+        // todo(turnip): do something
+        return _keyboardSingularInputList;
+    }
+
+    public List<ISingularInput> GetSingularInputList()
     {
         // todo: fix
         return _keyboardSingularInputList;
@@ -35,32 +44,51 @@ public class GodotInputProvider : IRhythmInputProvider
     public void PollInput()
     {
         // because it's complex
-        _keyboardDirectionInput.Direction = Vector2.Zero;
-        
-        if (In.IsActionPressed("keyboard1_up"))
-        {
-            _keyboardDirectionInput.Direction = Vector2.Up;
-        }
-        else if (In.IsActionPressed("keyboard1_down"))
-        {
-            _keyboardDirectionInput.Direction = Vector2.Down;
-        }
+        // _keyboardDirectionInput.Direction = Vector2.Zero;
+        //
+        // if (In.IsActionPressed("keyboard1_up"))
+        // {
+        //     _keyboardDirectionInput.Direction = Vector2.Up;
+        // }
+        // else if (In.IsActionPressed("keyboard1_down"))
+        // {
+        //     _keyboardDirectionInput.Direction = Vector2.Down;
+        // }
+        //
+        // if (In.IsActionPressed("keyboard1_left"))
+        // {
+        //     _keyboardDirectionInput.Direction += Vector2.Left;
+        // } else if (In.IsActionPressed("keyboard1_right"))
+        // {
+        //     _keyboardDirectionInput.Direction += Vector2.Right;
+        // }
 
-        if (In.IsActionPressed("keyboard1_left"))
-        {
-            _keyboardDirectionInput.Direction += Vector2.Left;
-        } else if (In.IsActionPressed("keyboard1_right"))
-        {
-            _keyboardDirectionInput.Direction += Vector2.Right;
-        }
+        // if (_keyboardDirectionInput.GetClaimingChannel() != null)
+        // {
+        //     foreach (var code in _keyboardSingularInputList)
+        //     {
+        //         // todo(turnip): 
+        //     }
+        // }
+    }
 
-        if (_keyboardDirectionInput.GetClaimingChannel() != null)
+    public IRhythmInput ProcessEvent(InputEvent @event)
+    {
+        if (@event.IsAction(Keyboard1Up, true))
         {
-            foreach (var code in _keyboardSingularInputList)
+            // todo(turnip): consider difference with just pressed and held state buffer?
+            if (@event.IsActionReleased(Keyboard1Up))
             {
-                // todo(turnip): 
-                
+                _keyboardUp.Release();
             }
+            else
+            {
+                _keyboardUp.Press();
+            }
+
+            return _keyboardUp;
         }
+
+        return SpecialInput.UnknownInput;
     }
 }
