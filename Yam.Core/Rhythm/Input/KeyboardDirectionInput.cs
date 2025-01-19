@@ -5,7 +5,7 @@ using Yam.Core.Rhythm.Chart;
 namespace Yam.Core.Rhythm.Input;
 
 // todo(turnip): refactor code to remove duplicates
-public class KeyboardDirectionInput : IRhythmInput
+public class KeyboardDirectionInput
 {
     // todo(turnip): see if we can combine them into the details class below
     private Beat? _claimingBeat;
@@ -28,6 +28,7 @@ public class KeyboardDirectionInput : IRhythmInput
             return false;
         }
 
+        GD.Print("Input Claimed");
         _claimingBeat = claimingBeat;
         return true;
     }

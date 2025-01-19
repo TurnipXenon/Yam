@@ -5,14 +5,16 @@ namespace Yam.Core.Rhythm.Chart;
 [Flags]
 public enum BeatInputResult
 {
-    Waiting,
+    Idle,
     TooEarly,
     Miss,
     Bad,
+    // todo(turnip): investigate whether anticipate is redundant
     Anticipating,
     Ok,
     Good,
     Excellent,
     Holding,
-    Ignore
+    Ignore,
+    Done
 }

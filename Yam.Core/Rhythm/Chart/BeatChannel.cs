@@ -49,7 +49,7 @@ public class BeatChannel : List<Beat>
 
         switch (result)
         {
-            case BeatInputResult.Waiting:
+            case BeatInputResult.Idle:
                 break;
             case BeatInputResult.Anticipating:
                 break;
@@ -59,13 +59,13 @@ public class BeatChannel : List<Beat>
             case BeatInputResult.Ok:
             case BeatInputResult.Good:
             case BeatInputResult.Excellent:
-                GD.Print($"Moving to ({currentBeat!.Time}, {currentBeat.UCoord})");
+                GD.Print($"Finished with ({currentBeat!.Time}, {currentBeat.UCoord})");
                 _currentInputIndex++;
                 break;
             case BeatInputResult.Holding:
                 break;
             case BeatInputResult.Ignore:
-                GD.Print($"IGNORE: Moving to ({currentBeat!.Time}, {currentBeat.UCoord})");
+                GD.Print($"IGNORE: Finished with ({currentBeat!.Time}, {currentBeat.UCoord})");
                 _currentInputIndex++;
                 break;
             case null:

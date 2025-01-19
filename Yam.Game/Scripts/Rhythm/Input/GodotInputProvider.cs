@@ -20,19 +20,21 @@ public class GodotInputProvider : IRhythmInputProvider
         new KeyboardSingularInput("keyboard1_right")
     };
 
-    public List<IRhythmInput> GetDirectionInputList()
+    public List<KeyboardDirectionInput> GetDirectionInputList()
     {
-        return _activeInputList;
+        // todo(turnip): do something
+        return new ();
     }
 
-    public List<IRhythmInput> GetSingularInputList()
+    public List<KeyboardSingularInput> GetSingularInputList()
     {
         // todo: fix
-        return _activeInputList;
+        return _keyboardSingularInputList;
     }
 
     public void PollInput()
     {
+        // because it's complex
         _keyboardDirectionInput.Direction = Vector2.Zero;
         
         if (In.IsActionPressed("keyboard1_up"))
@@ -56,6 +58,7 @@ public class GodotInputProvider : IRhythmInputProvider
         {
             foreach (var code in _keyboardSingularInputList)
             {
+                // todo(turnip): 
                 
             }
         }

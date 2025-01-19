@@ -24,15 +24,11 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     [Export] public PackedScene TickPrefab { get; set; }
     [Export] public float PreEmptDuration { get; set; } = 2f;
 
+    // todo(turnip): turn into export so visible in Godot inspector
     /// <summary>
     /// Ordered from most narrow (better) to widest (worse)
     /// </summary>
-    public List<ReactionWindow> RelativeReactionWindow { get; set; } = new() {
-        new ReactionWindow(0.2f, BeatInputResult.Excellent),
-        new ReactionWindow(0.5f, BeatInputResult.Good),
-        new ReactionWindow(0.75f, BeatInputResult.Ok),
-        new ReactionWindow(1f, BeatInputResult.TooEarly),
-    };
+    public List<ReactionWindow> RelativeReactionWindow { get; set; } = Beat.DefaultRelativeReactionWindow.ToList();
 
     /** Parent node where all the children beats will be parented to */
     [Export]
@@ -134,7 +130,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         }
 
         var chartEntity = JsonSerializer.Deserialize<ChartEntity>(f.GetAsText());
-        _chartModel = ChartModel.FromEntity(chartEntity);
+        _chartModel = ChartModel.FromEntity(chartEntity, RelativeReactionWindow);
 
         // todo(turnip): remove
         GD.Print("Done parsing");

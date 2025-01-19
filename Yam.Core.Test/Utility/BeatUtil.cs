@@ -1,11 +1,11 @@
 using System.Diagnostics;
 using Yam.Core.Rhythm.Chart;
 
-namespace Yam.Core.Test.RhythmTest.Chart;
+namespace Yam.Core.Test.Utility;
 
 public static class BeatUtil
 {
-    public static Beat NewBeat(float startTime, float endTime)
+    public static Beat NewHoldBeat(float startTime, float endTime)
     {
         Debug.Assert(startTime < endTime);
         var beat = new Beat
@@ -17,5 +17,10 @@ public static class BeatUtil
             Time = endTime
         });
         return beat;
+    }
+
+    public static Beat NewSingleBeat(BeatEntity beatEntity)
+    {
+        return Beat.FromEntity(beatEntity, Beat.DefaultRelativeReactionWindow);
     }
 }

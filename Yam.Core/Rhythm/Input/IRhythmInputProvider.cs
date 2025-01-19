@@ -11,7 +11,7 @@ namespace Yam.Core.Rhythm.Input;
  */
 public interface IRhythmInputProvider
 {
-    public List<IRhythmInput> GetDirectionInputList();
-    public List<IRhythmInput> GetSingularInputList();
+    public List<KeyboardDirectionInput> GetDirectionInputList();
+    public List<KeyboardSingularInput> GetSingularInputList();
     public void PollInput();
 }

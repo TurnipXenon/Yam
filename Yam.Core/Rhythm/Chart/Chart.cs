@@ -20,12 +20,12 @@ public class Chart
     }
 
     // todo(turnip): create a test for this
-    public static Chart FromEntity(ChartEntity chartEntity)
+    public static Chart FromEntity(ChartEntity chartEntity, List<ReactionWindow> reactionWindow)
     {
         var chart = new Chart();
         chartEntity.BeatList.ForEach(beatEntity =>
         {
-            var beat = Beat.FromEntity(beatEntity);
+            var beat = Beat.FromEntity(beatEntity, reactionWindow);
 
             var wasAdded = false;
             for (var index = 0; index < chart.ChannelList.Count; index++)
