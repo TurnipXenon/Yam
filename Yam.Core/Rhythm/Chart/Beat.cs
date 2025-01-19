@@ -122,7 +122,7 @@ public class Beat : TimeUCoordVector, IBeat
         return new Vector2(Time, UCoord);
     }
 
-    public BeatInputResult SimulateInput(IRhythmPlayer rhythmPlayer, IRhythmInputProvider inputProvider)
+    public BeatInputResult SimulateInput(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
     {
         if (_state == State.Done)
         {
@@ -131,7 +131,7 @@ public class Beat : TimeUCoordVector, IBeat
 
         var result = GetBeatType() switch
         {
-            BeatType.Single => _simulateSingleBeat(rhythmPlayer, inputProvider),
+            BeatType.Single => _simulateSingleBeat(rhythmPlayer, playerInput),
             BeatType.Slide => BeatInputResult.Ignore,
             BeatType.Hold => BeatInputResult.Ignore,
             _ => throw new ArgumentOutOfRangeException()
@@ -156,7 +156,7 @@ public class Beat : TimeUCoordVector, IBeat
         return result;
     }
 
-    private BeatInputResult _simulateSingleBeat(IRhythmPlayer rhythmPlayer, IRhythmInputProvider inputProvider)
+    private BeatInputResult _simulateSingleBeat(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
     {
         // todo: fix window from being based on current time to current beat
 
@@ -184,22 +184,15 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Miss;
         }
 
-        // find matching input, if there is execute
-        // todo: release condition for input is if the beat gives up or the player releases the input
-        var gameInputList = inputProvider.GetSingularInputList();
-
-        // find free gameInput and claim it
-        var wasInputDetected = false;
-        foreach (var gameInput in gameInputList.Where(gameInput => gameInput.GetClaimingChannel() == null))
+        if (playerInput.GetSource() != InputSource.Player
+            && playerInput.GetRhythmActionType() != RhythmActionType.Singular)
         {
-            gameInput.ClaimOnStart(this);
-            wasInputDetected = true;
-            break;
+            return BeatInputResult.Anticipating;
         }
 
-        if (wasInputDetected)
+        if (playerInput.GetClaimingChannel() == null)
         {
-            Console.WriteLine("Input detected");
+            playerInput.ClaimOnStart(this);
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {
@@ -207,6 +200,7 @@ public class Beat : TimeUCoordVector, IBeat
             }
         }
 
+        // the detected input does not apply for this beat since it's claimed by another one already
         return BeatInputResult.Anticipating;
     }
 

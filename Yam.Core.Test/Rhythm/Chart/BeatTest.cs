@@ -60,31 +60,26 @@ public abstract class BeatTest
             });
 
             var rhythmPlayer = new Mock<IRhythmPlayer>();
-            var inputProvider = new Mock<IRhythmInputProvider>();
-
+            var playerInput = new Mock<IRhythmInput>();
+            playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+            
             // start: too far
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - (Beat.DefaultTooEarlyRadius + Beat.FrameEpsilon));
-            var tooFar = beat.SimulateInput(rhythmPlayer.Object, inputProvider.Object);
+            var tooFar = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Idle, tooFar);
 
             // within range but no inputs yet
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultOkRadius);
-            inputProvider.Setup(i => i.GetSingularInputList()).Returns(new List<KeyboardSingularInput>());
-            var noInput = beat.SimulateInput(rhythmPlayer.Object, inputProvider.Object);
+            var noInput = beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput);
             Assert.Equal(BeatInputResult.Anticipating, noInput);
-
+            
             // within range of excellent with input
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
-            inputProvider.Setup(i => i.GetSingularInputList()).Returns(new List<KeyboardSingularInput>()
-            {
-                new("testCode")
-                // todo: decide the values later as we go
-            });
-            var excellentInput = beat.SimulateInput(rhythmPlayer.Object, inputProvider.Object);
+            var excellentInput = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
-
+            
             // check the beat after it's done
-            Assert.Equal(BeatInputResult.Done, beat.SimulateInput(rhythmPlayer.Object, inputProvider.Object));
+            Assert.Equal(BeatInputResult.Done, beat.SimulateInput(rhythmPlayer.Object, playerInput.Object));
         }
         
         // todo(turnip): no input and miss

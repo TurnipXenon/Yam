@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json;
 using Godot;
 using Yam.Core.Rhythm.Chart;
+using Yam.Core.Rhythm.Input;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 using Yam.Game.Scripts.Rhythm.Input;
 using ChartModel = Yam.Core.Rhythm.Chart.Chart;
@@ -79,8 +80,9 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
 
         #region input
 
-        _inputProvider.PollInput();
-        _chartModel.SimulateBeatInput(this, _inputProvider);
+        // todo(turnip): move to the unhandled input handler below
+        // _inputProvider.PollInput();
+        _chartModel.SimulateBeatInput(this, SpecialInput.GameInput);
 
         #endregion input
 
@@ -173,5 +175,11 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         }
 
         return _processedReactionWindow;
+    }
+
+
+    public override void _UnhandledInput(InputEvent @event)
+    {
+        _chartModel.SimulateBeatInput(this, _inputProvider.ProcessEvent(@event));
     }
 }

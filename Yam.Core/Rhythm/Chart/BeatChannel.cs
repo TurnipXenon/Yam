@@ -42,7 +42,7 @@ public class BeatChannel : List<Beat>
         return _currentInputIndex >= Count ? null : this[_currentInputIndex];
     }
 
-    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInputProvider inputProvider)
+    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput inputProvider)
     {
         var currentBeat = TryToGetBeatForInput();
         var result = currentBeat?.SimulateInput(rhythmPlayer, inputProvider);
