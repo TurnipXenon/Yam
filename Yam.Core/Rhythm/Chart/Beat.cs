@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Godot;
+using Xunit.Abstractions;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
@@ -10,6 +11,8 @@ namespace Yam.Core.Rhythm.Chart;
 
 public class Beat : TimeUCoordVector, IBeat
 {
+    public GameLogger Logger = new();
+    
     public static readonly float DefaultTooEarlyRadius = 1f;
     public static readonly float DefaultOkRadius = 0.75f;
     public static readonly float DefaultGoodRadius = 0.5f;
@@ -42,7 +45,20 @@ public class Beat : TimeUCoordVector, IBeat
 
     private List<ReactionWindow> _reactionWindowList = new();
 
-    public float EndTime => BeatList.Count == 0 ? Time : BeatList.Last().Time;
+    private float _endTime = -10;
+
+    public float EndTime
+    {
+        get
+        {
+            if (_endTime < -9)
+            {
+                _endTime = BeatList.Count == 0 ? Time : BeatList.Last().Time;
+            }
+
+            return _endTime;
+        }
+    }
 
     #region Beat State
 
@@ -81,6 +97,9 @@ public class Beat : TimeUCoordVector, IBeat
             var firstBeat = beat.BeatList[0];
             beat.Time = firstBeat.Time;
             beat.UCoord = firstBeat.UCoord;
+            beat.PIn = firstBeat.PIn;
+            beat.POut = firstBeat.POut;
+            beat._reactionWindowList = ReactionWindowsFromRelative(reactionWindow, beat.Time);
         }
 
         return beat;
@@ -135,7 +154,7 @@ public class Beat : TimeUCoordVector, IBeat
         {
             BeatType.Single => _simulateSingleBeat(rhythmPlayer, playerInput),
             BeatType.Slide => BeatInputResult.Ignore,
-            BeatType.Hold => BeatInputResult.Ignore,
+            BeatType.Hold => _simulateHoldBeat(rhythmPlayer, playerInput),
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -153,7 +172,7 @@ public class Beat : TimeUCoordVector, IBeat
                 or BeatInputResult.Good
                 or BeatInputResult.Excellent:
                 _state = State.Done;
-                _visualizer?.InformEndResult(result);
+                _visualizer?.InformEndResult(result, this);
                 _visualizer = null;
                 break;
             case BeatInputResult.Holding:
@@ -177,7 +196,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (_state != State.Waiting)
         {
             // todo(turnip): add test for this case
-            GameLogger.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            Logger.PrintErr($"Not expected result: ({Time}, {UCoord})");
             return BeatInputResult.Ignore;
         }
 
@@ -190,7 +209,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            GameLogger.Print($"Missed ({Time}, {UCoord})");
+            Logger.Print($"Missed ({Time}, {UCoord})");
             return BeatInputResult.Miss;
         }
 
@@ -213,13 +232,141 @@ public class Beat : TimeUCoordVector, IBeat
         return BeatInputResult.Anticipating;
     }
 
-    public void InformRelease()
+    #region Hold
+
+    private int _holdIndex;
+    private IRhythmPlayer? _rhythmPlayer;
+
+    // For hold, we need to store the following information:
+    // Hold Start (start)
+    // Hold consistency (between each tick)
+    // Hold release (final beat or final tick)
+    private BeatInputResult _simulateHoldBeat(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
     {
-        // todo(turnip)
+        if (_state == State.Waiting)
+        {
+            return _simulateStartHold(rhythmPlayer, playerInput);
+        }
+
+        // todo(turnip): for holding with movement, make sure we are on track
+
+        // detecting release is handled at the bottom, we only handle possible late releases here
+        var lastBeat = BeatList.Last();
+        var okReaction = lastBeat._reactionWindowList[^2];
+        var currentTime = rhythmPlayer.GetCurrentSongTime();
+        if (currentTime >= okReaction.Range.Y)
+        {
+            _state = State.Done;
+            Logger.Print($"Missed Hold ({Time}, {UCoord})");
+            return BeatInputResult.Miss;
+        }
+
+        return BeatInputResult.Holding;
     }
+
+
+    private BeatInputResult _simulateStartHold(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
+    {
+        var tooEarlyReaction = _reactionWindowList.Last();
+        var okReaction = _reactionWindowList[^2];
+        var currentTime = rhythmPlayer.GetCurrentSongTime();
+
+        if (_state != State.Waiting)
+        {
+            // todo(turnip): add test for this case
+            Logger.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            return BeatInputResult.Ignore;
+        }
+
+
+        if (currentTime < tooEarlyReaction.Range.X)
+        {
+            return BeatInputResult.Idle;
+        }
+
+        if (currentTime >= okReaction.Range.Y)
+        {
+            _state = State.Done;
+            Logger.Print($"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
+            return BeatInputResult.Miss;
+        }
+
+        if (playerInput.GetSource() != InputSource.Player
+            && playerInput.GetRhythmActionType() != RhythmActionType.Singular)
+        {
+            return BeatInputResult.Anticipating;
+        }
+
+        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
+        {
+            foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
+                         reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
+            {
+                // we need reference to this for the release time
+                _rhythmPlayer = rhythmPlayer;
+
+                // todo(turnip): inform initial beat of the result and animate
+                var result = reactionWindow.BeatInputResult;
+                // todo: think of how visualizing works later
+                _visualizer?.InformEndResult(result, this);
+                _visualizer = null;
+                Logger.Print("Start hold");
+                return BeatInputResult.Holding;
+            }
+        }
+
+        // the detected input does not apply for this beat since it's claimed by another one already
+        return BeatInputResult.Anticipating;
+    }
+
+    #endregion Hold
 
     public void SetVisualizer(IBeatVisualizer visualizer)
     {
         _visualizer = visualizer;
+    }
+
+    // todo: delete this variable when we find a better way to communicate a release to the hold beat visualizer
+    // then we can have a mock listening for the result of how this beat ends
+    public BeatInputResult HoldReleaseResult;
+
+    public void OnInputRelease()
+    {
+        var currentTime = _rhythmPlayer?.GetCurrentSongTime();
+        if (currentTime == null)
+        {
+            return;
+        }
+
+        var lastReactionWindow = BeatList.Last()._reactionWindowList;
+        foreach (var reactionWindow in lastReactionWindow.Where(reactionWindow =>
+                     reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
+        {
+            // todo(turnip): inform initial beat of the result and animate
+            var result = reactionWindow.BeatInputResult;
+            Logger.Print($"Release: {result}");
+            // todo: figure out which visualizer we should call??? the hold beat???
+            // _visualizer?.InformEndResult(result, this);
+            // _visualizer = null;
+            _state = State.Done;
+            HoldReleaseResult = result;
+            // todo: inform beat channel next???
+            return;
+        }
+
+        HoldReleaseResult = BeatInputResult.Miss;
+        Logger.Print("Release too late!");
+        _state = State.Done;
+    }
+
+    public static Beat FromEntity(BeatEntity beatEntity, List<ReactionWindow> defaultRelativeReactionWindow, ITestOutputHelper xUnitLogger)
+    {
+        var beat = FromEntity(beatEntity, defaultRelativeReactionWindow);
+        beat.Logger.XUnitLogger = xUnitLogger;
+        foreach (var child in beat.BeatList)
+        {
+            child.Logger.XUnitLogger = xUnitLogger;
+        }
+        return beat;
     }
 }

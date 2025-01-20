@@ -47,14 +47,12 @@ public class KeyboardSingularInput : ISingularInput
             return false;
         }
 
-        GameLogger.Print("Successfully claimed");
         _claimingBeat = claimingBeat;
         return true;
     }
 
     public void ReleaseInput()
     {
-        GameLogger.Print("Released ", _keyCode);
         _claimingBeat = null;
     }
 
@@ -88,7 +86,7 @@ public class KeyboardSingularInput : ISingularInput
     public void Release()
     {
         _singularInputState = SingularInputState.Free;
-        _claimingBeat?.InformRelease();
+        _claimingBeat?.OnInputRelease();
         _claimingBeat = null;
     }
 }

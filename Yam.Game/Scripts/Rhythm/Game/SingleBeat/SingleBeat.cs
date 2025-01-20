@@ -80,10 +80,10 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
                / (rhythmPlayer.PreEmptDuration);
     }
 
-    public void InformEndResult(BeatInputResult result)
+    public void InformEndResult(BeatInputResult result, IBeat beat)
     {
         // todo(turnip): add effects
-        GameLogger.Print("Result received in Godot: ", result.ToString());
+        GD.Print("Result received in Godot: ", result.ToString());
         ReleaseSelf();
     }
 }

@@ -15,4 +15,13 @@ public class TimeUCoordVector
     {
         return new Vector2(Time, UCoord);
     }
+
+    public TimeUCoordVector Clone()
+    {
+        return new TimeUCoordVector
+        {
+            Time = Time,
+            UCoord = UCoord
+        };
+    }
 }

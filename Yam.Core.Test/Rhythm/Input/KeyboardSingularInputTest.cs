@@ -1,7 +1,9 @@
 using JetBrains.Annotations;
 using Moq;
+using Xunit.Abstractions;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
+using Yam.Core.Test.Utility;
 
 namespace Yam.Core.Test.Rhythm.Input;
 
@@ -33,8 +35,8 @@ public abstract class KeyboardSingularInputTest
             // on release, all claims are released also, and the claimer will be informed
             // note: that we have to be very careful with this
             input.Release();
-            beat.Verify(m => m.InformRelease(), Times.Once());
-            differentBeat.Verify(m => m.InformRelease(), Times.Never());
+            beat.Verify(m => m.OnInputRelease(), Times.Once());
+            differentBeat.Verify(m => m.OnInputRelease(), Times.Never());
         }
         
         [Fact]
@@ -84,8 +86,8 @@ public abstract class KeyboardSingularInputTest
             // on release, all claims are released also, and the claimer will be informed
             // note: that we have to be very careful with this
             input.Release();
-            beat.Verify(m => m.InformRelease(), Times.Once());
-            differentBeat.Verify(m => m.InformRelease(), Times.Never());
+            beat.Verify(m => m.OnInputRelease(), Times.Once());
+            differentBeat.Verify(m => m.OnInputRelease(), Times.Never());
         }
     }
 }

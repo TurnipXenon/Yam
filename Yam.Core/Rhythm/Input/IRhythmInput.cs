@@ -37,3 +37,8 @@ public interface IRhythmInput
     public void Activate();
     public void Release();
 }
+
+public interface IRhythmInputListener
+{
+    public void OnInputRelease();
+}

@@ -44,6 +44,8 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
     private GodotInputProvider _inputProvider;
     private float _lastReactionUpdate;
     private List<ReactionWindow> _processedReactionWindow = new();
+    private float _songStart;
+    private float _songDriftAdjustment;
 
     public override void _Ready()
     {
@@ -75,17 +77,15 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
             return;
         }
 
-        _currentSongTime = AudioStreamPlayer.GetPlaybackPosition();
+        var currentTime = Time.GetTicksMsec() / 1000f;
+        _currentSongTime = currentTime - _songStart;
+        
+        // relying on song start instead of getting playback position
+        // we will have issues later when we enable pausing and song looping
+        // GD.Print($"{_currentSongTime} vs {AudioStreamPlayer.GetPlaybackPosition()}");
 
-        // Input should be near time poll so we're
-
-        #region input
-
-        // todo(turnip): move to the unhandled input handler below
-        // _inputProvider.PollInput();
+        // simulate idle time for input misses
         _chartModel.SimulateBeatInput(this, SpecialInput.GameInput);
-
-        #endregion input
 
         // todo(turnip): if the updating or processing logic here becomes too complex
         // extract the logic elsewhere???
@@ -128,7 +128,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         using var f = FileAccess.Open(Chart.ResourcePath, FileAccess.ModeFlags.Read);
         if (f == null)
         {
-            GameLogger.PrintErr("Chart: Missing Chart file");
+            GD.PrintErr("Chart: Missing Chart file");
             return;
         }
 
@@ -136,7 +136,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         _chartModel = ChartModel.FromEntity(chartEntity, RelativeReactionWindow);
 
         // todo(turnip): remove
-        GameLogger.Print("Done parsing");
+        GD.Print("Done parsing");
 
         // todo(turnip): choose music based on chart instead of hardcoded-ish here
     }
@@ -148,6 +148,8 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         // todo(turnip): possibly support chart metadata for delay
         AudioStreamPlayer.Stream = AudioStream;
         AudioStreamPlayer.Play();
+        _songStart = Time.GetTicksMsec() / 1000f;
+        _songDriftAdjustment = 0f;
     }
 
     public float GetCurrentSongTime()

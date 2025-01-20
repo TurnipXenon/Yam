@@ -1,7 +1,8 @@
+using Yam.Core.Rhythm.Input;
+
 namespace Yam.Core.Rhythm.Chart;
 
-public interface IBeat
+public interface IBeat: IRhythmInputListener
 {
-    void InformRelease();
     void SetVisualizer(IBeatVisualizer visualizer);
 }

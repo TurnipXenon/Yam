@@ -6,15 +6,15 @@ namespace Yam.Core.Common;
 // todo(turnip): improve GameLogger by detecting that we're being run in xUnit
 // and ignore any calls to Godot. Or check if Godot's GD global function specific
 // to Print is available for use
-public static class GameLogger
+public class GameLogger
 {
-    public static ITestOutputHelper? Output;
+    public ITestOutputHelper? XUnitLogger;
 
-    public static void Print(params string[] what)
+    public void Print(params string[] what)
     {
-        if (Output != null)
+        if (XUnitLogger != null)
         {
-            Output.WriteLine(what.Join(""));
+            XUnitLogger.WriteLine(what.Join(""));
         }
         else
         {
@@ -22,11 +22,11 @@ public static class GameLogger
         }
     }
     
-    public static void PrintErr(string what)
+    public void PrintErr(string what)
     {
-        if (Output != null)
+        if (XUnitLogger != null)
         {
-            Output.WriteLine($"Godot.PrintErr: {what}");
+            XUnitLogger.WriteLine($"Godot.PrintErr: {what}");
         }
         else
         {
