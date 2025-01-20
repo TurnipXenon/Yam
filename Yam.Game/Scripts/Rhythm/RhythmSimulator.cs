@@ -14,7 +14,7 @@ using HoldBeat = Yam.Game.Scripts.Rhythm.Game.HoldBeat.HoldBeat;
 
 namespace Yam.Game.Scripts.Rhythm;
 
-public partial class RhythmPlayer : Node, IRhythmPlayer
+public partial class RhythmSimulator : Node, IRhythmSimulator
 {
     [Export] public Resource Chart { get; set; }
     [Export] public AudioStreamPlayer AudioStreamPlayer { get; set; }
@@ -103,7 +103,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
                     SingleBeatPooler.Request(new PooledSingleBeatArgs()
                     {
                         Beat = beat,
-                        RhythmPlayer = this
+                        RhythmSimulator = this
                     });
                     break;
 
