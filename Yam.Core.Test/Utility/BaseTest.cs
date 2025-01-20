@@ -5,8 +5,10 @@ namespace Yam.Core.Test.Utility;
 
 public abstract class BaseTest
 {
-    protected BaseTest(ITestOutputHelper output)
+    protected readonly ITestOutputHelper XUnitLogger;
+
+    protected BaseTest(ITestOutputHelper xUnitLogger)
     {
-        GameLogger.Output = output;
+        XUnitLogger = xUnitLogger;
     }
 }

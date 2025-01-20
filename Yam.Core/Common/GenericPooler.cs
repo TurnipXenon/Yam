@@ -1,11 +1,12 @@
 #nullable enable
 using System.Collections.Generic;
-using Godot;
 
 namespace Yam.Core.Common;
 
 public abstract class GenericPooler<TPooledObject, TPooledObjectArgs>
 {
+    public GameLogger Logger = new();
+
     protected readonly List<TPooledObject> InUse = new();
     protected readonly Stack<TPooledObject> Available = new();
 
@@ -29,7 +30,7 @@ public abstract class GenericPooler<TPooledObject, TPooledObjectArgs>
 
         if (newObject == null)
         {
-            GameLogger.PrintErr("Instantiating Pooled Object failed");
+            Logger.PrintErr("Instantiating Pooled Object failed");
         }
         else
         {

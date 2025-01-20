@@ -1,7 +1,6 @@
 using JetBrains.Annotations;
 using Moq;
 using Xunit.Abstractions;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
 using Yam.Core.Test.Utility;
@@ -46,13 +45,13 @@ public abstract class BeatTest
 
             var first3 = BeatUtil.NewHoldBeat_OverlapTest(1f, 2.1f);
             var second3 = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
-            Assert.True(first2.Overlaps(second3));
+            Assert.True(first3.Overlaps(second3));
         }
     }
 
     public class SimulateSingleBeat : BaseTest
     {
-        public SimulateSingleBeat(ITestOutputHelper output) : base(output)
+        public SimulateSingleBeat(ITestOutputHelper xUnitLogger) : base(xUnitLogger)
         {
         }
 
@@ -60,7 +59,7 @@ public abstract class BeatTest
         public void BeatLifecycle()
         {
             var beatTime = 10f;
-            var beat = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime));
+            var beat = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime), XUnitLogger);
 
             var rhythmPlayer = new Mock<IRhythmPlayer>();
             var playerInput = new Mock<IRhythmInput>();
@@ -93,8 +92,8 @@ public abstract class BeatTest
         public void InputCannotBeClaimedTwice()
         {
             var beatTime = 10f;
-            var beat1 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime));
-            var beat2 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime));
+            var beat1 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime), XUnitLogger);
+            var beat2 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime), XUnitLogger);
 
             var rhythmPlayer = new Mock<IRhythmPlayer>();
             var playerInput = new Mock<IRhythmInput>();
@@ -126,7 +125,7 @@ public abstract class BeatTest
 
     public class SimulateHoldBeat : BaseTest
     {
-        public SimulateHoldBeat(ITestOutputHelper output) : base(output)
+        public SimulateHoldBeat(ITestOutputHelper xUnitLogger) : base(xUnitLogger)
         {
         }
 
@@ -140,7 +139,9 @@ public abstract class BeatTest
             {
                 new BeatEntity(startTime),
                 new BeatEntity(endTime),
-            });
+            }, XUnitLogger);
+            beat.Logger.XUnitLogger = XUnitLogger;
+
 
             var rhythmPlayer = new Mock<IRhythmPlayer>();
             var playerInput = new Mock<IRhythmInput>();
@@ -172,10 +173,10 @@ public abstract class BeatTest
 
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns((startTime + endTime) / 2f);
             Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
-            
+
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(endTime);
             Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
-            
+
             beat.OnInputRelease();
             Assert.Equal(BeatInputResult.Excellent, beat.HoldReleaseResult);
         }
@@ -199,9 +200,9 @@ public abstract class BeatTest
         // todo(turnip): too early, good, ok
 
         // todo(turnip): input is already claimed and miss
-        
+
         // todo(turnip): handle input switching when there are two holds that end at different times
-        
+
         // todo(turnip): handle input switching when there is a hold and a beat
     }
 }

@@ -8,6 +8,8 @@ namespace Yam.Core.Rhythm.Input;
 // todo(turnip): refactor code to remove duplicates
 public class KeyboardDirectionInput
 {
+    public GameLogger Logger = new();
+    
     // todo(turnip): see if we can combine them into the details class below
     private Beat? _claimingBeat;
     public Vector2 Direction { get; set; }
@@ -29,7 +31,7 @@ public class KeyboardDirectionInput
             return false;
         }
 
-        GameLogger.Print("Input Claimed");
+        Logger.Print("Input Claimed");
         _claimingBeat = claimingBeat;
         return true;
     }

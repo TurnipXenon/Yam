@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Godot;
+using Xunit.Abstractions;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
@@ -10,6 +11,8 @@ namespace Yam.Core.Rhythm.Chart;
 
 public class Beat : TimeUCoordVector, IBeat
 {
+    public GameLogger Logger = new();
+    
     public static readonly float DefaultTooEarlyRadius = 1f;
     public static readonly float DefaultOkRadius = 0.75f;
     public static readonly float DefaultGoodRadius = 0.5f;
@@ -193,7 +196,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (_state != State.Waiting)
         {
             // todo(turnip): add test for this case
-            GameLogger.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            Logger.PrintErr($"Not expected result: ({Time}, {UCoord})");
             return BeatInputResult.Ignore;
         }
 
@@ -206,7 +209,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            GameLogger.Print($"Missed ({Time}, {UCoord})");
+            Logger.Print($"Missed ({Time}, {UCoord})");
             return BeatInputResult.Miss;
         }
 
@@ -254,7 +257,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            GameLogger.Print($"Missed Hold ({Time}, {UCoord})");
+            Logger.Print($"Missed Hold ({Time}, {UCoord})");
             return BeatInputResult.Miss;
         }
 
@@ -271,7 +274,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (_state != State.Waiting)
         {
             // todo(turnip): add test for this case
-            GameLogger.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            Logger.PrintErr($"Not expected result: ({Time}, {UCoord})");
             return BeatInputResult.Ignore;
         }
 
@@ -284,7 +287,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            GameLogger.Print($"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
+            Logger.Print($"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
             return BeatInputResult.Miss;
         }
 
@@ -307,7 +310,7 @@ public class Beat : TimeUCoordVector, IBeat
                 // todo: think of how visualizing works later
                 _visualizer?.InformEndResult(result, this);
                 _visualizer = null;
-                GameLogger.Print("Start hold");
+                Logger.Print("Start hold");
                 return BeatInputResult.Holding;
             }
         }
@@ -341,7 +344,7 @@ public class Beat : TimeUCoordVector, IBeat
         {
             // todo(turnip): inform initial beat of the result and animate
             var result = reactionWindow.BeatInputResult;
-            GameLogger.Print($"Release: {result}");
+            Logger.Print($"Release: {result}");
             // todo: figure out which visualizer we should call??? the hold beat???
             // _visualizer?.InformEndResult(result, this);
             // _visualizer = null;
@@ -352,7 +355,18 @@ public class Beat : TimeUCoordVector, IBeat
         }
 
         HoldReleaseResult = BeatInputResult.Miss;
-        GameLogger.Print("Release too late!");
+        Logger.Print("Release too late!");
         _state = State.Done;
+    }
+
+    public static Beat FromEntity(BeatEntity beatEntity, List<ReactionWindow> defaultRelativeReactionWindow, ITestOutputHelper xUnitLogger)
+    {
+        var beat = FromEntity(beatEntity, defaultRelativeReactionWindow);
+        beat.Logger.XUnitLogger = xUnitLogger;
+        foreach (var child in beat.BeatList)
+        {
+            child.Logger.XUnitLogger = xUnitLogger;
+        }
+        return beat;
     }
 }

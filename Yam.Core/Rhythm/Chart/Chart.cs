@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using Godot;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
@@ -8,6 +7,8 @@ namespace Yam.Core.Rhythm.Chart;
 
 public class Chart
 {
+    public GameLogger Logger = new();
+    
     public const int ChannelSize = 5;
 
     public List<BeatChannel> ChannelList { get; set; } = new(ChannelSize);
@@ -42,7 +43,8 @@ public class Chart
 
             if (!wasAdded)
             {
-                GameLogger.PrintErr($"Beat not added: {beat.Time}");
+                // todo(turnip): fix static call to logger figure out how to cancel logs in static context???
+                chart.Logger.PrintErr($"Beat not added: {beat.Time}");
             }
 
             // todo: take note of this logic

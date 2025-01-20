@@ -10,12 +10,8 @@ namespace Yam.Core.Test.Rhythm.Input;
 [TestSubject(typeof(KeyboardSingularInput))]
 public abstract class KeyboardSingularInputTest
 {
-    public class Lifecycle: BaseTest
+    public class Lifecycle
     {
-        public Lifecycle(ITestOutputHelper output) : base(output)
-        {
-        }
-        
         [Fact]
         public void SimulateClaimingLifecycle()
         {

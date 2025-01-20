@@ -31,7 +31,7 @@ public partial class HoldPiece : Node2D
 
         if (StartBeat == null)
         {
-            GameLogger.PrintErr($"Failed creating start beat: {startBeat.Time}");
+            GD.Print($"Failed creating start beat: {startBeat.Time}");
             return;
         }
 

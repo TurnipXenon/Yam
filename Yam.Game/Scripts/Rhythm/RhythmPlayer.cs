@@ -82,7 +82,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         
         // relying on song start instead of getting playback position
         // we will have issues later when we enable pausing and song looping
-        // GameLogger.Print($"{_currentSongTime} vs {AudioStreamPlayer.GetPlaybackPosition()}");
+        // GD.Print($"{_currentSongTime} vs {AudioStreamPlayer.GetPlaybackPosition()}");
 
         // simulate idle time for input misses
         _chartModel.SimulateBeatInput(this, SpecialInput.GameInput);
@@ -128,7 +128,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         using var f = FileAccess.Open(Chart.ResourcePath, FileAccess.ModeFlags.Read);
         if (f == null)
         {
-            GameLogger.PrintErr("Chart: Missing Chart file");
+            GD.PrintErr("Chart: Missing Chart file");
             return;
         }
 
@@ -136,7 +136,7 @@ public partial class RhythmPlayer : Node, IRhythmPlayer
         _chartModel = ChartModel.FromEntity(chartEntity, RelativeReactionWindow);
 
         // todo(turnip): remove
-        GameLogger.Print("Done parsing");
+        GD.Print("Done parsing");
 
         // todo(turnip): choose music based on chart instead of hardcoded-ish here
     }
