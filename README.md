@@ -2,7 +2,19 @@
 
 [![.NET](https://github.com/TurnipXenon/Yam/actions/workflows/dotnet.yml/badge.svg)](https://github.com/TurnipXenon/Yam/actions/workflows/dotnet.yml)
 
-PLEASE DON"T READ NOT YET DONE!!! WE'RE PROTOTYPING :P
+Yam is a rhythm game. No concept or pitch outside of that just yet.
+
+## Currently development progress
+
+We recently finished implementing holds. The next goals are:
+
+1. Implement scenario where we press two holds and figure out which hold to prioritize during release. Check notebook for notes.
+2. Implement moving to follow holds.
+3. Implement ignoring moving to follow holds when the ticks are at the same uCoord AND no related anchors (POut to PIn).
+4. Implement slides.
+5. Implement scoring.
+6. Implement animations.
+7. Document design and interactions.
 
 ## OLD README
 

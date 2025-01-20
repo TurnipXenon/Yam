@@ -20,7 +20,7 @@ public class BeatChannel : List<Beat>
     /**
      * Note that CurrentIndex increases
      */
-    public Beat? TryToGetBeatToVisualize(IRhythmPlayer rhythmPlayer)
+    public Beat? TryToGetBeatToVisualize(IRhythmSimulator rhythmSimulator)
     {
         if (_currentVisualizationIndex >= Count)
         {
@@ -29,8 +29,8 @@ public class BeatChannel : List<Beat>
 
         var currentBeat = this[_currentVisualizationIndex];
         
-        if (rhythmPlayer.GetCurrentSongTime() > currentBeat.Time - rhythmPlayer.GetPreEmptTime()
-            && rhythmPlayer.GetCurrentSongTime() < currentBeat.Time + rhythmPlayer.GetPreEmptTime())
+        if (rhythmSimulator.GetCurrentSongTime() > currentBeat.Time - rhythmSimulator.GetPreEmptTime()
+            && rhythmSimulator.GetCurrentSongTime() < currentBeat.Time + rhythmSimulator.GetPreEmptTime())
         {
             _currentVisualizationIndex++;
             return currentBeat;
@@ -44,10 +44,10 @@ public class BeatChannel : List<Beat>
         return _currentInputIndex >= Count ? null : this[_currentInputIndex];
     }
 
-    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
+    public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
         var currentBeat = TryToGetBeatForInput();
-        var result = currentBeat?.SimulateInput(rhythmPlayer, playerInput);
+        var result = currentBeat?.SimulateInput(rhythmSimulator, playerInput);
 
         switch (result)
         {

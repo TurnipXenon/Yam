@@ -143,7 +143,7 @@ public class Beat : TimeUCoordVector, IBeat
         return new Vector2(Time, UCoord);
     }
 
-    public BeatInputResult SimulateInput(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
+    public BeatInputResult SimulateInput(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
         if (_state == State.Done)
         {
@@ -152,9 +152,9 @@ public class Beat : TimeUCoordVector, IBeat
 
         var result = GetBeatType() switch
         {
-            BeatType.Single => _simulateSingleBeat(rhythmPlayer, playerInput),
+            BeatType.Single => _simulateSingleBeat(rhythmSimulator, playerInput),
             BeatType.Slide => BeatInputResult.Ignore,
-            BeatType.Hold => _simulateHoldBeat(rhythmPlayer, playerInput),
+            BeatType.Hold => _simulateHoldBeat(rhythmSimulator, playerInput),
             _ => throw new ArgumentOutOfRangeException()
         };
 
@@ -185,13 +185,13 @@ public class Beat : TimeUCoordVector, IBeat
         return result;
     }
 
-    private BeatInputResult _simulateSingleBeat(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
+    private BeatInputResult _simulateSingleBeat(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
         // todo: fix window from being based on current time to current beat
 
         var tooEarlyReaction = _reactionWindowList.Last();
         var okReaction = _reactionWindowList[^2];
-        var currentTime = rhythmPlayer.GetCurrentSongTime();
+        var currentTime = rhythmSimulator.GetCurrentSongTime();
 
         if (_state != State.Waiting)
         {
@@ -235,17 +235,17 @@ public class Beat : TimeUCoordVector, IBeat
     #region Hold
 
     private int _holdIndex;
-    private IRhythmPlayer? _rhythmPlayer;
+    private IRhythmSimulator? _simulator;
 
     // For hold, we need to store the following information:
     // Hold Start (start)
     // Hold consistency (between each tick)
     // Hold release (final beat or final tick)
-    private BeatInputResult _simulateHoldBeat(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
+    private BeatInputResult _simulateHoldBeat(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
         if (_state == State.Waiting)
         {
-            return _simulateStartHold(rhythmPlayer, playerInput);
+            return _simulateStartHold(rhythmSimulator, playerInput);
         }
 
         // todo(turnip): for holding with movement, make sure we are on track
@@ -253,7 +253,7 @@ public class Beat : TimeUCoordVector, IBeat
         // detecting release is handled at the bottom, we only handle possible late releases here
         var lastBeat = BeatList.Last();
         var okReaction = lastBeat._reactionWindowList[^2];
-        var currentTime = rhythmPlayer.GetCurrentSongTime();
+        var currentTime = rhythmSimulator.GetCurrentSongTime();
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
@@ -265,11 +265,11 @@ public class Beat : TimeUCoordVector, IBeat
     }
 
 
-    private BeatInputResult _simulateStartHold(IRhythmPlayer rhythmPlayer, IRhythmInput playerInput)
+    private BeatInputResult _simulateStartHold(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
         var tooEarlyReaction = _reactionWindowList.Last();
         var okReaction = _reactionWindowList[^2];
-        var currentTime = rhythmPlayer.GetCurrentSongTime();
+        var currentTime = rhythmSimulator.GetCurrentSongTime();
 
         if (_state != State.Waiting)
         {
@@ -303,7 +303,7 @@ public class Beat : TimeUCoordVector, IBeat
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {
                 // we need reference to this for the release time
-                _rhythmPlayer = rhythmPlayer;
+                _simulator = rhythmSimulator;
 
                 // todo(turnip): inform initial beat of the result and animate
                 var result = reactionWindow.BeatInputResult;
@@ -332,7 +332,7 @@ public class Beat : TimeUCoordVector, IBeat
 
     public void OnInputRelease()
     {
-        var currentTime = _rhythmPlayer?.GetCurrentSongTime();
+        var currentTime = _simulator?.GetCurrentSongTime();
         if (currentTime == null)
         {
             return;

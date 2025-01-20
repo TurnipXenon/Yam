@@ -54,12 +54,12 @@ public class Chart
         return chart;
     }
 
-    public List<Beat> GetVisualizableBeats(IRhythmPlayer rhythmPlayer)
+    public List<Beat> GetVisualizableBeats(IRhythmSimulator rhythmSimulator)
     {
         List<Beat> beats = new();
         ChannelList.ForEach(b =>
         {
-            var nb = b.TryToGetBeatToVisualize(rhythmPlayer);
+            var nb = b.TryToGetBeatToVisualize(rhythmSimulator);
             if (nb != null)
             {
                 beats.Add(nb);
@@ -68,10 +68,10 @@ public class Chart
         return beats;
     }
 
-    public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput input)
+    public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput input)
     {
         ChannelList.Sort((a, b) => a.GetLatestInputTime().CompareTo(b.GetLatestInputTime()));
 
-        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmPlayer, input));
+        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmSimulator, input));
     }
 }

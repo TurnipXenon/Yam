@@ -17,7 +17,7 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         set { _beat = value; }
     }
 
-    public RhythmPlayer RhythmPlayer { get; set; }
+    public RhythmSimulator RhythmSimulator { get; set; }
     public SingleBeatPooler Pooler { get; set; }
 
     private Stack<IBasicListener> _releaseListeners = new();
@@ -30,14 +30,14 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         }
 
         // todo(turnip): cache position
-        var x = RhythmPlayer.SpawnPoint.Position.X
-                + ((RhythmPlayer.GetCurrentSongTime() - (Beat.Time - RhythmPlayer.PreEmptDuration)) *
-                   (RhythmPlayer.TriggerPoint.Position.X - RhythmPlayer.SpawnPoint.Position.X))
-                / (RhythmPlayer.PreEmptDuration);
+        var x = RhythmSimulator.SpawnPoint.Position.X
+                + ((RhythmSimulator.GetCurrentSongTime() - (Beat.Time - RhythmSimulator.PreEmptDuration)) *
+                   (RhythmSimulator.TriggerPoint.Position.X - RhythmSimulator.SpawnPoint.Position.X))
+                / (RhythmSimulator.PreEmptDuration);
 
         Position = Position with { X = x };
 
-        if (Position.X > RhythmPlayer.DestructionPoint.Position.X)
+        if (Position.X > RhythmSimulator.DestructionPoint.Position.X)
         {
             ReleaseSelf();
         }
@@ -63,21 +63,21 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
     public void Initialize(PooledSingleBeatArgs args)
     {
         args.Beat.IsVisualized = true;
-        RhythmPlayer = args.RhythmPlayer;
+        RhythmSimulator = args.RhythmSimulator;
         Beat = args.Beat;
         args.Beat.SetVisualizer(this);
-        Position = Position with { Y = RhythmPlayer.TriggerPoint.Position.Y + _beat.UCoord };
+        Position = Position with { Y = RhythmSimulator.TriggerPoint.Position.Y + _beat.UCoord };
         IsActive = true;
         Name = $"SingleBeat: {Beat.GetVector()}";
         Visible = true;
     }
 
-    public static float TimeToX(RhythmPlayer rhythmPlayer, float time)
+    public static float TimeToX(RhythmSimulator rhythmSimulator, float time)
     {
-        return rhythmPlayer.SpawnPoint.Position.X
-               + ((rhythmPlayer.GetCurrentSongTime() - (time - rhythmPlayer.PreEmptDuration)) *
-                  (rhythmPlayer.TriggerPoint.Position.X - rhythmPlayer.SpawnPoint.Position.X))
-               / (rhythmPlayer.PreEmptDuration);
+        return rhythmSimulator.SpawnPoint.Position.X
+               + ((rhythmSimulator.GetCurrentSongTime() - (time - rhythmSimulator.PreEmptDuration)) *
+                  (rhythmSimulator.TriggerPoint.Position.X - rhythmSimulator.SpawnPoint.Position.X))
+               / (rhythmSimulator.PreEmptDuration);
     }
 
     public void InformEndResult(BeatInputResult result, IBeat beat)
