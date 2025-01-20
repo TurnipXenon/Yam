@@ -1,14 +1,14 @@
 [gd_scene load_steps=10 format=3 uid="uid://bt1qe76771afk"]
 
-[ext_resource type="Script" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
-[ext_resource type="Script" path="res://Scripts/Rhythm/RhythmPlayer.cs" id="2_hdbk4"]
+[ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
+[ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_hdbk4"]
 [ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-test.rhythm.json" id="3_2dqin"]
 [ext_resource type="AudioStream" uid="uid://bjopcy3y4o24c" path="res://Scenes/Rhythm/Songs/sunleth_waterscape/Final Fantasy XIII - The Sunleth Waterscape.mp3" id="4_kql7o"]
 [ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="4_rd1fy"]
 [ext_resource type="PackedScene" uid="uid://cwlyq1np8ldmr" path="res://Scenes/Rhythm/RhythmPlayground/single_beat.tscn" id="5_711h0"]
 [ext_resource type="PackedScene" uid="uid://bh1kbt58r72bx" path="res://Scenes/Rhythm/RhythmPlayground/tick.tscn" id="6_n4de7"]
 [ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="7_gsea5"]
-[ext_resource type="Script" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="8_lk7v4"]
+[ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="8_lk7v4"]
 
 [node name="RhythmEditor" type="Node2D"]
 
@@ -18,14 +18,14 @@ script = ExtResource("1_vddvi")
 [node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("AudioStreamPlayer", "TriggerPoint", "SpawnPoint", "DestructionPoint", "Parent")]
 script = ExtResource("2_hdbk4")
 Chart = ExtResource("3_2dqin")
-AudioStreamPlayer = NodePath("../AudioStreamPlayer")
 AudioStream = ExtResource("4_kql7o")
-TriggerPoint = NodePath("../Trigger point")
-SpawnPoint = NodePath("../Spawn point")
-DestructionPoint = NodePath("../Destruction point")
 SingleBeatPrefab = ExtResource("5_711h0")
 TickPrefab = ExtResource("6_n4de7")
 PreEmptDuration = 1.5
+AudioStreamPlayer = NodePath("../AudioStreamPlayer")
+TriggerPoint = NodePath("../Trigger point")
+SpawnPoint = NodePath("../Spawn point")
+DestructionPoint = NodePath("../Destruction point")
 Parent = NodePath("..")
 
 [node name="Trigger point" type="Sprite2D" parent="."]
