@@ -17,7 +17,7 @@ public partial class HoldPiece : Node2D
     private Vector2 _ogP2;
     private Vector2 _ogP2In;
 
-    public void Initialize(RhythmPlayer rhythmPlayer,
+    public void Initialize(RhythmSimulator rhythmSimulator,
         Beat startBeat,
         Beat endBeat,
         SingleBeatPooler pooler,
@@ -26,7 +26,7 @@ public partial class HoldPiece : Node2D
         StartBeat = pooler.Request(new PooledSingleBeatArgs()
         {
             Beat = startBeat,
-            RhythmPlayer = rhythmPlayer
+            RhythmSimulator = rhythmSimulator
         });
 
         if (StartBeat == null)
@@ -39,19 +39,19 @@ public partial class HoldPiece : Node2D
 
         // todo: find a better place
         _ogP1 = StartBeat.Beat.GetVector();
-        _ogP1.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, startBeat.Time);
+        _ogP1.X = SingleBeat.SingleBeat.TimeToX(rhythmSimulator, startBeat.Time);
         if (startBeat.POut != null)
         {
             _ogP1Out = startBeat.POut.ToVector();
-            _ogP1Out.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, _ogP1Out.X);
+            _ogP1Out.X = SingleBeat.SingleBeat.TimeToX(rhythmSimulator, _ogP1Out.X);
         }
 
         _ogP2 = _endBeat.GetVector();
-        _ogP2.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, _endBeat.Time);
+        _ogP2.X = SingleBeat.SingleBeat.TimeToX(rhythmSimulator, _endBeat.Time);
         if (endBeat.PIn != null)
         {
             _ogP2In = endBeat.PIn.ToVector();
-            _ogP2In.X = SingleBeat.SingleBeat.TimeToX(rhythmPlayer, _ogP2In.X);
+            _ogP2In.X = SingleBeat.SingleBeat.TimeToX(rhythmSimulator, _ogP2In.X);
         }
         
         var p1DiffVector = _ogP1; // todo: reduce with outward p1 p1_out
@@ -62,7 +62,7 @@ public partial class HoldPiece : Node2D
                      * DivisionMultiplier;
         _increment = 1f / _divisions;
 
-        Position = new Vector2(_ogP1.X - SingleBeat.SingleBeat.TimeToX(rhythmPlayer, parentBeat.Time),
+        Position = new Vector2(_ogP1.X - SingleBeat.SingleBeat.TimeToX(rhythmSimulator, parentBeat.Time),
             startBeat.UCoord);
     }
 

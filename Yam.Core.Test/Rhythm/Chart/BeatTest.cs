@@ -61,30 +61,30 @@ public abstract class BeatTest
             var beatTime = 10f;
             var beat = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime), XUnitLogger);
 
-            var rhythmPlayer = new Mock<IRhythmPlayer>();
+            var rhythmSimulator = new Mock<IRhythmSimulator>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
 
             // start: too far
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+            rhythmSimulator.Setup(r => r.GetCurrentSongTime())
                 .Returns(beatTime - (Beat.DefaultTooEarlyRadius + Beat.FrameEpsilon));
-            var tooFar = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            var tooFar = beat.SimulateInput(rhythmSimulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Idle, tooFar);
 
             // within range but no inputs yet
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultOkRadius);
-            var noInput = beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput);
+            rhythmSimulator.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultOkRadius);
+            var noInput = beat.SimulateInput(rhythmSimulator.Object, SpecialInput.GameInput);
             Assert.Equal(BeatInputResult.Anticipating, noInput);
 
             // within range of excellent with input
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+            rhythmSimulator.Setup(r => r.GetCurrentSongTime())
                 .Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
             playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
-            var excellentInput = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            var excellentInput = beat.SimulateInput(rhythmSimulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
 
             // check the beat after it's done
-            Assert.Equal(BeatInputResult.Done, beat.SimulateInput(rhythmPlayer.Object, playerInput.Object));
+            Assert.Equal(BeatInputResult.Done, beat.SimulateInput(rhythmSimulator.Object, playerInput.Object));
         }
 
 
@@ -95,23 +95,23 @@ public abstract class BeatTest
             var beat1 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime), XUnitLogger);
             var beat2 = BeatUtil.NewSingleBeat(new BeatEntity(time: beatTime), XUnitLogger);
 
-            var rhythmPlayer = new Mock<IRhythmPlayer>();
+            var simulator = new Mock<IRhythmSimulator>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
 
             // within range of excellent with input
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+            simulator.Setup(r => r.GetCurrentSongTime())
                 .Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
             playerInput.Setup(i => i.ClaimOnStart(beat1)).Returns(true);
-            var excellentInput = beat1.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            var excellentInput = beat1.SimulateInput(simulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
             playerInput.Setup(i => i.GetClaimingChannel()).Returns(beat1);
 
-            var anticipating = beat2.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            var anticipating = beat2.SimulateInput(simulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Anticipating, anticipating);
 
             // check the beat after it's done
-            Assert.Equal(BeatInputResult.Done, beat1.SimulateInput(rhythmPlayer.Object, playerInput.Object));
+            Assert.Equal(BeatInputResult.Done, beat1.SimulateInput(simulator.Object, playerInput.Object));
         }
 
         // todo(turnip): cannot claim a beat when in held or release state
@@ -143,7 +143,7 @@ public abstract class BeatTest
             beat.Logger.XUnitLogger = XUnitLogger;
 
 
-            var rhythmPlayer = new Mock<IRhythmPlayer>();
+            var simulator = new Mock<IRhythmSimulator>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
 
@@ -151,31 +151,31 @@ public abstract class BeatTest
             Assert.Equal(BeatType.Hold, beat.GetBeatType());
 
             // start: too far
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+            simulator.Setup(r => r.GetCurrentSongTime())
                 .Returns(startTime - (Beat.DefaultTooEarlyRadius + Beat.FrameEpsilon));
-            var tooFar = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            var tooFar = beat.SimulateInput(simulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Idle, tooFar);
 
             // within range but no inputs yet
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(startTime - Beat.DefaultOkRadius);
-            var noInput = beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput);
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(startTime - Beat.DefaultOkRadius);
+            var noInput = beat.SimulateInput(simulator.Object, SpecialInput.GameInput);
             Assert.Equal(BeatInputResult.Anticipating, noInput);
 
             // within range of excellent with input
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+            simulator.Setup(r => r.GetCurrentSongTime())
                 .Returns(startTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
             playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
-            var holding = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            var holding = beat.SimulateInput(simulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Holding, holding);
 
             // check the beat after it's done
-            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
 
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns((startTime + endTime) / 2f);
-            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns((startTime + endTime) / 2f);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
 
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(endTime);
-            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(endTime);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
 
             beat.OnInputRelease();
             Assert.Equal(BeatInputResult.Excellent, beat.HoldReleaseResult);

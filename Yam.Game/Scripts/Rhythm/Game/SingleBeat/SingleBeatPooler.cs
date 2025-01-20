@@ -7,7 +7,7 @@ namespace Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
 public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 {
-    private readonly RhythmPlayer _rhythmPlayer;
+    private readonly RhythmSimulator _rhythmSimulator;
     private readonly PackedScene _prefab;
 
     protected override SingleBeat? InstantiatePooledObject(PooledSingleBeatArgs args)
@@ -20,14 +20,14 @@ public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
         var singleBeat = _prefab.Instantiate<SingleBeat>();
         singleBeat.Initialize(args);
         
-        singleBeat.RhythmPlayer.Parent.AddChild(singleBeat);
+        singleBeat.RhythmSimulator.Parent.AddChild(singleBeat);
         singleBeat.Pooler = this;
         return singleBeat;
     }
 
-    public SingleBeatPooler(RhythmPlayer rhythmPlayer, PackedScene prefab)
+    public SingleBeatPooler(RhythmSimulator rhythmSimulator, PackedScene prefab)
     {
-        _rhythmPlayer = rhythmPlayer;
+        _rhythmSimulator = rhythmSimulator;
         _prefab = prefab;
     }
 
