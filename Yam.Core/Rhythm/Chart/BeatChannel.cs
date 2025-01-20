@@ -50,9 +50,10 @@ public class BeatChannel : List<Beat>
         switch (result)
         {
             case BeatInputResult.Idle:
-                break;
             case BeatInputResult.Anticipating:
+            case BeatInputResult.Holding:
                 break;
+            case BeatInputResult.Done:
             case BeatInputResult.TooEarly:
             case BeatInputResult.Miss:
             case BeatInputResult.Bad:
@@ -61,8 +62,6 @@ public class BeatChannel : List<Beat>
             case BeatInputResult.Excellent:
                 GameLogger.Print($"Finished with ({currentBeat!.Time}, {currentBeat.UCoord}): {result.ToString()}");
                 _currentInputIndex++;
-                break;
-            case BeatInputResult.Holding:
                 break;
             case BeatInputResult.Ignore:
                 GameLogger.Print($"IGNORE: Finished with ({currentBeat!.Time}, {currentBeat.UCoord})");
@@ -75,5 +74,10 @@ public class BeatChannel : List<Beat>
         }
 
         // todo(turnip): send signal if there is a reaction
+    }
+
+    public float GetLatestInputTime()
+    {
+        return TryToGetBeatForInput()?.Time ?? 0f;
     }
 }

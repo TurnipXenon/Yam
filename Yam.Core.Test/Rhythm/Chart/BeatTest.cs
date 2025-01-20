@@ -16,47 +16,46 @@ public abstract class BeatTest
         [Fact]
         public void DoesNotOverlap()
         {
-            var first = BeatUtil.NewHoldBeat(0f, 1f);
-            var second = BeatUtil.NewHoldBeat(2f, 3f);
+            var first = BeatUtil.NewHoldBeat_OverlapTest(0f, 1f);
+            var second = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
             Assert.False(first.Overlaps(second));
         }
 
         [Fact]
         public void EarlyTailOverlaps()
         {
-            var first = BeatUtil.NewHoldBeat(2.5f, 3f);
-            var second = BeatUtil.NewHoldBeat(2f, 3f);
+            var first = BeatUtil.NewHoldBeat_OverlapTest(2.5f, 3f);
+            var second = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
             Assert.True(first.Overlaps(second));
-            
-            var first2 = BeatUtil.NewHoldBeat(2f, 4f);
-            var second2 = BeatUtil.NewHoldBeat(2f, 3f);
+
+            var first2 = BeatUtil.NewHoldBeat_OverlapTest(2f, 4f);
+            var second2 = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
             Assert.True(first2.Overlaps(second2));
         }
 
         [Fact]
         public void LateTailOverlaps()
         {
-            var first = BeatUtil.NewHoldBeat(1f, 4f);
-            var second = BeatUtil.NewHoldBeat(2f, 3f);
+            var first = BeatUtil.NewHoldBeat_OverlapTest(1f, 4f);
+            var second = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
             Assert.True(first.Overlaps(second));
-            
-            var first2 = BeatUtil.NewHoldBeat(1f, 3f);
-            var second2 = BeatUtil.NewHoldBeat(2f, 3f);
+
+            var first2 = BeatUtil.NewHoldBeat_OverlapTest(1f, 3f);
+            var second2 = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
             Assert.True(first2.Overlaps(second2));
-            
-            var first3 = BeatUtil.NewHoldBeat(1f, 2.1f);
-            var second3 = BeatUtil.NewHoldBeat(2f, 3f);
+
+            var first3 = BeatUtil.NewHoldBeat_OverlapTest(1f, 2.1f);
+            var second3 = BeatUtil.NewHoldBeat_OverlapTest(2f, 3f);
             Assert.True(first2.Overlaps(second3));
         }
     }
 
-    public class SimulateSingleBeat
+    public class SimulateSingleBeat : BaseTest
     {
-        public SimulateSingleBeat(ITestOutputHelper output)
+        public SimulateSingleBeat(ITestOutputHelper output) : base(output)
         {
-            GameLogger.Output = output;
         }
-        
+
         [Fact]
         public void BeatLifecycle()
         {
@@ -66,9 +65,10 @@ public abstract class BeatTest
             var rhythmPlayer = new Mock<IRhythmPlayer>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
-            
+
             // start: too far
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - (Beat.DefaultTooEarlyRadius + Beat.FrameEpsilon));
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+                .Returns(beatTime - (Beat.DefaultTooEarlyRadius + Beat.FrameEpsilon));
             var tooFar = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Idle, tooFar);
 
@@ -76,18 +76,19 @@ public abstract class BeatTest
             rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultOkRadius);
             var noInput = beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput);
             Assert.Equal(BeatInputResult.Anticipating, noInput);
-            
+
             // within range of excellent with input
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+                .Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
             playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
             var excellentInput = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
-            
+
             // check the beat after it's done
             Assert.Equal(BeatInputResult.Done, beat.SimulateInput(rhythmPlayer.Object, playerInput.Object));
         }
-        
-        
+
+
         [Fact]
         public void InputCannotBeClaimedTwice()
         {
@@ -98,29 +99,109 @@ public abstract class BeatTest
             var rhythmPlayer = new Mock<IRhythmPlayer>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
-            
+
             // within range of excellent with input
-            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+                .Returns(beatTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
             playerInput.Setup(i => i.ClaimOnStart(beat1)).Returns(true);
             var excellentInput = beat1.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
             playerInput.Setup(i => i.GetClaimingChannel()).Returns(beat1);
-            
+
             var anticipating = beat2.SimulateInput(rhythmPlayer.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Anticipating, anticipating);
-            
+
             // check the beat after it's done
             Assert.Equal(BeatInputResult.Done, beat1.SimulateInput(rhythmPlayer.Object, playerInput.Object));
         }
-        
+
         // todo(turnip): cannot claim a beat when in held or release state
-        
+
         // todo(turnip): no input and miss
-        
+
         // todo(turnip): too early, good, ok
-        
+
         // todo(turnip): input is already claimed and miss
     }
-    
-    // todo(turnip) create tests for the input provider
+
+    public class SimulateHoldBeat : BaseTest
+    {
+        public SimulateHoldBeat(ITestOutputHelper output) : base(output)
+        {
+        }
+
+        // todo: simple hold beat
+        [Fact]
+        public void SimpleHoldLifecycle()
+        {
+            var startTime = 10f;
+            var endTime = 15f;
+            var beat = BeatUtil.NewHoldBeat(new()
+            {
+                new BeatEntity(startTime),
+                new BeatEntity(endTime),
+            });
+
+            var rhythmPlayer = new Mock<IRhythmPlayer>();
+            var playerInput = new Mock<IRhythmInput>();
+            playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+
+            // assert we're doing hold beats
+            Assert.Equal(BeatType.Hold, beat.GetBeatType());
+
+            // start: too far
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+                .Returns(startTime - (Beat.DefaultTooEarlyRadius + Beat.FrameEpsilon));
+            var tooFar = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Idle, tooFar);
+
+            // within range but no inputs yet
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(startTime - Beat.DefaultOkRadius);
+            var noInput = beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput);
+            Assert.Equal(BeatInputResult.Anticipating, noInput);
+
+            // within range of excellent with input
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime())
+                .Returns(startTime - Beat.DefaultExcellentRadius + Beat.FrameEpsilon);
+            playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
+            var holding = beat.SimulateInput(rhythmPlayer.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Holding, holding);
+
+            // check the beat after it's done
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
+
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns((startTime + endTime) / 2f);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
+            
+            rhythmPlayer.Setup(r => r.GetCurrentSongTime()).Returns(endTime);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(rhythmPlayer.Object, SpecialInput.GameInput));
+            
+            beat.OnInputRelease();
+            Assert.Equal(BeatInputResult.Excellent, beat.HoldReleaseResult);
+        }
+
+        // todo: hold release late
+
+        // todo: hold release outside excellent
+
+        // todo: hold beat with multiple ticks
+
+        // todo: hold beat with movements
+
+        // todo: hold beat ignore movements when all the ticks have the same point and no in/out anchors
+
+        // todo(turnip): cannot be claimed twice
+
+        // todo(turnip): cannot claim a beat when in held or release state
+
+        // todo(turnip): no input and miss
+
+        // todo(turnip): too early, good, ok
+
+        // todo(turnip): input is already claimed and miss
+        
+        // todo(turnip): handle input switching when there are two holds that end at different times
+        
+        // todo(turnip): handle input switching when there is a hold and a beat
+    }
 }

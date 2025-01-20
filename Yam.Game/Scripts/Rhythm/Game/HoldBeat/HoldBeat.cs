@@ -6,7 +6,7 @@ using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
 namespace Yam.Game.Scripts.Rhythm.Game.HoldBeat;
 
-public partial class HoldBeat : Node2D, IBasicListener
+public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
 {
     private Beat _mainBeat;
     private RhythmPlayer _rhythmPlayer;
@@ -33,6 +33,7 @@ public partial class HoldBeat : Node2D, IBasicListener
             var pooler = i == 0 ? _rhythmPlayer.SingleBeatPooler : _rhythmPlayer.TickPooler;
             var holdPiece = new HoldPiece();
             holdPiece.Initialize(_rhythmPlayer, _mainBeat.BeatList[i], _mainBeat.BeatList[i + 1], pooler, _mainBeat);
+            // todo(turnip): set visualizer here?
             AddChild(holdPiece);
 
             if (i == 0)
@@ -66,5 +67,10 @@ public partial class HoldBeat : Node2D, IBasicListener
     public void Trigger()
     {
         QueueFree();
+    }
+
+    public void InformEndResult(BeatInputResult result, IBeat beat)
+    {
+        throw new System.NotImplementedException();
     }
 }

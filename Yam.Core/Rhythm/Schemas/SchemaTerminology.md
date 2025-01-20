@@ -74,3 +74,5 @@ distance or number of increments = (abs(P1 - P1_in)
 ```
 
 TODO: Set hold line pooler and tick pooler. Then we create hold beat object which manages hold line and tick pool. It returns these items to the pooler later too
+
+**Special note:** Issues with syncing audio with beat input. Here's the ideal way of doing it: https://rhythmquestgame.com/devlog/04.html

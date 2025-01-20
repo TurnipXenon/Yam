@@ -68,6 +68,8 @@ public class Chart
 
     public void SimulateBeatInput(IRhythmPlayer rhythmPlayer, IRhythmInput input)
     {
+        ChannelList.Sort((a, b) => a.GetLatestInputTime().CompareTo(b.GetLatestInputTime()));
+
         ChannelList.ForEach(c => c.SimulateBeatInput(rhythmPlayer, input));
     }
 }
