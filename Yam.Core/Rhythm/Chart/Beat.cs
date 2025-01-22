@@ -17,7 +17,6 @@ public class Beat : TimeUCoordVector, IBeat
     public static readonly float DefaultOkRadius = 0.75f;
     public static readonly float DefaultGoodRadius = 0.5f;
     public static readonly float DefaultExcellentRadius = 0.2f;
-    public static readonly float FrameEpsilon = 1f / 60f;
 
     // todo(turnip): NOW
     public static readonly List<ReactionWindow> DefaultRelativeReactionWindow = new()

@@ -16,6 +16,12 @@ public class BeatEntity : TimeUCoordVector
     {
         Time = time;
     }
+    
+    public BeatEntity(float time, float uCoord)
+    {
+        Time = time;
+        UCoord = uCoord;
+    }
 
     public TimeUCoordVector? PIn { get; set; }
     public TimeUCoordVector? POut { get; set; }
@@ -27,11 +33,13 @@ public class BeatEntity : TimeUCoordVector
     /// <returns>BeatEntity</returns>
     public BeatEntity ShallowClone()
     {
-        var newBeat = new BeatEntity();
-        newBeat.Time = Time;
-        newBeat.UCoord = UCoord;
-        newBeat.PIn = PIn?.Clone();
-        newBeat.POut = POut?.Clone();
+        var newBeat = new BeatEntity
+        {
+            Time = Time,
+            UCoord = UCoord,
+            PIn = PIn?.Clone(),
+            POut = POut?.Clone()
+        };
         return newBeat;
     }
 }
