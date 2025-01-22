@@ -23,6 +23,10 @@ and resources used to help make the changes in each PRs*
 
 - [ ] Add a log for this PR and link their files (in the current branch
   not main)
+- [ ] Insert how you solved the problem
+- [ ] Insert all references and help used to solve this problem
 
-- Insert how you solved the problem
-- Insert all references and help used to solve this problem
+## TODO
+
+| Task |  Description | Date added | Date started | Date finished |
+|---|---|---|---|---|
