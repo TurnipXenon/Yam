@@ -64,6 +64,7 @@ public abstract class BeatTest
             var rhythmSimulator = new Mock<IRhythmSimulator>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+            playerInput.Setup(i => i.GetSource()).Returns(InputSource.Player);
 
             // start: too far
             rhythmSimulator.Setup(r => r.GetCurrentSongTime())
@@ -98,6 +99,7 @@ public abstract class BeatTest
             var simulator = new Mock<IRhythmSimulator>();
             var playerInput = new Mock<IRhythmInput>();
             playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+            playerInput.Setup(i => i.GetSource()).Returns(InputSource.Player);
 
             // within range of excellent with input
             simulator.Setup(r => r.GetCurrentSongTime())

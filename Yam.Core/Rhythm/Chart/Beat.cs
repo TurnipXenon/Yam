@@ -105,6 +105,24 @@ public class Beat : TimeUCoordVector, IBeat
         return beat;
     }
 
+    public static Beat FromEntity(BeatEntity beatEntity,
+        List<ReactionWindow> defaultRelativeReactionWindow,
+        ITestOutputHelper? xUnitLogger)
+    {
+        var beat = FromEntity(beatEntity, defaultRelativeReactionWindow);
+
+        if (xUnitLogger != null)
+        {
+            beat.Logger.XUnitLogger = xUnitLogger;
+            foreach (var child in beat.BeatList)
+            {
+                child.Logger.XUnitLogger = xUnitLogger;
+            }
+        }
+
+        return beat;
+    }
+
     public bool Overlaps(Beat other)
     {
         var otherStart = other.Time - InputEpsilon;
@@ -214,12 +232,12 @@ public class Beat : TimeUCoordVector, IBeat
         }
 
         if (playerInput.GetSource() != InputSource.Player
-            && playerInput.GetRhythmActionType() != RhythmActionType.Singular)
+            || playerInput.GetRhythmActionType() != RhythmActionType.Singular)
         {
             return BeatInputResult.Anticipating;
         }
 
-        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
+        if (playerInput.ClaimOnStart(this))
         {
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
@@ -287,7 +305,8 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            Logger.Print($"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
+            Logger.Print(
+                $"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
             return BeatInputResult.Miss;
         }
 
@@ -357,16 +376,5 @@ public class Beat : TimeUCoordVector, IBeat
         HoldReleaseResult = BeatInputResult.Miss;
         Logger.Print("Release too late!");
         _state = State.Done;
-    }
-
-    public static Beat FromEntity(BeatEntity beatEntity, List<ReactionWindow> defaultRelativeReactionWindow, ITestOutputHelper xUnitLogger)
-    {
-        var beat = FromEntity(beatEntity, defaultRelativeReactionWindow);
-        beat.Logger.XUnitLogger = xUnitLogger;
-        foreach (var child in beat.BeatList)
-        {
-            child.Logger.XUnitLogger = xUnitLogger;
-        }
-        return beat;
     }
 }

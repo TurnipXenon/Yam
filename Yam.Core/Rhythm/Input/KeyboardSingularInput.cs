@@ -58,7 +58,7 @@ public class KeyboardSingularInput : ISingularInput
 
     public InputSource GetSource()
     {
-        return InputSource.Game;
+        return InputSource.Player;
     }
 
     public RhythmActionType GetRhythmActionType()
