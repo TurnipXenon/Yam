@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Xunit.Abstractions;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
@@ -11,6 +12,14 @@ public class BeatChannel : List<Beat>
     
     private int _currentVisualizationIndex;
     private int _currentInputIndex;
+
+    public BeatChannel(ITestOutputHelper? xUnitLogger)
+    {
+        if (xUnitLogger != null)
+        {
+            Logger.XUnitLogger = xUnitLogger;
+        }
+    }
 
     // todo: give current beats to visualize given current time and time frame to visualize
 
@@ -39,7 +48,7 @@ public class BeatChannel : List<Beat>
         return null;
     }
 
-    private Beat? TryToGetBeatForInput()
+    public Beat? TryToGetBeatForInput()
     {
         return _currentInputIndex >= Count ? null : this[_currentInputIndex];
     }
@@ -53,8 +62,8 @@ public class BeatChannel : List<Beat>
         {
             case BeatInputResult.Idle:
             case BeatInputResult.Anticipating:
-            case BeatInputResult.Holding:
                 break;
+            case BeatInputResult.Holding:
             case BeatInputResult.Done:
             case BeatInputResult.TooEarly:
             case BeatInputResult.Miss:

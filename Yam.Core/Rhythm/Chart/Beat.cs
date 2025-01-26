@@ -12,12 +12,11 @@ namespace Yam.Core.Rhythm.Chart;
 public class Beat : TimeUCoordVector, IBeat
 {
     public GameLogger Logger = new();
-    
+
     public static readonly float DefaultTooEarlyRadius = 1f;
     public static readonly float DefaultOkRadius = 0.75f;
     public static readonly float DefaultGoodRadius = 0.5f;
     public static readonly float DefaultExcellentRadius = 0.2f;
-    public static readonly float FrameEpsilon = 1f / 60f;
 
     // todo(turnip): NOW
     public static readonly List<ReactionWindow> DefaultRelativeReactionWindow = new()
@@ -28,7 +27,7 @@ public class Beat : TimeUCoordVector, IBeat
         new ReactionWindow(DefaultTooEarlyRadius, BeatInputResult.TooEarly),
     };
 
-    private enum State
+    public enum State
     {
         Waiting,
         Holding,
@@ -64,6 +63,7 @@ public class Beat : TimeUCoordVector, IBeat
 
     public bool IsVisualized;
     private State _state = State.Waiting;
+    public State GetState() => _state;
 
     #endregion Beat State
 
@@ -100,6 +100,24 @@ public class Beat : TimeUCoordVector, IBeat
             beat.PIn = firstBeat.PIn;
             beat.POut = firstBeat.POut;
             beat._reactionWindowList = ReactionWindowsFromRelative(reactionWindow, beat.Time);
+        }
+
+        return beat;
+    }
+
+    public static Beat FromEntity(BeatEntity beatEntity,
+        List<ReactionWindow> defaultRelativeReactionWindow,
+        ITestOutputHelper? xUnitLogger)
+    {
+        var beat = FromEntity(beatEntity, defaultRelativeReactionWindow);
+
+        if (xUnitLogger != null)
+        {
+            beat.Logger.XUnitLogger = xUnitLogger;
+            foreach (var child in beat.BeatList)
+            {
+                child.Logger.XUnitLogger = xUnitLogger;
+            }
         }
 
         return beat;
@@ -177,6 +195,7 @@ public class Beat : TimeUCoordVector, IBeat
                 break;
             case BeatInputResult.Holding:
                 _state = State.Holding;
+                HoldReleaseResult = BeatInputResult.Holding;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -214,12 +233,12 @@ public class Beat : TimeUCoordVector, IBeat
         }
 
         if (playerInput.GetSource() != InputSource.Player
-            && playerInput.GetRhythmActionType() != RhythmActionType.Singular)
+            || playerInput.GetRhythmActionType() != RhythmActionType.Singular)
         {
             return BeatInputResult.Anticipating;
         }
 
-        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
+        if (playerInput.ClaimOnStart(this))
         {
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
@@ -248,19 +267,36 @@ public class Beat : TimeUCoordVector, IBeat
             return _simulateStartHold(rhythmSimulator, playerInput);
         }
 
+        return SimulateHoldingIdleBeat();
+    }
+
+    public BeatInputResult SimulateHoldingIdleBeat()
+    {
+        if (_simulator == null)
+        {
+            // todo: inform signal about state change and result?
+            _state = State.Done;
+            Logger.Print("Simulator is null when simulating idle");
+            HoldReleaseResult = BeatInputResult.Done;
+            return BeatInputResult.Ignore;
+        }
         // todo(turnip): for holding with movement, make sure we are on track
 
         // detecting release is handled at the bottom, we only handle possible late releases here
         var lastBeat = BeatList.Last();
         var okReaction = lastBeat._reactionWindowList[^2];
-        var currentTime = rhythmSimulator.GetCurrentSongTime();
+        var currentTime = _simulator.GetCurrentSongTime();
         if (currentTime >= okReaction.Range.Y)
         {
+            // todo: inform signal about state change and result?
+            // todo: make multiholdinput listen!
             _state = State.Done;
-            Logger.Print($"Missed Hold ({Time}, {UCoord})");
+            Logger.Print($"Missed Hold release ({Time}, {UCoord})");
+            HoldReleaseResult = BeatInputResult.Miss;
             return BeatInputResult.Miss;
         }
 
+        // todo: inform signal about state change and result?
         return BeatInputResult.Holding;
     }
 
@@ -287,7 +323,8 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             _state = State.Done;
-            Logger.Print($"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
+            Logger.Print(
+                $"Missed hold start ({Time}, {UCoord}). OkRange ends at {okReaction.Range.Y}. Current time is {currentTime}");
             return BeatInputResult.Miss;
         }
 
@@ -297,7 +334,7 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Anticipating;
         }
 
-        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
+        if (playerInput.GetClaimingChannel(this) == null && playerInput.ClaimOnStart(this))
         {
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
@@ -326,16 +363,17 @@ public class Beat : TimeUCoordVector, IBeat
         _visualizer = visualizer;
     }
 
+
     // todo: delete this variable when we find a better way to communicate a release to the hold beat visualizer
     // then we can have a mock listening for the result of how this beat ends
-    public BeatInputResult HoldReleaseResult;
+    public BeatInputResult HoldReleaseResult = BeatInputResult.Idle;
 
-    public void OnInputRelease()
+    private BeatInputResult _onInputRelease(bool shouldApply)
     {
         var currentTime = _simulator?.GetCurrentSongTime();
-        if (currentTime == null)
+        if (currentTime == null || _state != State.Holding)
         {
-            return;
+            return BeatInputResult.Ignore;
         }
 
         var lastReactionWindow = BeatList.Last()._reactionWindowList;
@@ -344,29 +382,37 @@ public class Beat : TimeUCoordVector, IBeat
         {
             // todo(turnip): inform initial beat of the result and animate
             var result = reactionWindow.BeatInputResult;
-            Logger.Print($"Release: {result}");
             // todo: figure out which visualizer we should call??? the hold beat???
             // _visualizer?.InformEndResult(result, this);
             // _visualizer = null;
-            _state = State.Done;
-            HoldReleaseResult = result;
+            if (shouldApply)
+            {
+                Logger.Print($"Release: {result}");
+                _state = State.Done;
+                HoldReleaseResult = result;
+            }
+
             // todo: inform beat channel next???
-            return;
+            return result;
         }
 
-        HoldReleaseResult = BeatInputResult.Miss;
-        Logger.Print("Release too late!");
-        _state = State.Done;
+        if (shouldApply)
+        {
+            HoldReleaseResult = BeatInputResult.Miss;
+            Logger.Print("Release too late!");
+            _state = State.Done;
+        }
+
+        return BeatInputResult.Miss;
     }
 
-    public static Beat FromEntity(BeatEntity beatEntity, List<ReactionWindow> defaultRelativeReactionWindow, ITestOutputHelper xUnitLogger)
+    public void OnInputRelease()
     {
-        var beat = FromEntity(beatEntity, defaultRelativeReactionWindow);
-        beat.Logger.XUnitLogger = xUnitLogger;
-        foreach (var child in beat.BeatList)
-        {
-            child.Logger.XUnitLogger = xUnitLogger;
-        }
-        return beat;
+        _onInputRelease(true);
+    }
+
+    public BeatInputResult OnSimulateInputRelease()
+    {
+        return _onInputRelease(false);
     }
 }

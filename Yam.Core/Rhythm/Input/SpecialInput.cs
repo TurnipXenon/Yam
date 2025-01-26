@@ -37,7 +37,7 @@ public class SpecialInput : IRhythmInput
         throw new NotImplementedException();
     }
 
-    public IBeat? GetClaimingChannel()
+    public IBeat? GetClaimingChannel(IBeat contextualBeat)
     {
         throw new NotImplementedException();
     }

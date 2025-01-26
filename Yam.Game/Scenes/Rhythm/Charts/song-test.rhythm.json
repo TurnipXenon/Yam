@@ -278,11 +278,19 @@
 	  "BeatList": [
 		{
 		  "Time": 26.359,
-		  "UCoord": 0
+		  "UCoord": 0,
+		  "POut": {
+			"Time": 26.586,
+			"UCoord": 0
+		  }
 		},
 		{
 		  "Time": 26.813,
-		  "UCoord": 128
+		  "UCoord": 128,
+		  "PIn": {
+			"Time": 26.586,
+			"UCoord": 128
+		  }
 		},
 		{
 		  "Time": 27.268,
@@ -294,11 +302,19 @@
 		},
 		{
 		  "Time": 28.177,
-		  "UCoord": 128
+		  "UCoord": 128,
+		  "POut": {
+			"Time": 28.4045,
+			"UCoord": 128
+		  }
 		},
 		{
 		  "Time": 28.632,
-		  "UCoord": 0
+		  "UCoord": 0,
+		  "PIn": {
+			"Time": 28.4045,
+			"UCoord": 0
+		  }
 		}
 	  ]
 	},
@@ -336,11 +352,19 @@
 	  "BeatList": [
 		{
 		  "Time": 29.995,
-		  "UCoord": 0
+		  "UCoord": 0,
+		  "POut": {
+			"Time": 30.2225,
+			"UCoord": 0
+		  }
 		},
 		{
 		  "Time": 30.45,
-		  "UCoord": 128
+		  "UCoord": 128,
+		  "PIn": {
+			"Time": 30.2225,
+			"UCoord": 128
+		  }
 		},
 		{
 		  "Time": 30.904,

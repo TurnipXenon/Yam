@@ -1,5 +1,7 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using Xunit.Abstractions;
 using Yam.Core.Common;
 using Yam.Core.Rhythm.Input;
 
@@ -7,27 +9,44 @@ namespace Yam.Core.Rhythm.Chart;
 
 public class Chart
 {
-    public GameLogger Logger = new();
-    
-    public const int ChannelSize = 5;
+    private GameLogger _logger = new();
 
-    public List<BeatChannel> ChannelList { get; set; } = new(ChannelSize);
-
-    private Chart()
+    public GameLogger Logger
     {
-        for (var i = 0; i < ChannelSize; i++)
+        get => _logger;
+        set
         {
-            ChannelList.Add(new BeatChannel());
+            _logger = value;
+            ChannelList.ForEach(c => c.Logger = _logger);
         }
     }
 
-    // todo(turnip): create a test for this
-    public static Chart FromEntity(ChartEntity chartEntity, List<ReactionWindow> reactionWindow)
+    public const int ChannelSize = 2;
+
+    public List<BeatChannel> ChannelList { get; set; } = new(ChannelSize);
+
+    private Chart(ITestOutputHelper? xUnitLogger)
     {
-        var chart = new Chart();
+        for (var i = 0; i < ChannelSize; i++)
+        {
+            ChannelList.Add(new BeatChannel(xUnitLogger));
+        }
+    }
+
+    public static Chart FromEntity(ChartEntity chartEntity,
+        List<ReactionWindow> reactionWindow,
+        ITestOutputHelper? xUnitLogger = null)
+    {
+        var chart = new Chart(xUnitLogger);
+
+        if (xUnitLogger != null)
+        {
+            chart.Logger.XUnitLogger = xUnitLogger;
+        }
+
         chartEntity.BeatList.ForEach(beatEntity =>
         {
-            var beat = Beat.FromEntity(beatEntity, reactionWindow);
+            var beat = Beat.FromEntity(beatEntity, reactionWindow, xUnitLogger);
 
             var wasAdded = false;
             for (var index = 0; index < chart.ChannelList.Count; index++)
@@ -54,6 +73,8 @@ public class Chart
         return chart;
     }
 
+    // todo(turnip): create a test for this
+
     public List<Beat> GetVisualizableBeats(IRhythmSimulator rhythmSimulator)
     {
         List<Beat> beats = new();
@@ -68,10 +89,99 @@ public class Chart
         return beats;
     }
 
-    public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput input)
-    {
-        ChannelList.Sort((a, b) => a.GetLatestInputTime().CompareTo(b.GetLatestInputTime()));
+    private MultiHoldInput? _multiHoldInput;
 
-        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmSimulator, input));
+    public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput realInput)
+    {
+        if (realInput.GetSource() == InputSource.Unknown)
+        {
+            return;
+        }
+
+        // ingestedInput will be overriden under certain conditions below
+        var ingestedInput = realInput;
+        
+        if (_multiHoldInput != null 
+            && realInput.GetSource() == InputSource.Player
+            && !realInput.IsValidDirection())
+        {
+            if (_multiHoldInput.AddInput(realInput))
+            {
+                ingestedInput = _multiHoldInput;
+            }
+        }
+        else if (_multiHoldInput != null)
+        {
+            // do nothing
+        }
+        else if (realInput.GetSource() == InputSource.Player)
+        {
+            // the sorting and input grouping is only important for input from player
+            var shouldSort = false;
+            var lastTime = -100f;
+            foreach (var beatChannel in ChannelList)
+            {
+                if (lastTime > beatChannel.GetLatestInputTime())
+                {
+                    shouldSort = true;
+                }
+
+                lastTime = beatChannel.GetLatestInputTime();
+            }
+
+            if (shouldSort)
+            {
+                ChannelList.Sort((a, b) => a.GetLatestInputTime().CompareTo(b.GetLatestInputTime()));
+            }
+
+            // we need to be from smallest to largest when doing this
+            // so a sort should happen first
+            var similarTimeDetected = false;
+            var lastChannel = ChannelList[0];
+            List<BeatChannel> similarChannelList = new();
+            for (var i = 1; i < ChannelList.Count; i++)
+            {
+                var currentChannel = ChannelList[i];
+                if (currentChannel.GetLatestInputTime() == 0)
+                {
+                    continue;
+                }
+
+                if (Math.Abs(currentChannel.GetLatestInputTime() - lastChannel.GetLatestInputTime()) < float.Epsilon)
+                {
+                    if (!similarTimeDetected)
+                    {
+                        similarChannelList.Add(lastChannel);
+                        similarTimeDetected = true;
+                    }
+
+                    similarChannelList.Add(currentChannel);
+                }
+                else if (similarTimeDetected)
+                {
+                    break;
+                }
+
+                lastChannel = currentChannel;
+            }
+
+            if (similarChannelList.Count > 0 &&
+                similarChannelList.Exists(c => c.TryToGetBeatForInput()?.GetBeatType() == BeatType.Hold))
+            {
+                // todo: create fake input??? if one is a hold
+                Logger.Print($"Detected equal inputs: {similarChannelList.Count}");
+                _multiHoldInput = new MultiHoldInput(rhythmSimulator, realInput);
+                ingestedInput = _multiHoldInput;
+            }
+
+            // todo(turnip): check if at least one hold is in the list
+        }
+
+        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmSimulator, ingestedInput));
+
+        if (_multiHoldInput != null && _multiHoldInput.IsStillAcceptingInputs())
+        {
+            _multiHoldInput = null;
+        }
     }
 }

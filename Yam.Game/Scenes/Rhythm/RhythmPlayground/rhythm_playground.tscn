@@ -18,14 +18,14 @@ script = ExtResource("1_vddvi")
 [node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("AudioStreamPlayer", "TriggerPoint", "SpawnPoint", "DestructionPoint", "Parent")]
 script = ExtResource("2_hdbk4")
 Chart = ExtResource("3_2dqin")
-AudioStream = ExtResource("4_kql7o")
-SingleBeatPrefab = ExtResource("5_711h0")
-TickPrefab = ExtResource("6_n4de7")
-PreEmptDuration = 1.5
 AudioStreamPlayer = NodePath("../AudioStreamPlayer")
+AudioStream = ExtResource("4_kql7o")
 TriggerPoint = NodePath("../Trigger point")
 SpawnPoint = NodePath("../Spawn point")
 DestructionPoint = NodePath("../Destruction point")
+SingleBeatPrefab = ExtResource("5_711h0")
+TickPrefab = ExtResource("6_n4de7")
+PreEmptDuration = 1.5
 Parent = NodePath("..")
 
 [node name="Trigger point" type="Sprite2D" parent="."]

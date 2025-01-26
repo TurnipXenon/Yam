@@ -20,13 +20,13 @@ public abstract class KeyboardSingularInputTest
             // you cannot claim an unpressed button
             var beat = new Mock<IBeat>();
             Assert.False(input.ClaimOnStart(beat.Object));
-            Assert.Null(input.GetClaimingChannel());
+            Assert.Null(input.GetClaimingChannel(beat.Object));
 
             // you can claim a button only on start, for now
             input.Activate();
             Assert.Equal(SingularInputState.Started, input.GetState());
             Assert.True(input.ClaimOnStart(beat.Object));
-            Assert.Equal(beat.Object, input.GetClaimingChannel());
+            Assert.Equal(beat.Object, input.GetClaimingChannel(beat.Object));
 
             // you cannot claim a button that's already claimed
             var differentBeat = new Mock<IBeat>();
@@ -47,7 +47,7 @@ public abstract class KeyboardSingularInputTest
             // you cannot claim an unpressed button
             var beat = new Mock<IBeat>();
             Assert.False(input.ClaimOnStart(beat.Object));
-            Assert.Null(input.GetClaimingChannel());
+            Assert.Null(input.GetClaimingChannel(beat.Object));
 
             // you can claim a button only on start, for now
             input.Activate();
@@ -57,7 +57,7 @@ public abstract class KeyboardSingularInputTest
             input.Activate();
             Assert.Equal(SingularInputState.Held, input.GetState());
             Assert.False(input.ClaimOnStart(beat.Object));
-            Assert.Null(input.GetClaimingChannel());
+            Assert.Null(input.GetClaimingChannel(beat.Object));
         }
         
         [Fact]
@@ -68,20 +68,20 @@ public abstract class KeyboardSingularInputTest
             // you cannot claim an unpressed button
             var beat = new Mock<IBeat>();
             Assert.False(input.ClaimOnStart(beat.Object));
-            Assert.Null(input.GetClaimingChannel());
+            Assert.Null(input.GetClaimingChannel(beat.Object));
 
             // you can claim a button only on start, for now
             input.Activate();
             Assert.Equal(SingularInputState.Started, input.GetState());
             Assert.True(input.ClaimOnStart(beat.Object));
-            Assert.Equal(beat.Object, input.GetClaimingChannel());
+            Assert.Equal(beat.Object, input.GetClaimingChannel(beat.Object));
 
             // hold status
             input.Activate();
             Assert.Equal(SingularInputState.Held, input.GetState());
             var differentBeat = new Mock<IBeat>();
             Assert.False(input.ClaimOnStart(differentBeat.Object));
-            Assert.Equal(beat.Object, input.GetClaimingChannel());
+            Assert.Equal(beat.Object, input.GetClaimingChannel(beat.Object));
 
             // on release, all claims are released also, and the claimer will be informed
             // note: that we have to be very careful with this

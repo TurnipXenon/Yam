@@ -24,12 +24,22 @@ public static class BeatUtil
     {
         return Beat.FromEntity(beatEntity, Beat.DefaultRelativeReactionWindow, xUnitLogger);
     }
-    
+
     public static Beat NewHoldBeat(List<BeatEntity> beatEntityList, ITestOutputHelper xUnitLogger)
     {
         Debug.Assert(beatEntityList.Count > 0);
         var baseBeat = beatEntityList[0].ShallowClone();
         baseBeat.BeatList = beatEntityList;
-        return Beat.FromEntity(baseBeat, Beat.DefaultRelativeReactionWindow,xUnitLogger);
+        return Beat.FromEntity(baseBeat, Beat.DefaultRelativeReactionWindow, xUnitLogger);
+    }
+
+
+    public static Chart NewChart(List<BeatEntity> beatEntityList, ITestOutputHelper xUnitLogger)
+    {
+        Debug.Assert(beatEntityList.Count > 0);
+        return Chart.FromEntity(
+            new ChartEntity() { BeatList = beatEntityList },
+            Beat.DefaultRelativeReactionWindow,
+            xUnitLogger);
     }
 }

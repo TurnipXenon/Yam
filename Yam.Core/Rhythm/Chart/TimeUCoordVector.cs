@@ -1,4 +1,6 @@
+using System;
 using Godot;
+using Yam.Core.Common;
 
 namespace Yam.Core.Rhythm.Chart;
 
@@ -23,5 +25,11 @@ public class TimeUCoordVector
             Time = Time,
             UCoord = UCoord
         };
+    }
+
+    public bool CompareTimeUCoord(TimeUCoordVector other)
+    {
+        return Math.Abs(Time - other.Time) < Globals.FrameEpsilon &&
+               Math.Abs(UCoord - other.UCoord) < Globals.FrameEpsilon;
     }
 }

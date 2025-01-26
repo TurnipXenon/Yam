@@ -38,7 +38,7 @@ public class KeyboardSingularInput : ISingularInput
         return _keyCode;
     }
 
-    public IBeat? GetClaimingChannel() => _claimingBeat;
+    public IBeat? GetClaimingChannel(IBeat contextualBeat) => _claimingBeat;
 
     public bool ClaimOnStart(IBeat claimingBeat)
     {
@@ -58,7 +58,7 @@ public class KeyboardSingularInput : ISingularInput
 
     public InputSource GetSource()
     {
-        return InputSource.Game;
+        return InputSource.Player;
     }
 
     public RhythmActionType GetRhythmActionType()

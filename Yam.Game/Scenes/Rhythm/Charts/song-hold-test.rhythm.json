@@ -1,0 +1,400 @@
+{
+	"BeatList": [
+		{
+			"BeatList": [
+				{
+					"Time": 4.654,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 5.563,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"BeatList": [
+				{
+					"Time": 4.654,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 5.163,
+					"UCoord": 128.0
+				}
+			]
+		},
+		{
+			"Time": 5.791,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 6.018,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 6.018,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 6.245,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 6.473,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 7.723,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 8.177,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 8.632,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 8.632,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 9.086,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 9.541,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 9.541,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 9.995,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 9.995,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 11.586,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 12.495,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 12.495,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 13.177,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 13.632,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 13.632,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 14.086,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 14.086,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 14.541,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 14.995,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 14.995,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 15.45,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 16.018,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 16.018,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 16.586,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 16.813,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 17.041,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 17.041,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 17.268,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 17.495,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 17.95,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 18.404,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 19.086,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 19.086,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 19.541,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 20.223,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 20.45,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 20.677,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 20.677,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 20.904,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 21.132,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 21.586,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 22.041,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 22.495,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 23.177,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 23.177,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 23.632,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 24.086,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 24.086,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 24.541,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 24.541,
+					"UCoord": 0.0
+				},
+				{
+					"Time": 25.45,
+					"UCoord": 0.0
+				}
+			]
+		},
+		{
+			"Time": 24.995,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 26.359,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 26.359,
+					"UCoord": 0.0,
+					"POut": {
+						"Time": 26.586,
+						"UCoord": 0.0
+					}
+				},
+				{
+					"Time": 26.813,
+					"UCoord": 128.0,
+					"PIn": {
+						"Time": 26.586,
+						"UCoord": 128.0
+					}
+				},
+				{
+					"Time": 27.268,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 27.723,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 28.177,
+					"UCoord": 128.0,
+					"POut": {
+						"Time": 28.4045,
+						"UCoord": 128.0
+					}
+				},
+				{
+					"Time": 28.632,
+					"UCoord": 0.0,
+					"PIn": {
+						"Time": 28.4045,
+						"UCoord": 0.0
+					}
+				}
+			]
+		},
+		{
+			"Time": 29.086,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 29.313,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 29.313,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 29.541,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 29.541,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 29.768,
+			"UCoord": 0.0
+		},
+		{
+			"Time": 29.768,
+			"UCoord": 256.0
+		},
+		{
+			"Time": 29.995,
+			"UCoord": 0.0,
+			"BeatList": [
+				{
+					"Time": 29.995,
+					"UCoord": 0.0,
+					"POut": {
+						"Time": 30.2225,
+						"UCoord": 0.0
+					}
+				},
+				{
+					"Time": 30.45,
+					"UCoord": 128.0,
+					"PIn": {
+						"Time": 30.2225,
+						"UCoord": 128.0
+					}
+				},
+				{
+					"Time": 30.904,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 31.132,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 31.586,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 31.813,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 32.041,
+					"UCoord": 128.0
+				},
+				{
+					"Time": 32.609,
+					"UCoord": 0.0
+				}
+			]
+		}
+	]
+}
