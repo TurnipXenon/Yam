@@ -62,8 +62,8 @@ public class BeatChannel : List<Beat>
         {
             case BeatInputResult.Idle:
             case BeatInputResult.Anticipating:
-            case BeatInputResult.Holding:
                 break;
+            case BeatInputResult.Holding:
             case BeatInputResult.Done:
             case BeatInputResult.TooEarly:
             case BeatInputResult.Miss:

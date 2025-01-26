@@ -16,11 +16,6 @@ public class GameLogger
     {
         if (XUnitLogger != null)
         {
-            foreach (var key in Environment.GetEnvironmentVariables().Keys)
-            {
-                XUnitLogger.WriteLine($"{key}: {Environment.GetEnvironmentVariables()[key]}");
-            }
-
             XUnitLogger.WriteLine(what.Join(""));
         }
         else if (IsGodot)

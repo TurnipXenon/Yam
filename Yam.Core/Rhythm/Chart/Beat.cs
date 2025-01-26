@@ -12,7 +12,7 @@ namespace Yam.Core.Rhythm.Chart;
 public class Beat : TimeUCoordVector, IBeat
 {
     public GameLogger Logger = new();
-    
+
     public static readonly float DefaultTooEarlyRadius = 1f;
     public static readonly float DefaultOkRadius = 0.75f;
     public static readonly float DefaultGoodRadius = 0.5f;
@@ -27,7 +27,7 @@ public class Beat : TimeUCoordVector, IBeat
         new ReactionWindow(DefaultTooEarlyRadius, BeatInputResult.TooEarly),
     };
 
-    private enum State
+    public enum State
     {
         Waiting,
         Holding,
@@ -63,6 +63,7 @@ public class Beat : TimeUCoordVector, IBeat
 
     public bool IsVisualized;
     private State _state = State.Waiting;
+    public State GetState() => _state;
 
     #endregion Beat State
 
@@ -194,6 +195,7 @@ public class Beat : TimeUCoordVector, IBeat
                 break;
             case BeatInputResult.Holding:
                 _state = State.Holding;
+                HoldReleaseResult = BeatInputResult.Holding;
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -265,19 +267,36 @@ public class Beat : TimeUCoordVector, IBeat
             return _simulateStartHold(rhythmSimulator, playerInput);
         }
 
+        return SimulateHoldingIdleBeat();
+    }
+
+    public BeatInputResult SimulateHoldingIdleBeat()
+    {
+        if (_simulator == null)
+        {
+            // todo: inform signal about state change and result?
+            _state = State.Done;
+            Logger.Print("Simulator is null when simulating idle");
+            HoldReleaseResult = BeatInputResult.Done;
+            return BeatInputResult.Ignore;
+        }
         // todo(turnip): for holding with movement, make sure we are on track
 
         // detecting release is handled at the bottom, we only handle possible late releases here
         var lastBeat = BeatList.Last();
         var okReaction = lastBeat._reactionWindowList[^2];
-        var currentTime = rhythmSimulator.GetCurrentSongTime();
+        var currentTime = _simulator.GetCurrentSongTime();
         if (currentTime >= okReaction.Range.Y)
         {
+            // todo: inform signal about state change and result?
             _state = State.Done;
-            Logger.Print($"Missed Hold ({Time}, {UCoord})");
+            Logger.Print($"Missed Hold release ({Time}, {UCoord})");
+            HoldReleaseResult = BeatInputResult.Miss;
             return BeatInputResult.Miss;
         }
 
+        // todo: inform signal about state change and result?
+        Logger.Print("Test");
         return BeatInputResult.Holding;
     }
 
@@ -346,12 +365,12 @@ public class Beat : TimeUCoordVector, IBeat
 
     // todo: delete this variable when we find a better way to communicate a release to the hold beat visualizer
     // then we can have a mock listening for the result of how this beat ends
-    public BeatInputResult HoldReleaseResult;
+    public BeatInputResult HoldReleaseResult = BeatInputResult.Idle;
 
     public void OnInputRelease()
     {
         var currentTime = _simulator?.GetCurrentSongTime();
-        if (currentTime == null)
+        if (currentTime == null || _state != State.Holding)
         {
             return;
         }

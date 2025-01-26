@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace Yam.Core.Rhythm.Chart;
 
@@ -21,6 +22,17 @@ public class BeatEntity : TimeUCoordVector
     {
         Time = time;
         UCoord = uCoord;
+    }
+    
+    public BeatEntity(List<BeatEntity> tickList)
+    {
+        Debug.Assert(tickList.Count > 0);
+        var initialTick = tickList[0];
+        Time = initialTick.Time;
+        UCoord = initialTick.UCoord;
+        PIn = initialTick.PIn?.Clone();
+        POut = initialTick.POut?.Clone();
+        tickList.ForEach(t => BeatList.Add(t));
     }
 
     public TimeUCoordVector? PIn { get; set; }

@@ -61,6 +61,11 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
 
         Position = Position with { X = x };
 
+        if (_mainBeat.GetState() == Beat.State.Holding)
+        {
+            _mainBeat.SimulateHoldingIdleBeat();
+        }
+
         // todo: kill when endBeat reaches beyond
     }
 

@@ -91,21 +91,24 @@ public class Chart
 
     private MultiHoldInput? _multiHoldInput;
 
-    public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput input)
+    public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput realInput)
     {
-        if (input.GetSource() == InputSource.Unknown)
+        if (realInput.GetSource() == InputSource.Unknown)
         {
             return;
         }
 
-        if (_multiHoldInput != null && input.GetSource() == InputSource.Player)
+        // ingestedInput will be overriden under certain conditions below
+        var ingestedInput = realInput;
+        
+        if (_multiHoldInput != null && realInput.GetSource() == InputSource.Player)
         {
         }
         else if (_multiHoldInput != null)
         {
             // do nothing
         }
-        else if (input.GetSource() == InputSource.Player)
+        else if (realInput.GetSource() == InputSource.Player)
         {
             // the sorting and input grouping is only important for input from player
             var shouldSort = false;
@@ -166,6 +169,6 @@ public class Chart
             // todo(turnip): check if at least one hold is in the list
         }
 
-        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmSimulator, input));
+        ChannelList.ForEach(c => c.SimulateBeatInput(rhythmSimulator, ingestedInput));
     }
 }

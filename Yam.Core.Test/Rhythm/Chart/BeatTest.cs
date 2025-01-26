@@ -132,17 +132,15 @@ public abstract class BeatTest
         {
         }
 
-        // todo: simple hold beat
         [Fact]
         public void SimpleHoldLifecycle()
         {
             var startTime = 10f;
             var endTime = 15f;
-            var beat = BeatUtil.NewHoldBeat(new()
-            {
+            var beat = BeatUtil.NewHoldBeat([
                 new BeatEntity(startTime),
-                new BeatEntity(endTime),
-            }, XUnitLogger);
+                new BeatEntity(endTime)
+            ], XUnitLogger);
             beat.Logger.XUnitLogger = XUnitLogger;
 
 
@@ -184,7 +182,115 @@ public abstract class BeatTest
             Assert.Equal(BeatInputResult.Excellent, beat.HoldReleaseResult);
         }
 
-        // todo: hold release late
+        [Fact]
+        public void LateHoldRelease()
+        {
+            var startTime = 10f;
+            var endTime = 15f;
+            var beat = BeatUtil.NewHoldBeat([
+                new BeatEntity(startTime),
+                new BeatEntity(endTime)
+            ], XUnitLogger);
+            beat.Logger.XUnitLogger = XUnitLogger;
+
+
+            var simulator = new Mock<IRhythmSimulator>();
+            var playerInput = new Mock<IRhythmInput>();
+            playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+
+            // assert we're doing hold beats
+            Assert.Equal(BeatType.Hold, beat.GetBeatType());
+
+            // start: too far
+            simulator.Setup(r => r.GetCurrentSongTime())
+                .Returns(startTime - (Beat.DefaultTooEarlyRadius + Globals.FrameEpsilon));
+            var tooFar = beat.SimulateInput(simulator.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Idle, tooFar);
+
+            // within range but no inputs yet
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(startTime - Beat.DefaultOkRadius);
+            var noInput = beat.SimulateInput(simulator.Object, SpecialInput.GameInput);
+            Assert.Equal(BeatInputResult.Anticipating, noInput);
+
+            // within range of excellent with input
+            simulator.Setup(r => r.GetCurrentSongTime())
+                .Returns(startTime - Beat.DefaultExcellentRadius + Globals.FrameEpsilon);
+            playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
+            var holding = beat.SimulateInput(simulator.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Holding, holding);
+
+            // check the beat after it's done
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
+
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns((startTime + endTime) / 2f);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
+
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(endTime);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
+            Assert.Equal(BeatInputResult.Holding, beat.HoldReleaseResult);
+
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(endTime + Beat.DefaultOkRadius);
+            beat.SimulateHoldingIdleBeat();
+            Assert.Equal(BeatInputResult.Miss, beat.HoldReleaseResult);
+            
+            beat.OnInputRelease();
+            Assert.Equal(BeatInputResult.Miss, beat.HoldReleaseResult);
+        }
+        
+        [Fact]
+        public void OkHoldRelease()
+        {
+            var startTime = 10f;
+            var endTime = 15f;
+            var beat = BeatUtil.NewHoldBeat([
+                new BeatEntity(startTime),
+                new BeatEntity(endTime)
+            ], XUnitLogger);
+            beat.Logger.XUnitLogger = XUnitLogger;
+
+
+            var simulator = new Mock<IRhythmSimulator>();
+            var playerInput = new Mock<IRhythmInput>();
+            playerInput.Setup(i => i.GetRhythmActionType()).Returns(RhythmActionType.Singular);
+
+            // assert we're doing hold beats
+            Assert.Equal(BeatType.Hold, beat.GetBeatType());
+
+            // start: too far
+            simulator.Setup(r => r.GetCurrentSongTime())
+                .Returns(startTime - (Beat.DefaultTooEarlyRadius + Globals.FrameEpsilon));
+            var tooFar = beat.SimulateInput(simulator.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Idle, tooFar);
+
+            // within range but no inputs yet
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(startTime - Beat.DefaultOkRadius);
+            var noInput = beat.SimulateInput(simulator.Object, SpecialInput.GameInput);
+            Assert.Equal(BeatInputResult.Anticipating, noInput);
+
+            // within range of excellent with input
+            simulator.Setup(r => r.GetCurrentSongTime())
+                .Returns(startTime - Beat.DefaultExcellentRadius + Globals.FrameEpsilon);
+            playerInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
+            var holding = beat.SimulateInput(simulator.Object, playerInput.Object);
+            Assert.Equal(BeatInputResult.Holding, holding);
+
+            // check the beat after it's done
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
+
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns((startTime + endTime) / 2f);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
+
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(endTime);
+            Assert.Equal(BeatInputResult.Holding, beat.SimulateInput(simulator.Object, SpecialInput.GameInput));
+            Assert.Equal(BeatInputResult.Holding, beat.HoldReleaseResult);
+
+            simulator.Setup(r => r.GetCurrentSongTime()).Returns(endTime + Beat.DefaultOkRadius - Globals.FrameEpsilon);
+            beat.SimulateHoldingIdleBeat();
+            Assert.Equal(BeatInputResult.Holding, beat.HoldReleaseResult);
+            
+            beat.OnInputRelease();
+            Assert.Equal(BeatInputResult.Ok, beat.HoldReleaseResult);
+        }
 
         // todo: hold release outside excellent
 
