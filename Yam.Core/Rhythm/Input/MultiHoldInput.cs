@@ -83,7 +83,7 @@ public class MultiHoldInput : IRhythmInput, IBeat
 
     public InputSource GetSource()
     {
-        return InputSource.Game;
+        return InputSource.Player;
     }
 
     public RhythmActionType GetRhythmActionType()
