@@ -108,7 +108,7 @@ public abstract class BeatTest
             playerInput.Setup(i => i.ClaimOnStart(beat1)).Returns(true);
             var excellentInput = beat1.SimulateInput(simulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
-            playerInput.Setup(i => i.GetClaimingChannel()).Returns(beat1);
+            playerInput.Setup(i => i.GetClaimingChannel(It.IsAny<IBeat>())).Returns(beat1);
 
             var anticipating = beat2.SimulateInput(simulator.Object, playerInput.Object);
             Assert.Equal(BeatInputResult.Anticipating, anticipating);

@@ -110,6 +110,8 @@ public abstract class ChartTest
             // todo(turnip): check if input received in a possible interface is not the input we put
             // see ingestedInput in Chart.SimulateBeatInputIn
         }
+        
+        // todo(turnip): second input not registered within visual time
 
         // todo(turnip): hold + tap (released)
 

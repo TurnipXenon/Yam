@@ -183,6 +183,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
 
     public override void _UnhandledInput(InputEvent @event)
     {
+        // todo(turnip): prioritize simulating a slide direction
         _chartModel.SimulateBeatInput(this, _inputProvider.ProcessEvent(@event));
     }
 }

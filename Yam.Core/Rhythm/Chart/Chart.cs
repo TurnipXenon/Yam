@@ -101,12 +101,15 @@ public class Chart
         // ingestedInput will be overriden under certain conditions below
         var ingestedInput = realInput;
         
-        if (_multiHoldInput != null && realInput.GetSource() == InputSource.Player)
+        if (_multiHoldInput != null 
+            && realInput.GetSource() == InputSource.Player
+            && !realInput.IsValidDirection())
         {
+            _multiHoldInput.AddInput(realInput);
         }
         else if (_multiHoldInput != null)
         {
-            // do nothing
+            ingestedInput = _multiHoldInput;
         }
         else if (realInput.GetSource() == InputSource.Player)
         {
@@ -164,11 +167,18 @@ public class Chart
             {
                 // todo: create fake input??? if one is a hold
                 Logger.Print($"Detected equal inputs: {similarChannelList.Count}");
+                _multiHoldInput = new MultiHoldInput(rhythmSimulator, realInput);
+                ingestedInput = _multiHoldInput;
             }
 
             // todo(turnip): check if at least one hold is in the list
         }
 
         ChannelList.ForEach(c => c.SimulateBeatInput(rhythmSimulator, ingestedInput));
+
+        if (_multiHoldInput != null && _multiHoldInput.IsStillAcceptingInputs())
+        {
+            _multiHoldInput = null;
+        }
     }
 }

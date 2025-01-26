@@ -16,7 +16,7 @@ public interface IRhythmInput
 
     public Vector2 GetDirection();
     public string GetInputCode();
-    public IBeat? GetClaimingChannel();
+    public IBeat? GetClaimingChannel(IBeat contextualBeat);
 
     /// <summary>
     /// Returns true if successfully claimed channel. False if another channel claimed this input

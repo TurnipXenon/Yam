@@ -334,7 +334,7 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Anticipating;
         }
 
-        if (playerInput.GetClaimingChannel() == null && playerInput.ClaimOnStart(this))
+        if (playerInput.GetClaimingChannel(this) == null && playerInput.ClaimOnStart(this))
         {
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
