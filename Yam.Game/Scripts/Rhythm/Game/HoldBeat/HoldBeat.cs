@@ -10,6 +10,7 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
 {
     private Beat _mainBeat;
     private RhythmSimulator _rhythmSimulator;
+
     /** HoldBeat handles instantiating _endBeat */
     private SingleBeat.SingleBeat _endSingleBeat;
 
@@ -43,7 +44,6 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
         }
 
         _isActive = true;
-
     }
 
     public override void _Process(double delta)

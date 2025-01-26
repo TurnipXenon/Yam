@@ -1,0 +1,57 @@
+[gd_scene load_steps=10 format=3 uid="uid://666i5uf4g355"]
+
+[ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_oac8v"]
+[ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_mylgg"]
+[ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-hold-test.rhythm.json" id="3_oac8v"]
+[ext_resource type="AudioStream" uid="uid://bjopcy3y4o24c" path="res://Scenes/Rhythm/Songs/sunleth_waterscape/Final Fantasy XIII - The Sunleth Waterscape.mp3" id="4_5dqyy"]
+[ext_resource type="PackedScene" uid="uid://cwlyq1np8ldmr" path="res://Scenes/Rhythm/RhythmPlayground/single_beat.tscn" id="5_x31qe"]
+[ext_resource type="PackedScene" uid="uid://bh1kbt58r72bx" path="res://Scenes/Rhythm/RhythmPlayground/tick.tscn" id="6_7lxg4"]
+[ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="7_6hqd1"]
+[ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="8_a6ujk"]
+[ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="9_kj4qu"]
+
+[node name="RhythmEditor" type="Node2D"]
+
+[node name="ParseOsu" type="Node" parent="."]
+script = ExtResource("1_oac8v")
+
+[node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("AudioStreamPlayer", "TriggerPoint", "SpawnPoint", "DestructionPoint", "Parent")]
+script = ExtResource("2_mylgg")
+Chart = ExtResource("3_oac8v")
+AudioStreamPlayer = NodePath("../AudioStreamPlayer")
+AudioStream = ExtResource("4_5dqyy")
+TriggerPoint = NodePath("../Trigger point")
+SpawnPoint = NodePath("../Spawn point")
+DestructionPoint = NodePath("../Destruction point")
+SingleBeatPrefab = ExtResource("5_x31qe")
+TickPrefab = ExtResource("6_7lxg4")
+PreEmptDuration = 1.5
+Parent = NodePath("..")
+
+[node name="Trigger point" type="Sprite2D" parent="."]
+position = Vector2(614, 84)
+texture = ExtResource("7_6hqd1")
+
+[node name="Spawn point" type="Sprite2D" parent="."]
+position = Vector2(-130, 84)
+texture = ExtResource("7_6hqd1")
+
+[node name="Destruction point" type="Sprite2D" parent="."]
+position = Vector2(1100, 84)
+texture = ExtResource("7_6hqd1")
+
+[node name="single_beat" parent="." instance=ExtResource("5_x31qe")]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+
+[node name="hold_line" parent="." instance=ExtResource("8_a6ujk")]
+
+[node name="test_drawing" type="Node2D" parent="."]
+visible = false
+position = Vector2(150, 121)
+script = ExtResource("9_kj4qu")
+P1In = Vector2(200, 0)
+P2 = Vector2(400, 400)
+P2Out = Vector2(200, 400)
+DivisionMultiplier = 0.1
+IsOn = false

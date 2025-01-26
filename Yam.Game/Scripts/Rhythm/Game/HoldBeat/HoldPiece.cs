@@ -63,7 +63,7 @@ public partial class HoldPiece : Node2D
         _increment = 1f / _divisions;
 
         Position = new Vector2(_ogP1.X - SingleBeat.SingleBeat.TimeToX(rhythmSimulator, parentBeat.Time),
-            startBeat.UCoord);
+            startBeat.UCoord - parentBeat.UCoord);
     }
 
 
