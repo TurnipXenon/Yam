@@ -289,6 +289,7 @@ public class Beat : TimeUCoordVector, IBeat
         if (currentTime >= okReaction.Range.Y)
         {
             // todo: inform signal about state change and result?
+            // todo: make multiholdinput listen!
             _state = State.Done;
             Logger.Print($"Missed Hold release ({Time}, {UCoord})");
             HoldReleaseResult = BeatInputResult.Miss;
@@ -296,7 +297,6 @@ public class Beat : TimeUCoordVector, IBeat
         }
 
         // todo: inform signal about state change and result?
-        Logger.Print("Test");
         return BeatInputResult.Holding;
     }
 
@@ -363,16 +363,17 @@ public class Beat : TimeUCoordVector, IBeat
         _visualizer = visualizer;
     }
 
+
     // todo: delete this variable when we find a better way to communicate a release to the hold beat visualizer
     // then we can have a mock listening for the result of how this beat ends
     public BeatInputResult HoldReleaseResult = BeatInputResult.Idle;
 
-    public void OnInputRelease()
+    private BeatInputResult _onInputRelease(bool shouldApply)
     {
         var currentTime = _simulator?.GetCurrentSongTime();
         if (currentTime == null || _state != State.Holding)
         {
-            return;
+            return BeatInputResult.Ignore;
         }
 
         var lastReactionWindow = BeatList.Last()._reactionWindowList;
@@ -381,18 +382,37 @@ public class Beat : TimeUCoordVector, IBeat
         {
             // todo(turnip): inform initial beat of the result and animate
             var result = reactionWindow.BeatInputResult;
-            Logger.Print($"Release: {result}");
             // todo: figure out which visualizer we should call??? the hold beat???
             // _visualizer?.InformEndResult(result, this);
             // _visualizer = null;
-            _state = State.Done;
-            HoldReleaseResult = result;
+            if (shouldApply)
+            {
+                Logger.Print($"Release: {result}");
+                _state = State.Done;
+                HoldReleaseResult = result;
+            }
+
             // todo: inform beat channel next???
-            return;
+            return result;
         }
 
-        HoldReleaseResult = BeatInputResult.Miss;
-        Logger.Print("Release too late!");
-        _state = State.Done;
+        if (shouldApply)
+        {
+            HoldReleaseResult = BeatInputResult.Miss;
+            Logger.Print("Release too late!");
+            _state = State.Done;
+        }
+
+        return BeatInputResult.Miss;
+    }
+
+    public void OnInputRelease()
+    {
+        _onInputRelease(true);
+    }
+
+    public BeatInputResult OnSimulateInputRelease()
+    {
+        return _onInputRelease(false);
     }
 }

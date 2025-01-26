@@ -105,11 +105,14 @@ public class Chart
             && realInput.GetSource() == InputSource.Player
             && !realInput.IsValidDirection())
         {
-            _multiHoldInput.AddInput(realInput);
+            if (_multiHoldInput.AddInput(realInput))
+            {
+                ingestedInput = _multiHoldInput;
+            }
         }
         else if (_multiHoldInput != null)
         {
-            ingestedInput = _multiHoldInput;
+            // do nothing
         }
         else if (realInput.GetSource() == InputSource.Player)
         {
