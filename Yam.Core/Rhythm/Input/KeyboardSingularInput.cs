@@ -1,7 +1,4 @@
-#nullable enable
 using System;
-using Godot;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
 namespace Yam.Core.Rhythm.Input;
@@ -28,9 +25,9 @@ public class KeyboardSingularInput : ISingularInput
 
     public bool IsDirectionSensitive() => false;
 
-    public Vector2 GetDirection()
+    public float GetDirection()
     {
-        return Vector2.Zero;
+        throw new NotImplementedException();
     }
 
     public string GetInputCode()
@@ -88,5 +85,10 @@ public class KeyboardSingularInput : ISingularInput
         _singularInputState = SingularInputState.Free;
         _claimingBeat?.OnInputRelease();
         _claimingBeat = null;
+    }
+
+    public IRhythmInput ActSingle()
+    {
+        throw new NotImplementedException();
     }
 }

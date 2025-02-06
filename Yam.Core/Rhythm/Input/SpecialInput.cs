@@ -27,7 +27,7 @@ public class SpecialInput : IRhythmInput
         throw new NotImplementedException();
     }
 
-    public Vector2 GetDirection()
+    public float GetDirection()
     {
         throw new NotImplementedException();
     }
@@ -70,5 +70,12 @@ public class SpecialInput : IRhythmInput
     public void Release()
     {
         throw new NotImplementedException();
+    }
+
+    public IRhythmInput ActSingle()
+    {
+        // todo: possibly hacky? try to rationalize why we want this
+        // quick explanation: for simulating a fake single beat, the logic is deeper and it handles special inputs
+        return this;
     }
 }

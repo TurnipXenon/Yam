@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Godot;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
@@ -178,6 +177,11 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         }
 
         return _processedReactionWindow;
+    }
+
+    public float GetDirectionTolerance()
+    {
+        throw new NotImplementedException();
     }
 
 

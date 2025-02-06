@@ -1,4 +1,3 @@
-#nullable enable
 using Godot;
 using Yam.Core.Rhythm.Chart;
 
@@ -14,7 +13,11 @@ public interface IRhythmInput
      */
     public bool IsDirectionSensitive();
 
-    public Vector2 GetDirection();
+    /// <summary>
+    /// radian
+    /// </summary>
+    /// <returns></returns>
+    public float GetDirection();
     public string GetInputCode();
     public IBeat? GetClaimingChannel(IBeat contextualBeat);
 
@@ -27,7 +30,7 @@ public interface IRhythmInput
     public void ReleaseInput();
     public InputSource GetSource();
     RhythmActionType GetRhythmActionType();
-    
+
     /// <summary>
     /// Activate is a generic term to indicate that the input's state has become active
     /// For buttons, this means they've been pressed
@@ -35,10 +38,7 @@ public interface IRhythmInput
     /// For direction pads, this means they've been moved out of Vector2.Zero
     /// </summary>
     public void Activate();
-    public void Release();
-}
 
-public interface IRhythmInputListener
-{
-    public void OnInputRelease();
+    public void Release();
+    IRhythmInput ActSingle();
 }

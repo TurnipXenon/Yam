@@ -8,4 +8,9 @@ public interface IRhythmSimulator
     public float GetPreEmptTime();
     public float GetPreEmptDuration();
     public List<ReactionWindow> GetReactionWindowList();
+    /// <summary>
+    /// radian
+    /// </summary>
+    /// <returns></returns>
+    float GetDirectionTolerance();
 }

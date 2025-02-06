@@ -13,10 +13,14 @@ public class Beat : TimeUCoordVector, IBeat
 {
     public GameLogger Logger = new();
 
-    public static readonly float DefaultTooEarlyRadius = 1f;
-    public static readonly float DefaultOkRadius = 0.75f;
-    public static readonly float DefaultGoodRadius = 0.5f;
-    public static readonly float DefaultExcellentRadius = 0.2f;
+    public const float DefaultTooEarlyRadius = 1f;
+    public const float DefaultOkRadius = 0.75f;
+    public const float DefaultGoodRadius = 0.5f;
+    public const float DefaultExcellentRadius = 0.2f;
+
+    public const float DirectionEpsilon = Mathf.Pi / 32;
+    public const float LeastWrongDirectionDifference = Mathf.Pi / 4;
+    public const float DefaultDirectionTolerance = LeastWrongDirectionDifference - DirectionEpsilon;
 
     // todo(turnip): NOW
     public static readonly List<ReactionWindow> DefaultRelativeReactionWindow = new()
@@ -39,7 +43,13 @@ public class Beat : TimeUCoordVector, IBeat
 
     public TimeUCoordVector? PIn { get; set; }
     public TimeUCoordVector? POut { get; set; }
-    public BitwiseDirection Direction { get; set; }
+
+    /// <summary>
+    /// radian
+    /// </summary>
+    /// todo(turnip): better documentation
+    public float? Direction { get; set; }
+
     public List<Beat> BeatList { get; set; } = new();
 
     private List<ReactionWindow> _reactionWindowList = new();
@@ -86,6 +96,11 @@ public class Beat : TimeUCoordVector, IBeat
             POut = beatEntity.POut,
             _reactionWindowList = ReactionWindowsFromRelative(reactionWindow, beatEntity.Time)
         };
+
+        if (beatEntity.Direction != null)
+        {
+            beat.Direction = Mathf.DegToRad((float)beatEntity.Direction);
+        }
 
         Debug.Assert(beat._reactionWindowList.Count > 2);
 
@@ -146,7 +161,7 @@ public class Beat : TimeUCoordVector, IBeat
         }
         else
         {
-            _beatType = Direction != BitwiseDirection.None
+            _beatType = Direction != null
                 ? BeatType.Slide
                 : BeatType.Single;
         }
@@ -168,10 +183,10 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Done;
         }
 
-        var result = GetBeatType() switch
+        BeatInputResult result = GetBeatType() switch
         {
             BeatType.Single => _simulateSingleBeat(rhythmSimulator, playerInput),
-            BeatType.Slide => BeatInputResult.Ignore,
+            BeatType.Slide => _simulateSlideBeat(rhythmSimulator, playerInput),
             BeatType.Hold => _simulateHoldBeat(rhythmSimulator, playerInput),
             _ => throw new ArgumentOutOfRangeException()
         };
@@ -253,7 +268,6 @@ public class Beat : TimeUCoordVector, IBeat
 
     #region Hold
 
-    private int _holdIndex;
     private IRhythmSimulator? _simulator;
 
     // For hold, we need to store the following information:
@@ -357,6 +371,26 @@ public class Beat : TimeUCoordVector, IBeat
     }
 
     #endregion Hold
+
+    private BeatInputResult _simulateSlideBeat(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
+    {
+        // todo input to single input
+        var timingResult = _simulateSingleBeat(rhythmSimulator, playerInput.ActSingle());
+        if (BeatInputResultUtil.GetScore(timingResult) <= 0)
+        {
+            return timingResult;
+        }
+
+        if (playerInput.GetRhythmActionType() != RhythmActionType.Directional)
+        {
+            return BeatInputResult.Anticipating;
+        }
+
+        // we might want to do that once we implement a smarter middleware?
+        var radDiff = Mathf.Abs((float)Direction! - playerInput.GetDirection());
+        // todo(turnip): decide if we need to add a bad judgment?
+        return radDiff < rhythmSimulator.GetDirectionTolerance() ? timingResult : BeatInputResult.Anticipating;
+    }
 
     public void SetVisualizer(IBeatVisualizer visualizer)
     {
