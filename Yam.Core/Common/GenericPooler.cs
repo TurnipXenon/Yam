@@ -1,4 +1,3 @@
-#nullable enable
 using System.Collections.Generic;
 
 namespace Yam.Core.Common;
@@ -51,7 +50,7 @@ public abstract class GenericPooler<TPooledObject, TPooledObjectArgs>
     {
         InUse.AddRange(Available);
         Available.Clear();
-        InUse.ForEach(b => DestroyPooledObject(b));
+        InUse.ForEach(DestroyPooledObject);
         InUse.Clear();
     }
 }

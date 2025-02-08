@@ -100,6 +100,11 @@ public class Beat : TimeUCoordVector, IBeat
         if (beatEntity.Direction != null)
         {
             beat.Direction = Mathf.DegToRad((float)beatEntity.Direction);
+
+            while (beat.Direction > Mathf.Pi)
+            {
+                beat.Direction -= 2 * Mathf.Pi;
+            }
         }
 
         Debug.Assert(beat._reactionWindowList.Count > 2);
@@ -374,8 +379,52 @@ public class Beat : TimeUCoordVector, IBeat
 
     private BeatInputResult _simulateSlideBeat(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
-        // todo input to single input
-        var timingResult = _simulateSingleBeat(rhythmSimulator, playerInput.ActSingle());
+        // unlike a normal beat, we wait for the excelled judgment
+        // 
+        // we might want to accomodate players that want more sensitive judgments. those sensitive
+        // judgments are reserved for direction button players and joystick or gamepad players
+        var tooEarlyReaction = _reactionWindowList[0];
+        var okReaction = _reactionWindowList[^2];
+        var currentTime = rhythmSimulator.GetCurrentSongTime();
+
+        if (_state != State.Waiting)
+        {
+            // todo(turnip): add test for this case
+            Logger.PrintErr($"Not expected result: ({Time}, {UCoord})");
+            return BeatInputResult.Ignore;
+        }
+
+
+        if (currentTime < tooEarlyReaction.Range.X)
+        {
+            return BeatInputResult.Idle;
+        }
+
+        if (currentTime >= okReaction.Range.Y)
+        {
+            _state = State.Done;
+            return BeatInputResult.Miss;
+        }
+
+
+        if (playerInput.GetSource() != InputSource.Player
+            || playerInput.GetRhythmActionType() != RhythmActionType.Directional)
+        {
+            return BeatInputResult.Anticipating;
+        }
+
+
+        var timingResult = BeatInputResult.Anticipating;
+        if (playerInput.IsValidDirection())
+        {
+            foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
+                         reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
+            {
+                timingResult = reactionWindow.BeatInputResult;
+                break;
+            }
+        }
+
         if (BeatInputResultUtil.GetScore(timingResult) <= 0)
         {
             return timingResult;

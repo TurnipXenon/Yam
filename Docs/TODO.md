@@ -1,7 +1,12 @@
 # TODO
 
 - [ ] document how to add a beat type: from beatentity to chartentity to chart to beat
+- [ ] document weird way we convert degree to radian to fit how godot gives float to
 - [ ] Make ActSingle test
+- [ ] Implement mouse controls
+- [ ] Implement keyboard controls
+- [ ] Future: implement gamepad control?? Split between button and directional
+- [ ] Logger level
 
 ## Slide
 

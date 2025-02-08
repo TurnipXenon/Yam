@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bt1qe76771afk"]
+[gd_scene load_steps=12 format=3 uid="uid://bt1qe76771afk"]
 
 [ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
 [ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_hdbk4"]
@@ -9,6 +9,8 @@
 [ext_resource type="PackedScene" uid="uid://bh1kbt58r72bx" path="res://Scenes/Rhythm/RhythmPlayground/tick.tscn" id="6_n4de7"]
 [ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="7_gsea5"]
 [ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="8_lk7v4"]
+[ext_resource type="PackedScene" uid="uid://esk3dg27po8y" path="res://Scenes/Rhythm/RhythmPlayground/slide_beat.tscn" id="10_1sh7o"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/InputVisualizer.cs" id="11_qp5bd"]
 
 [node name="RhythmEditor" type="Node2D"]
 
@@ -25,6 +27,7 @@ SpawnPoint = NodePath("../Spawn point")
 DestructionPoint = NodePath("../Destruction point")
 SingleBeatPrefab = ExtResource("5_711h0")
 TickPrefab = ExtResource("6_n4de7")
+SlidePrefab = ExtResource("10_1sh7o")
 PreEmptDuration = 1.5
 Parent = NodePath("..")
 
@@ -55,3 +58,8 @@ P2 = Vector2(400, 400)
 P2Out = Vector2(200, 400)
 DivisionMultiplier = 0.1
 IsOn = false
+
+[node name="input_visualizer" parent="." instance=ExtResource("10_1sh7o")]
+position = Vector2(625, 240)
+scale = Vector2(0.52, 0.52)
+script = ExtResource("11_qp5bd")

@@ -337,16 +337,19 @@ public abstract class BeatTest
             var tooFar = beat.SimulateInput(rhythmSimulator.Object, slideInput.Object);
             Assert.Equal(BeatInputResult.Idle, tooFar);
 
-            // within range but no inputs yet
+            // within early range
             rhythmSimulator.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultOkRadius);
             var noInput = beat.SimulateInput(rhythmSimulator.Object, SpecialInput.GameInput);
-            Assert.Equal(BeatInputResult.Anticipating, noInput);
+            Assert.Equal(BeatInputResult.Idle, noInput);
 
-            // within range of excellent with input
+            // within range of excellent without input
             rhythmSimulator.Setup(r => r.GetCurrentSongTime())
                 .Returns(beatTime - Beat.DefaultExcellentRadius + Globals.FrameEpsilon);
-            slideInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
-            ghostSingleInput.Setup(i => i.ClaimOnStart(beat)).Returns(true);
+            var noInputWithin = beat.SimulateInput(rhythmSimulator.Object, slideInput.Object);
+            Assert.Equal(BeatInputResult.Anticipating, noInputWithin);
+
+            // within range of excellent with input
+            slideInput.Setup(i => i.IsValidDirection()).Returns(true);
             var excellentInput = beat.SimulateInput(rhythmSimulator.Object, slideInput.Object);
             Assert.Equal(BeatInputResult.Excellent, excellentInput);
 
@@ -383,7 +386,8 @@ public abstract class BeatTest
             Assert.Equal(BeatInputResult.Idle, tooFar);
 
             // within range but no inputs yet
-            simulator.Setup(r => r.GetCurrentSongTime()).Returns(beatTime - Beat.DefaultOkRadius);
+            simulator.Setup(r => r.GetCurrentSongTime())
+                .Returns(beatTime - Beat.DefaultExcellentRadius + Globals.FrameEpsilon);
             var noInput = beat.SimulateInput(simulator.Object, SpecialInput.GameInput);
             Assert.Equal(BeatInputResult.Anticipating, noInput);
 

@@ -7,16 +7,10 @@ namespace Yam.Core.Rhythm.Input;
 // note to self: knows the implementation?
 // todo(turnip): create ISingularInput. this is a keyboard implementation
 // todo(turnip): OnStarted, OnHold, OnRelease (document differences)
-public class KeyboardSingularInput : ISingularInput
+public class KeyboardSingularInput(string keyCode) : ISingularInput
 {
     // todo(turnip): see if we can combine them into the details class below
     private IBeat? _claimingBeat;
-    private string _keyCode;
-
-    public KeyboardSingularInput(string keyCode)
-    {
-        _keyCode = keyCode;
-    }
 
     public bool IsValidDirection()
     {
@@ -32,7 +26,7 @@ public class KeyboardSingularInput : ISingularInput
 
     public string GetInputCode()
     {
-        return _keyCode;
+        return keyCode;
     }
 
     public IBeat? GetClaimingChannel(IBeat contextualBeat) => _claimingBeat;
