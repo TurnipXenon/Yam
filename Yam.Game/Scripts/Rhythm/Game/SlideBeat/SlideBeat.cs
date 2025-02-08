@@ -45,6 +45,12 @@ public partial class SlideBeat : Node2D, IBeatVisualizer
 
     private void ReleaseSelf()
     {
+        // todo(turnip): regression test for when constant release and intializing pool
+        if (!IsActive)
+        {
+            return;
+        }
+        
         IsActive = false;
         Visible = false;
         Pooler.Release(this);

@@ -11,6 +11,8 @@
 - [ ] Future: implement gamepad control?? Split between button and directional
 - [ ] Logger level
 - [ ] Cool rotation lerping (find closest rotation and simplify rotation when it exceeds?)
+- [x] Fix beat pooling bug
+  - [ ] Regression test for Godot objects???
 
 ## Slide
 
