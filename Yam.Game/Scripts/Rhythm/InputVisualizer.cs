@@ -29,6 +29,7 @@ public partial class InputVisualizer : Sprite2D
         Debug.Assert(TriggerPoint != null);
 
         _inputProvider = RhythmSimulator.InputProvider;
+        RhythmSimulator.InputVisualizer = this;
         _directionInput = _inputProvider.GetDirectionInput();
         _minY = TriggerPoint.Position.Y;
         _maxY = Position.Y;

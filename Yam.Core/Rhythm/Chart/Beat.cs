@@ -77,7 +77,7 @@ public class Beat : TimeUCoordVector, IBeat
 
     #endregion Beat State
 
-    private IBeatVisualizer? _visualizer;
+    public IBeatVisualizer? Visualizer;
 
     public static List<ReactionWindow> ReactionWindowsFromRelative(List<ReactionWindow> reactionWindow, float time)
     {
@@ -210,8 +210,8 @@ public class Beat : TimeUCoordVector, IBeat
                 or BeatInputResult.Good
                 or BeatInputResult.Excellent:
                 _state = State.Done;
-                _visualizer?.InformEndResult(result, this);
-                _visualizer = null;
+                Visualizer?.InformEndResult(result, this);
+                Visualizer = null;
                 break;
             case BeatInputResult.Holding:
                 _state = State.Holding;
@@ -364,8 +364,8 @@ public class Beat : TimeUCoordVector, IBeat
                 // todo(turnip): inform initial beat of the result and animate
                 var result = reactionWindow.BeatInputResult;
                 // todo: think of how visualizing works later
-                _visualizer?.InformEndResult(result, this);
-                _visualizer = null;
+                Visualizer?.InformEndResult(result, this);
+                Visualizer = null;
                 Logger.Print("Start hold");
                 return BeatInputResult.Holding;
             }
@@ -443,7 +443,7 @@ public class Beat : TimeUCoordVector, IBeat
 
     public void SetVisualizer(IBeatVisualizer visualizer)
     {
-        _visualizer = visualizer;
+        Visualizer = visualizer;
     }
 
 

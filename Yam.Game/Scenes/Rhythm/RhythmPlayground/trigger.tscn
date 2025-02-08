@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://biqwufgdlyr5u"]
+
+[ext_resource type="Texture2D" uid="uid://btpesyqrthgm3" path="res://Assets/Placeholder/trigger.png" id="1_d81x7"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/TriggerVisualizer.cs" id="2_s2t4w"]
+
+[node name="trigger" type="Sprite2D"]
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("1_d81x7")
+script = ExtResource("2_s2t4w")

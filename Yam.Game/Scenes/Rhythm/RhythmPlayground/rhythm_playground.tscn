@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bt1qe76771afk"]
+[gd_scene load_steps=17 format=3 uid="uid://bt1qe76771afk"]
 
 [ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
 [ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_hdbk4"]
@@ -9,7 +9,9 @@
 [ext_resource type="PackedScene" uid="uid://bh1kbt58r72bx" path="res://Scenes/Rhythm/RhythmPlayground/tick.tscn" id="6_n4de7"]
 [ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="7_gsea5"]
 [ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="8_lk7v4"]
+[ext_resource type="Script" path="res://Scripts/Rhythm/TriggerInitializer.cs" id="9_n3om1"]
 [ext_resource type="PackedScene" uid="uid://esk3dg27po8y" path="res://Scenes/Rhythm/RhythmPlayground/slide_beat.tscn" id="10_1sh7o"]
+[ext_resource type="PackedScene" uid="uid://biqwufgdlyr5u" path="res://Scenes/Rhythm/RhythmPlayground/trigger.tscn" id="10_nss7q"]
 [ext_resource type="Script" uid="uid://boaxad6p4sitn" path="res://Scripts/Rhythm/InputVisualizer.cs" id="11_qp5bd"]
 [ext_resource type="Texture2D" uid="uid://cwf30r7ek5utu" path="res://Assets/Placeholder/arrow.png" id="12_46c8x"]
 [ext_resource type="Script" uid="uid://djf4p5by0s535" path="res://Scenes/Rhythm/RhythmPlayground/UI/StartButton.cs" id="12_qp5bd"]
@@ -34,9 +36,12 @@ SlidePrefab = ExtResource("10_1sh7o")
 PreEmptDuration = 1.5
 Parent = NodePath("..")
 
-[node name="Trigger point" type="Sprite2D" parent="."]
+[node name="Trigger point" type="Sprite2D" parent="." node_paths=PackedStringArray("Simulator")]
 position = Vector2(731, 84)
 texture = ExtResource("4_rd1fy")
+script = ExtResource("9_n3om1")
+TriggerPrefab = ExtResource("10_nss7q")
+Simulator = NodePath("../RhythmSimulator")
 
 [node name="Spawn point" type="Sprite2D" parent="."]
 position = Vector2(-130, 84)
@@ -82,5 +87,8 @@ action_mode = 0
 text = "Start"
 script = ExtResource("12_qp5bd")
 Simulator = NodePath("../../RhythmSimulator")
+
+[node name="trigger" parent="." instance=ExtResource("10_nss7q")]
+position = Vector2(-217, 444)
 
 [connection signal="pressed" from="CanvasLayer/Button" to="CanvasLayer/Button" method="OnClick"]
