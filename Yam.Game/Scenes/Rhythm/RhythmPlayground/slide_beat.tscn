@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://esk3dg27po8y"]
+
+[ext_resource type="Texture2D" uid="uid://cwf30r7ek5utu" path="res://Assets/Placeholder/arrow.png" id="1_ae10r"]
+[ext_resource type="Script" uid="uid://djq3f3fahgf1m" path="res://Scripts/Rhythm/Game/SlideBeat/SlideBeat.cs" id="2_rrk5x"]
+
+[node name="slide_beat" type="Sprite2D"]
+scale = Vector2(0.160156, 0.160156)
+texture = ExtResource("1_ae10r")
+script = ExtResource("2_rrk5x")

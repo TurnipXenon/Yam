@@ -37,6 +37,7 @@ public class BeatEntity : TimeUCoordVector
 
     public TimeUCoordVector? PIn { get; set; }
     public TimeUCoordVector? POut { get; set; }
+    public float? Direction { get; set; }
     public List<BeatEntity> BeatList { get; set; } = new();
 
     /// <summary>
@@ -50,7 +51,8 @@ public class BeatEntity : TimeUCoordVector
             Time = Time,
             UCoord = UCoord,
             PIn = PIn?.Clone(),
-            POut = POut?.Clone()
+            POut = POut?.Clone(),
+            Direction = Direction
         };
         return newBeat;
     }

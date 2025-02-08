@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://666i5uf4g355"]
+[gd_scene load_steps=11 format=3 uid="uid://666i5uf4g355"]
 
 [ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_oac8v"]
 [ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_mylgg"]
@@ -9,6 +9,7 @@
 [ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="7_6hqd1"]
 [ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="8_a6ujk"]
 [ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="9_kj4qu"]
+[ext_resource type="Texture2D" uid="uid://cwf30r7ek5utu" path="res://Assets/Placeholder/arrow.png" id="10_mylgg"]
 
 [node name="RhythmEditor" type="Node2D"]
 
@@ -55,3 +56,8 @@ P2 = Vector2(400, 400)
 P2Out = Vector2(200, 400)
 DivisionMultiplier = 0.1
 IsOn = false
+
+[node name="Arrow" type="Sprite2D" parent="."]
+position = Vector2(-184, 243)
+scale = Vector2(0.160156, 0.160156)
+texture = ExtResource("10_mylgg")

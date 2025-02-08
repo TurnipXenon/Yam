@@ -13,4 +13,10 @@ public interface IRhythmInputProvider
 {
     public List<ISingularInput> GetDirectionInputList();
     public List<ISingularInput> GetSingularInputList();
+
+    /// <summary>
+    /// Simulate a frame
+    /// </summary>
+    /// <param name="delta">time since last frame in <b>seconds</b></param>
+    public void Poll(double delta);
 }

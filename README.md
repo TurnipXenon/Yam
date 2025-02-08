@@ -8,10 +8,10 @@ Yam is a rhythm game. No concept or pitch outside of that just yet.
 
 We recently finished implementing holds. The next goals are:
 
-1. Implement scenario where we press two holds and figure out which hold to prioritize during release. Check notebook for notes.
-2. Implement moving to follow holds.
-3. Implement ignoring moving to follow holds when the ticks are at the same uCoord AND no related anchors (POut to PIn).
-4. Implement slides.
+1. ~~Implement scenario where we press two holds and figure out which hold to prioritize during release. Check notebook for notes.~~
+2. Implement slides.
+3. Implement moving to follow holds.
+4. Implement ignoring moving to follow holds when the ticks are at the same uCoord AND no related anchors (POut to PIn).
 5. Implement scoring.
 6. Implement animations.
 7. Document design and interactions.

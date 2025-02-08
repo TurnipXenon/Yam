@@ -1,5 +1,4 @@
 using System;
-using Godot;
 using Yam.Core.Rhythm.Chart;
 
 namespace Yam.Core.Rhythm.Input;
@@ -19,6 +18,30 @@ public class SpecialInput : IRhythmInput
 
     public bool IsValidDirection()
     {
+        return false;
+    }
+
+    public InputSource GetSource()
+    {
+        return _source;
+    }
+
+    public RhythmActionType GetRhythmActionType()
+    {
+        return RhythmActionType.Invalid;
+    }
+
+    public IRhythmInput ActSingle()
+    {
+        // todo: possibly hacky? try to rationalize why we want this
+        // quick explanation: for simulating a fake single beat, the logic is deeper and it handles special inputs
+        return this;
+    }
+
+    #region Unimplemented
+
+    public IBeat? GetClaimingChannel(IBeat contextualBeat)
+    {
         throw new NotImplementedException();
     }
 
@@ -27,17 +50,13 @@ public class SpecialInput : IRhythmInput
         throw new NotImplementedException();
     }
 
-    public Vector2 GetDirection()
+
+    public float GetDirection()
     {
         throw new NotImplementedException();
     }
 
     public string GetInputCode()
-    {
-        throw new NotImplementedException();
-    }
-
-    public IBeat? GetClaimingChannel(IBeat contextualBeat)
     {
         throw new NotImplementedException();
     }
@@ -52,16 +71,6 @@ public class SpecialInput : IRhythmInput
         throw new NotImplementedException();
     }
 
-    public InputSource GetSource()
-    {
-        return _source;
-    }
-
-    public RhythmActionType GetRhythmActionType()
-    {
-        return RhythmActionType.Invalid;
-    }
-
     public void Activate()
     {
         throw new NotImplementedException();
@@ -71,4 +80,6 @@ public class SpecialInput : IRhythmInput
     {
         throw new NotImplementedException();
     }
+
+    #endregion
 }

@@ -1,24 +1,28 @@
 using System;
-using System.Collections.Generic;
+using Godot;
+using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
 namespace Yam.Core.Rhythm.Input;
 
 // todo(turnip): refactor code to remove duplicates
-public class KeyboardDirectionInput(List<KeyboardSingularInput> singularInputs) : ISingularInput
+public class MouseDirectionInput : IDirectionInput
 {
-    private const string SlideKeyCode = "SLIDE_KEYCODE";
+    private const string Keycode = "MOUSE_KEYCODE";
     private IBeat? _claimingBeat;
-    private List<KeyboardSingularInput> _singularInputs = singularInputs;
     private float _direction;
+
+    /// <summary>
+    /// Direction's validity time to live which is measured in <b>frames</b>
+    /// </summary>
+    private double _directionTtl = 0;
 
     public bool IsValidDirection()
     {
-        return true;
+        return _directionTtl > 0;
     }
 
-    // todo(turnip): this might depend on our simulator
-    public bool IsDirectionSensitive() => false;
+    public bool IsDirectionSensitive() => true;
 
     public float GetDirection()
     {
@@ -27,7 +31,7 @@ public class KeyboardDirectionInput(List<KeyboardSingularInput> singularInputs) 
 
     public string GetInputCode()
     {
-        return SlideKeyCode;
+        return Keycode;
     }
 
     // todo(turnip): we release claiming beat only if we release the singular beats
@@ -36,8 +40,7 @@ public class KeyboardDirectionInput(List<KeyboardSingularInput> singularInputs) 
 
     public bool ClaimOnStart(IBeat claimingBeat)
     {
-        // todo(turnip): consider invalid directions??
-        if (_claimingBeat != null || _singularInputState != SingularInputState.Started)
+        if (!IsValidDirection() || _claimingBeat != null || _singularInputState != SingularInputState.Started)
         {
             return false;
         }
@@ -46,11 +49,6 @@ public class KeyboardDirectionInput(List<KeyboardSingularInput> singularInputs) 
         return true;
     }
 
-    // todo(turnip): might be released when listening to a singular input that was claimed
-    public void ReleaseInput()
-    {
-        _claimingBeat = null;
-    }
 
     public InputSource GetSource()
     {
@@ -64,14 +62,16 @@ public class KeyboardDirectionInput(List<KeyboardSingularInput> singularInputs) 
 
     private SingularInputState _singularInputState = SingularInputState.Free;
 
+    // todo(turnip): might be released when listening to a singular input that was claimed
+    public void ReleaseInput()
+    {
+        throw new NotImplementedException();
+    }
+
+    // todo: we might want to extract this for single input?
     public void Activate()
     {
-        _singularInputState = _singularInputState switch
-        {
-            SingularInputState.Free => SingularInputState.Started,
-            SingularInputState.Started or SingularInputState.Held => SingularInputState.Held,
-            _ => throw new ArgumentOutOfRangeException()
-        };
+        throw new NotImplementedException();
     }
 
     public SingularInputState GetState()
@@ -81,13 +81,30 @@ public class KeyboardDirectionInput(List<KeyboardSingularInput> singularInputs) 
 
     public void Release()
     {
-        _singularInputState = SingularInputState.Free;
-        _claimingBeat?.OnInputRelease();
-        _claimingBeat = null;
+        throw new NotImplementedException();
     }
 
     public IRhythmInput ActSingle()
     {
-        throw new NotImplementedException();
+        // todo: uncomment
+        return this;
+    }
+
+    public void Poll(double delta)
+    {
+        if (_directionTtl > 0)
+        {
+            _directionTtl -= delta;
+        }
+        else
+        {
+            _claimingBeat = null;
+        }
+    }
+
+    public void SetRelativeMotion(Vector2 direction)
+    {
+        _direction = direction.Angle();
+        _directionTtl = Globals.FrameEpsilon;
     }
 }

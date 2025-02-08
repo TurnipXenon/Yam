@@ -37,9 +37,9 @@ public class MultiHoldInput : IRhythmInput, IBeat
         return false;
     }
 
-    public Vector2 GetDirection()
+    public float GetDirection()
     {
-        return Vector2.Zero;
+        throw new NotImplementedException();
     }
 
     public string GetInputCode()
@@ -100,6 +100,11 @@ public class MultiHoldInput : IRhythmInput, IBeat
     public void Release()
     {
         // exclusive on single input
+        throw new NotImplementedException();
+    }
+
+    public IRhythmInput ActSingle()
+    {
         throw new NotImplementedException();
     }
 

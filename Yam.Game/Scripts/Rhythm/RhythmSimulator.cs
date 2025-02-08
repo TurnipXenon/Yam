@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
 using Godot;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Core.Rhythm.Input;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
+using Yam.Game.Scripts.Rhythm.Game.SlideBeat;
 using Yam.Game.Scripts.Rhythm.Input;
 using ChartModel = Yam.Core.Rhythm.Chart.Chart;
 using HoldBeat = Yam.Game.Scripts.Rhythm.Game.HoldBeat.HoldBeat;
@@ -24,6 +24,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
     [Export] public Node2D DestructionPoint { get; set; }
     [Export] public PackedScene SingleBeatPrefab { get; set; }
     [Export] public PackedScene TickPrefab { get; set; }
+    [Export] public PackedScene SlidePrefab { get; set; }
     [Export] public float PreEmptDuration { get; set; } = 2f;
 
     // todo(turnip): turn into export so visible in Godot inspector
@@ -36,6 +37,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
     [Export]
     public Node Parent { get; set; }
 
+    public SlideBeatPooler SlideBeatPooler;
     public SingleBeatPooler SingleBeatPooler;
     public SingleBeatPooler TickPooler;
     private bool _isPlaying = false;
@@ -53,12 +55,15 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         Debug.Assert(SpawnPoint != null, "SpawnPoint != null");
         Debug.Assert(DestructionPoint != null, "DestructionPoint != null");
         Debug.Assert(SingleBeatPrefab != null, "SingleBeatPrefab != null");
+        Debug.Assert(TickPrefab != null, "SingleBeatPrefab != null");
+        Debug.Assert(SlidePrefab != null, "SingleBeatPrefab != null");
         Debug.Assert(AudioStream != null, "AudioStream != null");
         Debug.Assert(AudioStreamPlayer != null, "AudioStreamPlayer != null");
         Debug.Assert(Parent != null, "Parent != null");
 
         SingleBeatPooler = new SingleBeatPooler(this, SingleBeatPrefab);
         TickPooler = new SingleBeatPooler(this, TickPrefab);
+        SlideBeatPooler = new SlideBeatPooler(this, SlidePrefab);
         _inputProvider = new GodotInputProvider();
 
         // todo(turnip): remove and make it situational in the future
@@ -86,6 +91,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
 
         // simulate idle time for input misses
         _chartModel.SimulateBeatInput(this, SpecialInput.GameInput);
+        _inputProvider.Poll(delta);
 
         // todo(turnip): if the updating or processing logic here becomes too complex
         // extract the logic elsewhere???
@@ -108,7 +114,11 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
                     break;
 
                 case BeatType.Slide:
-                    // todo
+                    SlideBeatPooler.Request(new PooledSlideBeatArgs()
+                    {
+                        Beat = beat,
+                        RhythmSimulator = this
+                    });
                     break;
 
                 case BeatType.Hold:
@@ -180,10 +190,14 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         return _processedReactionWindow;
     }
 
+    public float GetDirectionTolerance()
+    {
+        return Beat.DefaultDirectionTolerance;
+    }
+
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        // todo(turnip): prioritize simulating a slide direction
         _chartModel.SimulateBeatInput(this, _inputProvider.ProcessEvent(@event));
     }
 }
