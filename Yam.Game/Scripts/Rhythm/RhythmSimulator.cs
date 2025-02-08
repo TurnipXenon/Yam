@@ -40,10 +40,10 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
     public SlideBeatPooler SlideBeatPooler;
     public SingleBeatPooler SingleBeatPooler;
     public SingleBeatPooler TickPooler;
-    private bool _isPlaying = false;
+    public IRhythmInputProvider InputProvider;
+    private bool _isPlaying;
     private ChartModel _chartModel;
     private float _currentSongTime;
-    private GodotInputProvider _inputProvider;
     private float _lastReactionUpdate;
     private List<ReactionWindow> _processedReactionWindow = new();
     private float _songStart;
@@ -64,15 +64,12 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         SingleBeatPooler = new SingleBeatPooler(this, SingleBeatPrefab);
         TickPooler = new SingleBeatPooler(this, TickPrefab);
         SlideBeatPooler = new SlideBeatPooler(this, SlidePrefab);
-        _inputProvider = new GodotInputProvider();
+        InputProvider = new GodotInputProvider();
 
         // todo(turnip): remove and make it situational in the future
         // such that it is not triggered by events in here but called externally
         // by the scene manager
         ParseChart();
-
-        // todo(turnip): extract function this is not the correct place for this but for now let's put it here
-        StartChart();
     }
 
     public override void _Process(double delta)
@@ -91,7 +88,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
 
         // simulate idle time for input misses
         _chartModel.SimulateBeatInput(this, SpecialInput.GameInput);
-        _inputProvider.Poll(delta);
+        InputProvider.Poll(delta);
 
         // todo(turnip): if the updating or processing logic here becomes too complex
         // extract the logic elsewhere???
@@ -151,7 +148,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         // todo(turnip): choose music based on chart instead of hardcoded-ish here
     }
 
-    private void StartChart()
+    public void StartChart()
     {
         // todo: turn on flag so update can do its thing
         _isPlaying = true;
@@ -198,6 +195,6 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        _chartModel.SimulateBeatInput(this, _inputProvider.ProcessEvent(@event));
+        _chartModel.SimulateBeatInput(this, InputProvider.ProcessEvent(@event));
     }
 }

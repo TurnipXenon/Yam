@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://ckj7gsp5lvcwj"]
+[gd_scene load_steps=13 format=3 uid="uid://ckj7gsp5lvcwj"]
 
 [ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_cpkv4"]
 [ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_m0wm0"]
@@ -10,7 +10,8 @@
 [ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="7_lruxl"]
 [ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="8_bxnnv"]
 [ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="9_yk3w5"]
-[ext_resource type="Script" path="res://Scripts/Rhythm/InputVisualizer.cs" id="11_m0wm0"]
+[ext_resource type="Script" uid="uid://boaxad6p4sitn" path="res://Scripts/Rhythm/InputVisualizer.cs" id="11_m0wm0"]
+[ext_resource type="Script" uid="uid://djf4p5by0s535" path="res://Scenes/Rhythm/RhythmPlayground/UI/StartButton.cs" id="12_ca3jt"]
 
 [node name="RhythmEditor" type="Node2D"]
 
@@ -66,3 +67,20 @@ position = Vector2(-184, 243)
 position = Vector2(625, 240)
 scale = Vector2(0.52, 0.52)
 script = ExtResource("11_m0wm0")
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="AspectRatioContainer" type="AspectRatioContainer" parent="CanvasLayer2"]
+offset_left = 409.0
+offset_top = 234.0
+offset_right = 455.0
+offset_bottom = 274.0
+
+[node name="Button" type="Button" parent="CanvasLayer2/AspectRatioContainer" node_paths=PackedStringArray("Simulator")]
+layout_mode = 2
+action_mode = 0
+text = "Start"
+script = ExtResource("12_ca3jt")
+Simulator = NodePath("../../../RhythmPlayer")
+
+[connection signal="pressed" from="CanvasLayer2/AspectRatioContainer/Button" to="CanvasLayer2/AspectRatioContainer/Button" method="OnClick"]

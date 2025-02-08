@@ -1,5 +1,5 @@
-#nullable enable
 using System.Collections.Generic;
+using Godot;
 
 namespace Yam.Core.Rhythm.Input;
 
@@ -19,4 +19,13 @@ public interface IRhythmInputProvider
     /// </summary>
     /// <param name="delta">time since last frame in <b>seconds</b></param>
     public void Poll(double delta);
+
+    IRhythmInput ProcessEvent(InputEvent @event);
+
+    /// <summary>
+    /// Get abstracted direction input
+    /// </summary>
+    /// <returns></returns>
+    /// <remarks>Required for visualization</remarks>
+    IDirectionInput GetDirectionInput();
 }

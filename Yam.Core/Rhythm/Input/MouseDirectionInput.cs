@@ -61,6 +61,7 @@ public class MouseDirectionInput : IDirectionInput
     }
 
     private SingularInputState _singularInputState = SingularInputState.Free;
+    private Vector2 _position;
 
     // todo(turnip): might be released when listening to a singular input that was claimed
     public void ReleaseInput()
@@ -104,7 +105,18 @@ public class MouseDirectionInput : IDirectionInput
 
     public void SetRelativeMotion(Vector2 direction)
     {
+        // todo: dead spot?
         _direction = direction.Angle();
         _directionTtl = Globals.FrameEpsilon;
+    }
+
+    public void SetCursorPosition(Vector2 position)
+    {
+        _position = position;
+    }
+
+    public Vector2 GetCursorPosition()
+    {
+        return _position;
     }
 }

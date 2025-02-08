@@ -1,8 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://bt1qe76771afk"]
+[gd_scene load_steps=15 format=3 uid="uid://bt1qe76771afk"]
 
 [ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
 [ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_hdbk4"]
-[ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-test.rhythm.json" id="3_2dqin"]
+[ext_resource type="JSON" path="res://Scenes/Rhythm/Charts/song-test.rhythm.json" id="3_qp5bd"]
 [ext_resource type="AudioStream" uid="uid://bjopcy3y4o24c" path="res://Scenes/Rhythm/Songs/sunleth_waterscape/Final Fantasy XIII - The Sunleth Waterscape.mp3" id="4_kql7o"]
 [ext_resource type="Texture2D" uid="uid://corpi772is0cb" path="res://Assets/Placeholder/white_square.png" id="4_rd1fy"]
 [ext_resource type="PackedScene" uid="uid://cwlyq1np8ldmr" path="res://Scenes/Rhythm/RhythmPlayground/single_beat.tscn" id="5_711h0"]
@@ -10,16 +10,19 @@
 [ext_resource type="PackedScene" uid="uid://b4qgmtd1nn3m6" path="res://Scenes/Rhythm/RhythmPlayground/hold_line.tscn" id="7_gsea5"]
 [ext_resource type="Script" uid="uid://bi1sdmd8agfnw" path="res://Scripts/Rhythm/Dev/TestDrawing.cs" id="8_lk7v4"]
 [ext_resource type="PackedScene" uid="uid://esk3dg27po8y" path="res://Scenes/Rhythm/RhythmPlayground/slide_beat.tscn" id="10_1sh7o"]
-[ext_resource type="Script" path="res://Scripts/Rhythm/InputVisualizer.cs" id="11_qp5bd"]
+[ext_resource type="Script" uid="uid://boaxad6p4sitn" path="res://Scripts/Rhythm/InputVisualizer.cs" id="11_qp5bd"]
+[ext_resource type="Texture2D" uid="uid://cwf30r7ek5utu" path="res://Assets/Placeholder/arrow.png" id="12_46c8x"]
+[ext_resource type="Script" uid="uid://djf4p5by0s535" path="res://Scenes/Rhythm/RhythmPlayground/UI/StartButton.cs" id="12_qp5bd"]
+[ext_resource type="Texture2D" uid="uid://y0aduvuh16vb" path="res://Assets/Placeholder/arrow_desat.png" id="13_g5ohl"]
 
 [node name="RhythmEditor" type="Node2D"]
 
 [node name="ParseOsu" type="Node" parent="."]
 script = ExtResource("1_vddvi")
 
-[node name="RhythmPlayer" type="Node" parent="." node_paths=PackedStringArray("AudioStreamPlayer", "TriggerPoint", "SpawnPoint", "DestructionPoint", "Parent")]
+[node name="RhythmSimulator" type="Node" parent="." node_paths=PackedStringArray("AudioStreamPlayer", "TriggerPoint", "SpawnPoint", "DestructionPoint", "Parent")]
 script = ExtResource("2_hdbk4")
-Chart = ExtResource("3_2dqin")
+Chart = ExtResource("3_qp5bd")
 AudioStreamPlayer = NodePath("../AudioStreamPlayer")
 AudioStream = ExtResource("4_kql7o")
 TriggerPoint = NodePath("../Trigger point")
@@ -32,7 +35,7 @@ PreEmptDuration = 1.5
 Parent = NodePath("..")
 
 [node name="Trigger point" type="Sprite2D" parent="."]
-position = Vector2(614, 84)
+position = Vector2(731, 84)
 texture = ExtResource("4_rd1fy")
 
 [node name="Spawn point" type="Sprite2D" parent="."]
@@ -59,7 +62,25 @@ P2Out = Vector2(200, 400)
 DivisionMultiplier = 0.1
 IsOn = false
 
-[node name="input_visualizer" parent="." instance=ExtResource("10_1sh7o")]
-position = Vector2(625, 240)
-scale = Vector2(0.52, 0.52)
+[node name="input_visualizer" parent="." node_paths=PackedStringArray("RhythmSimulator", "TriggerPoint") instance=ExtResource("10_1sh7o")]
+position = Vector2(735, 423)
+scale = Vector2(0.325, 0.325)
 script = ExtResource("11_qp5bd")
+ActiveImage = ExtResource("12_46c8x")
+InactiveImage = ExtResource("13_g5ohl")
+RhythmSimulator = NodePath("../RhythmSimulator")
+TriggerPoint = NodePath("../Trigger point")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Button" type="Button" parent="CanvasLayer" node_paths=PackedStringArray("Simulator")]
+offset_left = 427.0
+offset_top = 262.0
+offset_right = 473.0
+offset_bottom = 293.0
+action_mode = 0
+text = "Start"
+script = ExtResource("12_qp5bd")
+Simulator = NodePath("../../RhythmSimulator")
+
+[connection signal="pressed" from="CanvasLayer/Button" to="CanvasLayer/Button" method="OnClick"]
