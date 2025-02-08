@@ -43,6 +43,7 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
             }
         }
 
+        _mainBeat.Visualizer = this;
         _isActive = true;
     }
 
@@ -76,6 +77,6 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
 
     public void InformEndResult(BeatInputResult result, IBeat beat)
     {
-        throw new System.NotImplementedException();
+        // do nothing
     }
 }

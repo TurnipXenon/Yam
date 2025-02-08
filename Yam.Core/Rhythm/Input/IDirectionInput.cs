@@ -17,4 +17,7 @@ public interface IDirectionInput : IRhythmInput
     /// </summary>
     /// <param name="direction">Non-normalized direction of movement</param>
     void SetRelativeMotion(Vector2 direction);
+
+    void SetCursorPosition(Vector2 position);
+    Vector2 GetCursorPosition();
 }

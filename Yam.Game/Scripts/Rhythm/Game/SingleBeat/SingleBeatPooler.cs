@@ -50,8 +50,9 @@ public class SingleBeatPooler : GenericPooler<SingleBeat, PooledSingleBeatArgs>
 
     protected override void Free(SingleBeat pooledObject)
     {
-        InUse.Remove(pooledObject);
-        pooledObject.IsActive = false;
-        Available.Push(pooledObject);
+        // todo(turnip): delete when safe
+        // InUse.Remove(pooledObject);
+        // pooledObject.IsActive = false;
+        // Available.Push(pooledObject);
     }
 }

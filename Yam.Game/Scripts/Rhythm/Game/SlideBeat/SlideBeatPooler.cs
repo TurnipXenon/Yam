@@ -42,8 +42,9 @@ public class SlideBeatPooler(RhythmSimulator rhythmSimulator, PackedScene prefab
 
     protected override void Free(SlideBeat pooledObject)
     {
-        InUse.Remove(pooledObject);
-        pooledObject.IsActive = false;
-        Available.Push(pooledObject);
+        // todo(turnip): remove when needed
+        // InUse.Remove(pooledObject);
+        // pooledObject.IsActive = false;
+        // Available.Push(pooledObject);
     }
 }

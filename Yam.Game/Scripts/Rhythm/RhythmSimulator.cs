@@ -37,13 +37,15 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
     [Export]
     public Node Parent { get; set; }
 
+    public InputVisualizer InputVisualizer { get; set; }
+
     public SlideBeatPooler SlideBeatPooler;
     public SingleBeatPooler SingleBeatPooler;
     public SingleBeatPooler TickPooler;
-    private bool _isPlaying = false;
-    private ChartModel _chartModel;
+    public IRhythmInputProvider InputProvider;
+    public ChartModel ChartModel;
+    private bool _isPlaying;
     private float _currentSongTime;
-    private GodotInputProvider _inputProvider;
     private float _lastReactionUpdate;
     private List<ReactionWindow> _processedReactionWindow = new();
     private float _songStart;
@@ -64,15 +66,12 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         SingleBeatPooler = new SingleBeatPooler(this, SingleBeatPrefab);
         TickPooler = new SingleBeatPooler(this, TickPrefab);
         SlideBeatPooler = new SlideBeatPooler(this, SlidePrefab);
-        _inputProvider = new GodotInputProvider();
+        InputProvider = new GodotInputProvider();
 
         // todo(turnip): remove and make it situational in the future
         // such that it is not triggered by events in here but called externally
         // by the scene manager
         ParseChart();
-
-        // todo(turnip): extract function this is not the correct place for this but for now let's put it here
-        StartChart();
     }
 
     public override void _Process(double delta)
@@ -90,8 +89,8 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         // GD.Print($"{_currentSongTime} vs {AudioStreamPlayer.GetPlaybackPosition()}");
 
         // simulate idle time for input misses
-        _chartModel.SimulateBeatInput(this, SpecialInput.GameInput);
-        _inputProvider.Poll(delta);
+        ChartModel.SimulateBeatInput(this, SpecialInput.GameInput);
+        InputProvider.Poll(delta);
 
         // todo(turnip): if the updating or processing logic here becomes too complex
         // extract the logic elsewhere???
@@ -99,7 +98,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         // todo: determine which beats should be visible
 
         // todo: give this to the pooler and let it decide which ones idle vs instantiate
-        var visualizableBeats = _chartModel.GetVisualizableBeats(this);
+        var visualizableBeats = ChartModel.GetVisualizableBeats(this);
 
         foreach (var beat in visualizableBeats)
         {
@@ -143,7 +142,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         }
 
         var chartEntity = JsonSerializer.Deserialize<ChartEntity>(f.GetAsText());
-        _chartModel = ChartModel.FromEntity(chartEntity, RelativeReactionWindow);
+        ChartModel = ChartModel.FromEntity(chartEntity, RelativeReactionWindow);
 
         // todo(turnip): remove
         GD.Print("Done parsing");
@@ -151,7 +150,7 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         // todo(turnip): choose music based on chart instead of hardcoded-ish here
     }
 
-    private void StartChart()
+    public void StartChart()
     {
         // todo: turn on flag so update can do its thing
         _isPlaying = true;
@@ -160,7 +159,11 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         AudioStreamPlayer.Play();
         _songStart = Time.GetTicksMsec() / 1000f;
         _songDriftAdjustment = 0f;
+        EmitSignalOnStartChart();
     }
+    
+    [Signal]
+    public delegate void OnStartChartEventHandler();
 
     public float GetCurrentSongTime()
     {
@@ -198,6 +201,6 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
 
     public override void _UnhandledInput(InputEvent @event)
     {
-        _chartModel.SimulateBeatInput(this, _inputProvider.ProcessEvent(@event));
+        ChartModel.SimulateBeatInput(this, InputProvider.ProcessEvent(@event));
     }
 }

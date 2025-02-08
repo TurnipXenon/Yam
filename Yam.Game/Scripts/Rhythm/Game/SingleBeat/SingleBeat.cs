@@ -45,6 +45,12 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
 
     private void ReleaseSelf()
     {
+        // todo(turnip): regression test for when constant release and intializing pool
+        if (!IsActive)
+        {
+            return;
+        }
+        
         IsActive = false;
         Visible = false;
         Pooler.Release(this);
@@ -63,11 +69,11 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
     public void Initialize(PooledSingleBeatArgs args)
     {
         args.Beat.IsVisualized = true;
+        IsActive = true;
         RhythmSimulator = args.RhythmSimulator;
         Beat = args.Beat;
         args.Beat.SetVisualizer(this);
         Position = Position with { Y = RhythmSimulator.TriggerPoint.Position.Y + _beat.UCoord };
-        IsActive = true;
         Name = $"SingleBeat: {Beat.GetVector()}";
         Visible = true;
     }

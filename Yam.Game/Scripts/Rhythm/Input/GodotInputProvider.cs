@@ -50,6 +50,7 @@ public class GodotInputProvider : IRhythmInputProvider
         if (@event is InputEventMouseMotion eventMouseMotion)
         {
             _mouse.SetRelativeMotion(eventMouseMotion.Relative);
+            _mouse.SetCursorPosition(eventMouseMotion.Position);
             return _mouse;
         }
         
@@ -68,5 +69,10 @@ public class GodotInputProvider : IRhythmInputProvider
         }
         
         return SpecialInput.UnknownInput;
+    }
+
+    public IDirectionInput GetDirectionInput()
+    {
+        return _mouse;
     }
 }

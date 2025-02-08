@@ -24,6 +24,10 @@ window/size/viewport_height=540
 
 project/assembly_name="Yam.Game"
 
+[editor]
+
+movie_writer/movie_file="C:/Users/Pumpkin/Projects/Godot/Yam/Yam.Game/Builds/Movie/recording.avi"
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/simple_tool_button/plugin.cfg")
