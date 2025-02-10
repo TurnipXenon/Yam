@@ -6,4 +6,5 @@ public interface IBeat: IRhythmInputListener
 {
     void SetVisualizer(IBeatVisualizer visualizer);
     BeatInputResult OnSimulateInputRelease();
+    IBeatVisualizer? GetVisualizer();
 }

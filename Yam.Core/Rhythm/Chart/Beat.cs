@@ -13,10 +13,10 @@ public class Beat : TimeUCoordVector, IBeat
 {
     public GameLogger Logger = new();
 
-    public const float DefaultTooEarlyRadius = 1f;
-    public const float DefaultOkRadius = 0.75f;
-    public const float DefaultGoodRadius = 0.5f;
-    public const float DefaultExcellentRadius = 0.2f;
+    public const float DefaultTooEarlyRadius = 0.4f;
+    public const float DefaultOkRadius = 0.3f;
+    public const float DefaultGoodRadius = 0.2f;
+    public const float DefaultExcellentRadius = 0.1f;
 
     public const float DirectionEpsilon = Mathf.Pi / 32;
     public const float LeastWrongDirectionDifference = Mathf.Pi / 4;
@@ -210,10 +210,15 @@ public class Beat : TimeUCoordVector, IBeat
                 or BeatInputResult.Good
                 or BeatInputResult.Excellent:
                 _state = State.Done;
-                Visualizer?.InformEndResult(result, this);
+                if (GetBeatType() != BeatType.Hold)
+                {
+                    Visualizer?.OnBeatResult(result, this);
+                }
+
                 Visualizer = null;
                 break;
             case BeatInputResult.Holding:
+                _state = State.Holding;
                 _state = State.Holding;
                 HoldReleaseResult = BeatInputResult.Holding;
                 break;
@@ -364,8 +369,7 @@ public class Beat : TimeUCoordVector, IBeat
                 // todo(turnip): inform initial beat of the result and animate
                 var result = reactionWindow.BeatInputResult;
                 // todo: think of how visualizing works later
-                Visualizer?.InformEndResult(result, this);
-                Visualizer = null;
+                // Visualizer?.OnBeatResult(result, this);
                 Logger.Print("Start hold");
                 return BeatInputResult.Holding;
             }
@@ -373,6 +377,67 @@ public class Beat : TimeUCoordVector, IBeat
 
         // the detected input does not apply for this beat since it's claimed by another one already
         return BeatInputResult.Anticipating;
+    }
+
+
+    // todo: delete this variable when we find a better way to communicate a release to the hold beat visualizer
+    // then we can have a mock listening for the result of how this beat ends
+    public BeatInputResult HoldReleaseResult = BeatInputResult.Idle;
+
+    private BeatInputResult _onInputRelease(bool shouldApply)
+    {
+        var currentTime = _simulator?.GetCurrentSongTime();
+        if (currentTime == null || _state != State.Holding)
+        {
+            return BeatInputResult.Ignore;
+        }
+
+        var lastReactionWindow = BeatList.Last()._reactionWindowList;
+        foreach (var reactionWindow in lastReactionWindow.Where(reactionWindow =>
+                     reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
+        {
+            // todo(turnip): inform initial beat of the result and animate
+            var result = reactionWindow.BeatInputResult;
+            // todo: figure out which visualizer we should call??? the hold beat???
+            // _visualizer?.InformEndResult(result, this);
+            // _visualizer = null;
+            if (shouldApply)
+            {
+                Logger.Print($"Release: {result}");
+                _state = State.Done;
+                HoldReleaseResult = result;
+            }
+
+            // todo: inform beat channel next???
+            return result;
+        }
+
+        if (shouldApply)
+        {
+            HoldReleaseResult = BeatInputResult.Miss;
+            Logger.Print("Release too late!");
+            _state = State.Done;
+        }
+
+        return BeatInputResult.Miss;
+    }
+
+    public void OnInputRelease()
+    {
+        var result = _onInputRelease(true);
+
+        if (result is BeatInputResult.TooEarly
+            or BeatInputResult.Miss or BeatInputResult.Bad or BeatInputResult.Ok
+            or BeatInputResult.Good or BeatInputResult.Excellent or BeatInputResult.Done)
+        {
+            GD.Print($"OnInput: {Visualizer != null}");
+            Visualizer?.OnBeatResult(result, BeatList.Last());
+        }
+    }
+
+    public BeatInputResult OnSimulateInputRelease()
+    {
+        return _onInputRelease(false);
     }
 
     #endregion Hold
@@ -446,56 +511,8 @@ public class Beat : TimeUCoordVector, IBeat
         Visualizer = visualizer;
     }
 
-
-    // todo: delete this variable when we find a better way to communicate a release to the hold beat visualizer
-    // then we can have a mock listening for the result of how this beat ends
-    public BeatInputResult HoldReleaseResult = BeatInputResult.Idle;
-
-    private BeatInputResult _onInputRelease(bool shouldApply)
+    public IBeatVisualizer? GetVisualizer()
     {
-        var currentTime = _simulator?.GetCurrentSongTime();
-        if (currentTime == null || _state != State.Holding)
-        {
-            return BeatInputResult.Ignore;
-        }
-
-        var lastReactionWindow = BeatList.Last()._reactionWindowList;
-        foreach (var reactionWindow in lastReactionWindow.Where(reactionWindow =>
-                     reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
-        {
-            // todo(turnip): inform initial beat of the result and animate
-            var result = reactionWindow.BeatInputResult;
-            // todo: figure out which visualizer we should call??? the hold beat???
-            // _visualizer?.InformEndResult(result, this);
-            // _visualizer = null;
-            if (shouldApply)
-            {
-                Logger.Print($"Release: {result}");
-                _state = State.Done;
-                HoldReleaseResult = result;
-            }
-
-            // todo: inform beat channel next???
-            return result;
-        }
-
-        if (shouldApply)
-        {
-            HoldReleaseResult = BeatInputResult.Miss;
-            Logger.Print("Release too late!");
-            _state = State.Done;
-        }
-
-        return BeatInputResult.Miss;
-    }
-
-    public void OnInputRelease()
-    {
-        _onInputRelease(true);
-    }
-
-    public BeatInputResult OnSimulateInputRelease()
-    {
-        return _onInputRelease(false);
+        return Visualizer;
     }
 }

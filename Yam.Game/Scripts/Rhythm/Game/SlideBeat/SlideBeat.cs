@@ -87,7 +87,7 @@ public partial class SlideBeat : Node2D, IBeatVisualizer
                / (rhythmSimulator.PreEmptDuration);
     }
 
-    public void InformEndResult(BeatInputResult result, IBeat beat)
+    public void OnBeatResult(BeatInputResult result, IBeat beat)
     {
         // todo(turnip): add effects
         GD.Print("Result received in Godot: ", result.ToString());

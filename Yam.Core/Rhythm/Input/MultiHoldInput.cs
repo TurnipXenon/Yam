@@ -167,4 +167,9 @@ public class MultiHoldInput : IRhythmInput, IBeat
     {
         throw new NotImplementedException();
     }
+
+    public IBeatVisualizer? GetVisualizer()
+    {
+        throw new NotImplementedException();
+    }
 }
