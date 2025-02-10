@@ -430,7 +430,7 @@ public class Beat : TimeUCoordVector, IBeat
             or BeatInputResult.Miss or BeatInputResult.Bad or BeatInputResult.Ok
             or BeatInputResult.Good or BeatInputResult.Excellent or BeatInputResult.Done)
         {
-            GD.Print($"OnInput: {Visualizer != null}");
+            Logger.Print($"OnInput: {Visualizer != null}");
             Visualizer?.OnBeatResult(result, BeatList.Last());
         }
     }
