@@ -75,8 +75,8 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
         QueueFree();
     }
 
-    public void InformEndResult(BeatInputResult result, IBeat beat)
+    public void OnBeatResult(BeatInputResult result, IBeat beat)
     {
-        // do nothing
+        _rhythmSimulator.GenerateResultEffect(this, beat, result);
     }
 }

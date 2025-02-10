@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Yam.Core.Rhythm.Chart;
@@ -13,4 +14,12 @@ public interface IRhythmSimulator
     /// </summary>
     /// <returns></returns>
     float GetDirectionTolerance();
+    
+    // for subscription
+    public event EventHandler<BeatResultEvent> BeatSimulationResultEvent;
+    
+    // for invocation
+    void InvokeBeatResultEvent(BeatResultEvent @event);
+
+    void GenerateResultEffect(IBeatVisualizer beatVisualizer, IBeat beat, BeatInputResult result);
 }

@@ -9,7 +9,7 @@ namespace Yam.Core.Rhythm.Chart;
 public class BeatChannel : List<Beat>
 {
     public GameLogger Logger = new();
-    
+
     private int _currentVisualizationIndex;
     private int _currentInputIndex;
 
@@ -37,7 +37,7 @@ public class BeatChannel : List<Beat>
         }
 
         var currentBeat = this[_currentVisualizationIndex];
-        
+
         if (rhythmSimulator.GetCurrentSongTime() > currentBeat.Time - rhythmSimulator.GetPreEmptTime()
             && rhythmSimulator.GetCurrentSongTime() < currentBeat.Time + rhythmSimulator.GetPreEmptTime())
         {
@@ -52,6 +52,7 @@ public class BeatChannel : List<Beat>
     {
         return _currentInputIndex >= Count ? null : this[_currentInputIndex];
     }
+
 
     public void SimulateBeatInput(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
     {
@@ -83,8 +84,6 @@ public class BeatChannel : List<Beat>
             default:
                 throw new ArgumentOutOfRangeException();
         }
-
-        // todo(turnip): send signal if there is a reaction
     }
 
     public float GetLatestInputTime()

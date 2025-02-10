@@ -1,13 +1,15 @@
 # TODO
 
-- [ ] Detect hold and move
-  - [ ] Focus on figuring out if the next beat has that element
-  - [ ] Figure out the y coordinate of the current beat at the given time
+- [x] Detect hold and move
+  - [x] Focus on figuring out if the next beat has that element
+  - [x] ~~Figure out the y coordinate of the current beat at the given time~~ Not needed because we move our mouse instead
+- [ ] Scores
+- [ ] Implement detecting hold location
+- [ ] Implement hold end slide
 - [ ] document how to add a beat type: from beatentity to chartentity to chart to beat
 - [ ] document weird way we convert degree to radian to fit how godot gives float to
-- [ ] Make ActSingle test
 - [x] Implement mouse controls
-- [ ] Implement keyboard controls
+- [ ] Implement keyboard direction controls
 - [ ] Future: implement gamepad control?? Split between button and directional
 - [ ] Logger level
 - [ ] Cool rotation lerping (find closest rotation and simplify rotation when it exceeds?)

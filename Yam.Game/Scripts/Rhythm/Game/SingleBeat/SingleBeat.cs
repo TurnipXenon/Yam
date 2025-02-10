@@ -50,7 +50,7 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         {
             return;
         }
-        
+
         IsActive = false;
         Visible = false;
         Pooler.Release(this);
@@ -86,10 +86,9 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
                / (rhythmSimulator.PreEmptDuration);
     }
 
-    public void InformEndResult(BeatInputResult result, IBeat beat)
+    public void OnBeatResult(BeatInputResult result, IBeat beat)
     {
-        // todo(turnip): add effects
-        GD.Print("Result received in Godot: ", result.ToString());
+        RhythmSimulator.GenerateResultEffect(this, beat, result);
         ReleaseSelf();
     }
 }

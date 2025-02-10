@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://qbspsjjqhx6"]
+
+[ext_resource type="LabelSettings" uid="uid://cth2ndyls1kf2" path="res://Scenes/Rhythm/RhythmPlayground/Result/label_settings_result.tres" id="1_jeks1"]
+[ext_resource type="Script" uid="uid://b35h3k62jrja" path="res://Scenes/Rhythm/RhythmPlayground/Result/ResultLabel.cs" id="2_nt1jm"]
+
+[node name="result_label" type="Label"]
+z_index = 100
+offset_top = 148.0
+offset_right = 123.0
+offset_bottom = 231.0
+text = "Perfect"
+label_settings = ExtResource("1_jeks1")
+horizontal_alignment = 1
+vertical_alignment = 1
+script = ExtResource("2_nt1jm")
+Height = 20.0
+Duration = 300.0

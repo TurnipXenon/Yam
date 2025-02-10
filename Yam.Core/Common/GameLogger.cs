@@ -26,6 +26,12 @@ public class GameLogger
         {
             throw new Exception("Missing XUnitLogger");
         }
+#if DEBUG
+        else
+        {
+            Console.WriteLine(what.Join(" "));
+        }
+#endif // DEBUG
     }
 
     public void PrintErr(string what)

@@ -100,8 +100,8 @@ public class Chart
 
         // ingestedInput will be overriden under certain conditions below
         var ingestedInput = realInput;
-        
-        if (_multiHoldInput != null 
+
+        if (_multiHoldInput != null
             && realInput.GetSource() == InputSource.Player
             && !realInput.IsValidDirection())
         {
