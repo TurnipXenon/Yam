@@ -37,7 +37,7 @@ public partial class TriggerVisualizer : Node2D
             {
                 // follow the busy visualizer
                 IsFollowMode = false;
-                var preferredVisualizer = _parent.Visualizers[0];
+                var preferredVisualizer = _parent.Visualizers.Last();
                 foreach (var otherVisualizer in _parent.Visualizers.Where(otherVisualizer =>
                              otherVisualizer.IsFollowMode))
                 {
