@@ -18,8 +18,6 @@ public interface IRhythmSimulator
     // for subscription
     public event EventHandler<BeatResultEvent> BeatSimulationResultEvent;
     
-    // for invocation
-    void InvokeBeatResultEvent(BeatResultEvent @event);
 
-    void GenerateResultEffect(IBeatVisualizer beatVisualizer, IBeat beat, BeatInputResult result);
+    void InvokeBeatResultEvent(IBeatVisualizer beatVisualizer, IBeat beat, BeatInputResult result);
 }

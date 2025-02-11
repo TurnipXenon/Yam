@@ -88,7 +88,7 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
 
     public void OnBeatResult(BeatInputResult result, IBeat beat)
     {
-        RhythmSimulator.GenerateResultEffect(this, beat, result);
+        RhythmSimulator.InvokeBeatResultEvent(this, beat, result);
         ReleaseSelf();
     }
 }

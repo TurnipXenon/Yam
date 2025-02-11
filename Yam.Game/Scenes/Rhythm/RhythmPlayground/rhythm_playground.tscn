@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://bt1qe76771afk"]
+[gd_scene load_steps=18 format=3 uid="uid://bt1qe76771afk"]
 
 [ext_resource type="Script" uid="uid://bur6k5g353rhb" path="res://Scripts/Rhythm/Dev/ParseOsu.cs" id="1_vddvi"]
 [ext_resource type="Script" uid="uid://bbr4yobycov78" path="res://Scripts/Rhythm/RhythmSimulator.cs" id="2_hdbk4"]
@@ -15,6 +15,8 @@
 [ext_resource type="Texture2D" uid="uid://cwf30r7ek5utu" path="res://Assets/Placeholder/arrow.png" id="12_46c8x"]
 [ext_resource type="Script" uid="uid://djf4p5by0s535" path="res://Scenes/Rhythm/RhythmPlayground/UI/StartButton.cs" id="12_qp5bd"]
 [ext_resource type="Texture2D" uid="uid://y0aduvuh16vb" path="res://Assets/Placeholder/arrow_desat.png" id="13_g5ohl"]
+[ext_resource type="LabelSettings" uid="uid://cth2ndyls1kf2" path="res://Scenes/Rhythm/RhythmPlayground/Result/label_settings_result.tres" id="16_nss7q"]
+[ext_resource type="Script" path="res://Scenes/Rhythm/RhythmPlayground/UI/Score.cs" id="17_n3om1"]
 
 [node name="RhythmEditor" type="Node2D"]
 
@@ -62,7 +64,7 @@ InactiveImage = ExtResource("13_g5ohl")
 RhythmSimulator = NodePath("../RhythmSimulator")
 TriggerPoint = NodePath("../Trigger point")
 
-[node name="Button" type="Button" parent="." node_paths=PackedStringArray("Simulator")]
+[node name="button" type="Button" parent="." node_paths=PackedStringArray("Simulator")]
 offset_left = 427.0
 offset_top = 262.0
 offset_right = 473.0
@@ -75,4 +77,12 @@ Simulator = NodePath("../RhythmSimulator")
 [node name="trigger" parent="." instance=ExtResource("10_nss7q")]
 position = Vector2(-217, 444)
 
-[connection signal="pressed" from="Button" to="Button" method="OnClick"]
+[node name="score" type="Label" parent="." node_paths=PackedStringArray("RhythmSimulator")]
+offset_top = -1.0
+offset_right = 40.0
+offset_bottom = 22.0
+label_settings = ExtResource("16_nss7q")
+script = ExtResource("17_n3om1")
+RhythmSimulator = NodePath("../RhythmSimulator")
+
+[connection signal="pressed" from="button" to="button" method="OnClick"]
