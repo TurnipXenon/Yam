@@ -23,9 +23,10 @@ public partial class TriggerVisualizer : Node2D
         }
 
         Vector2 targetPosition;
-        if (_beat?.GetBeatType() == BeatType.Hold && (_beat.HoldReleaseResult == BeatInputResult.Holding ||
-                                                      _beat.HoldReleaseResult == BeatInputResult.Anticipating ||
-                                                      _beat.HoldReleaseResult == BeatInputResult.Idle))
+        if (_beat?.GetBeatType() == BeatType.Hold
+            && _beat.HoldReleaseResult is BeatInputResult.Holding
+                or BeatInputResult.Anticipating
+                or BeatInputResult.Idle)
         {
             // follow the _direction visualizer
             targetPosition = _simulator.InputVisualizer.Position;

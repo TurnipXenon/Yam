@@ -202,18 +202,14 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
 
     public event EventHandler<BeatResultEvent> BeatSimulationResultEvent = delegate { };
 
-    public void InvokeBeatResultEvent(BeatResultEvent @event)
-    {
-        BeatSimulationResultEvent.Invoke(this, @event);
-    }
-
     public override void _UnhandledInput(InputEvent @event)
     {
         ChartModel.SimulateBeatInput(this, InputProvider.ProcessEvent(@event));
     }
 
-    public void GenerateResultEffect(IBeatVisualizer beatVisualizer, IBeat beat, BeatInputResult result)
+    public void InvokeBeatResultEvent(IBeatVisualizer beatVisualizer, IBeat beat, BeatInputResult result)
     {
+        BeatSimulationResultEvent.Invoke(this, new BeatResultEvent(beat, result));
         var resultLabel = ResultPrefab.Instantiate<Scenes.Rhythm.RhythmPlayground.Result.ResultLabel>();
         resultLabel.Initialize(this, result, beat.GetVisualizer());
     }
