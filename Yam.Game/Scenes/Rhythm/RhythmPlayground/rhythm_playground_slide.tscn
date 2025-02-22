@@ -67,6 +67,8 @@ position = Vector2(-184, 243)
 position = Vector2(625, 240)
 scale = Vector2(0.52, 0.52)
 script = ExtResource("11_m0wm0")
+ActiveImage = null
+InactiveImage = null
 
 [node name="CanvasLayer2" type="CanvasLayer" parent="."]
 

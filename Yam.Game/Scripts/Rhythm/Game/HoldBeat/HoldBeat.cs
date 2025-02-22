@@ -1,12 +1,13 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using Godot;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
 namespace Yam.Game.Scripts.Rhythm.Game.HoldBeat;
 
-public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
+public partial class HoldBeat : Node2D, IBeatVisualizer
 {
     private Beat _mainBeat;
     private RhythmSimulator _rhythmSimulator;
@@ -15,6 +16,7 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
     private SingleBeat.SingleBeat _endSingleBeat;
 
     private bool _isActive = false;
+    private readonly List<HoldPiece> _holdPieceList = [];
 
     public void Initialize(RhythmSimulator rhythmSimulator, Beat mainBeat)
     {
@@ -27,7 +29,7 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
             Beat = endBeat,
             RhythmSimulator = _rhythmSimulator
         });
-        _endSingleBeat.SubscribeToEnd(this);
+        _endSingleBeat.ReleaseEvent += OnTriggerEndBeat;
 
         for (var i = 0; i < _mainBeat.BeatList.Count - 1; i++)
         {
@@ -36,6 +38,7 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
             holdPiece.Initialize(_rhythmSimulator, _mainBeat.BeatList[i], _mainBeat.BeatList[i + 1], pooler, _mainBeat);
             // todo(turnip): set visualizer here?
             AddChild(holdPiece);
+            _holdPieceList.Add(holdPiece);
 
             if (i == 0)
             {
@@ -70,13 +73,41 @@ public partial class HoldBeat : Node2D, IBasicListener, IBeatVisualizer
         // todo: kill when endBeat reaches beyond
     }
 
-    public void Trigger()
+    // final beat was triggered so everybody got cleared anyway
+    private void OnTriggerEndBeat(object sender, EventArgs eventArgs)
     {
-        QueueFree();
+        if (_isActive)
+        {
+            _isActive = false;
+            QueueFree();
+        }
     }
 
     public void OnBeatResult(BeatInputResult result, IBeat beat)
     {
-        _rhythmSimulator.GenerateResultEffect(this, beat, result);
+        if (_isActive)
+        {
+            _rhythmSimulator.InvokeBeatResultEvent(this, beat, result);
+            _isActive = false;
+            _releaseSelf(result);
+        }
+    }
+
+    private void _releaseSelf(BeatInputResult result)
+    {
+        // todo: get scoring per piece first before uncommenting?
+        // we have a bug where it affects future hold beats and i dont know why it does lol
+        _holdPieceList.ForEach(hp => hp.SubmitResult(result));
+        _endSingleBeat.Beat.SubmitResult(result);
+        QueueFree();
+    }
+    
+    
+    public override void _Notification(int what)
+    {
+        if (what == NotificationPredelete)
+        {
+            _endSingleBeat.ReleaseEvent -= OnTriggerEndBeat;
+        }
     }
 }

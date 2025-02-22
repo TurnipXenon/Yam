@@ -210,12 +210,7 @@ public class Beat : TimeUCoordVector, IBeat
                 or BeatInputResult.Good
                 or BeatInputResult.Excellent:
                 _state = State.Done;
-                if (GetBeatType() != BeatType.Hold)
-                {
-                    Visualizer?.OnBeatResult(result, this);
-                }
-
-                Visualizer = null;
+                SubmitResult(result);
                 break;
             case BeatInputResult.Holding:
                 _state = State.Holding;
@@ -431,9 +426,10 @@ public class Beat : TimeUCoordVector, IBeat
             or BeatInputResult.Good or BeatInputResult.Excellent or BeatInputResult.Done)
         {
             Logger.Print($"OnInput: {Visualizer != null}");
-            Visualizer?.OnBeatResult(result, BeatList.Last());
+            SubmitResult(result, BeatList.Last());
         }
     }
+
 
     public BeatInputResult OnSimulateInputRelease()
     {
@@ -514,5 +510,16 @@ public class Beat : TimeUCoordVector, IBeat
     public IBeatVisualizer? GetVisualizer()
     {
         return Visualizer;
+    }
+
+    public void SubmitResult(BeatInputResult result)
+    {
+        SubmitResult(result, this);
+    }
+
+    public void SubmitResult(BeatInputResult result, Beat referenceBeat)
+    {
+        Visualizer?.OnBeatResult(result, referenceBeat);
+        Visualizer = null;
     }
 }

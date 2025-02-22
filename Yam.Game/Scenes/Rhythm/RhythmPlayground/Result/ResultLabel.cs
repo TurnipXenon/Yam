@@ -64,6 +64,7 @@ public partial class ResultLabel : Label
             case BeatInputResult.TooEarly:
             case BeatInputResult.Miss:
                 _basePosition.X = simulator.TriggerPoint.Position.X;
+                Text = "Miss";
                 break;
             case BeatInputResult.Ok:
                 Text = "Ok";
@@ -76,6 +77,11 @@ public partial class ResultLabel : Label
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(result), result, null);
+        }
+
+        if (beatVisualizer.GetPosition().X < simulator.TriggerPoint.Position.X)
+        {
+            _basePosition.X = beatVisualizer.GetPosition().X;
         }
 
         // todo: remove
