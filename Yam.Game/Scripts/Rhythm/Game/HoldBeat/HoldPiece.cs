@@ -1,5 +1,5 @@
+using System;
 using Godot;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 using Yam.Game.Scripts.Rhythm.Game.SingleBeat;
 
@@ -16,6 +16,7 @@ public partial class HoldPiece : Node2D
     private Vector2 _ogP1Out;
     private Vector2 _ogP2;
     private Vector2 _ogP2In;
+    private bool _active = true;
 
     public void Initialize(RhythmSimulator rhythmSimulator,
         Beat startBeat,
@@ -28,6 +29,7 @@ public partial class HoldPiece : Node2D
             Beat = startBeat,
             RhythmSimulator = rhythmSimulator
         });
+        StartBeat.ReleaseEvent += OnStartBeatRelease;
 
         if (StartBeat == null)
         {
@@ -53,7 +55,7 @@ public partial class HoldPiece : Node2D
             _ogP2In = endBeat.PIn.ToVector();
             _ogP2In.X = SingleBeat.SingleBeat.TimeToX(rhythmSimulator, _ogP2In.X);
         }
-        
+
         var p1DiffVector = _ogP1; // todo: reduce with outward p1 p1_out
         var p2DiffVector = _endBeat.GetVector(); // todo: reduce with inward p2 p2_out
         var pointDiffVector = StartBeat.Beat.GetVector() - _endBeat.GetVector();
@@ -66,6 +68,10 @@ public partial class HoldPiece : Node2D
             startBeat.UCoord - parentBeat.UCoord);
     }
 
+    private void OnStartBeatRelease(object sender, EventArgs e)
+    {
+        _active = false;
+    }
 
     private Vector2 CubicBezier(Vector2 p0, Vector2 p1, Vector2 p2, Vector2 p3, float t)
     {
@@ -90,6 +96,23 @@ public partial class HoldPiece : Node2D
             var nextPoint = CubicBezier(p1, p1Out, p2In, p2, t);
             DrawLine(prevPoint, nextPoint, Colors.Green, 8f);
             prevPoint = nextPoint;
+        }
+    }
+
+    public void SubmitResult(BeatInputResult result)
+    {
+        if (_active)
+        {
+            _active = false;
+            StartBeat.Beat.SubmitResult(result);
+        }
+    }
+
+    public override void _Notification(int what)
+    {
+        if (what == NotificationPredelete)
+        {
+            StartBeat.ReleaseEvent -= OnStartBeatRelease;
         }
     }
 }

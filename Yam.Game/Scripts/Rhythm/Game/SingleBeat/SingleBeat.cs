@@ -1,6 +1,5 @@
-using System.Collections.Generic;
+using System;
 using Godot;
-using Yam.Core.Common;
 using Yam.Core.Rhythm.Chart;
 
 namespace Yam.Game.Scripts.Rhythm.Game.SingleBeat;
@@ -20,7 +19,8 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
     public RhythmSimulator RhythmSimulator { get; set; }
     public SingleBeatPooler Pooler { get; set; }
 
-    private Stack<IBasicListener> _releaseListeners = new();
+
+    public event EventHandler ReleaseEvent = delegate { };
 
     public override void _Process(double delta)
     {
@@ -55,15 +55,16 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         Visible = false;
         Pooler.Release(this);
 
-        while (_releaseListeners.Count > 0)
-        {
-            _releaseListeners.Pop().Trigger();
-        }
-    }
 
-    public void SubscribeToEnd(IBasicListener listener)
-    {
-        _releaseListeners.Push(listener);
+        ReleaseEvent.Invoke(this, EventArgs.Empty);
+        foreach (var releaseListeners in ReleaseEvent.GetInvocationList())
+        {
+            ReleaseEvent -= (EventHandler)releaseListeners;
+        }
+
+        // since we released all events, C# will complain later it's empty
+        // so let's readd an empty delegate
+        ReleaseEvent += delegate { };
     }
 
     public void Initialize(PooledSingleBeatArgs args)

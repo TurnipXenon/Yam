@@ -16,7 +16,7 @@
 [ext_resource type="Script" uid="uid://djf4p5by0s535" path="res://Scenes/Rhythm/RhythmPlayground/UI/StartButton.cs" id="12_qp5bd"]
 [ext_resource type="Texture2D" uid="uid://y0aduvuh16vb" path="res://Assets/Placeholder/arrow_desat.png" id="13_g5ohl"]
 [ext_resource type="LabelSettings" uid="uid://cth2ndyls1kf2" path="res://Scenes/Rhythm/RhythmPlayground/Result/label_settings_result.tres" id="16_nss7q"]
-[ext_resource type="Script" path="res://Scenes/Rhythm/RhythmPlayground/UI/Score.cs" id="17_n3om1"]
+[ext_resource type="Script" uid="uid://0m3hy8j7x16w" path="res://Scenes/Rhythm/RhythmPlayground/UI/Score.cs" id="17_n3om1"]
 
 [node name="RhythmEditor" type="Node2D"]
 
