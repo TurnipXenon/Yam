@@ -273,6 +273,7 @@ public class Beat : TimeUCoordVector, IBeat
 
     #region Hold
 
+    // private int _holdIndex = 1;
     private IRhythmSimulator? _simulator;
 
     // For hold, we need to store the following information:
@@ -289,6 +290,51 @@ public class Beat : TimeUCoordVector, IBeat
         return SimulateHoldingIdleBeat();
     }
 
+    private bool _isFullyStraightChecked;
+    private bool _isFullyStraight = true;
+
+    public bool IsFullyStraight()
+    {
+        if (_isFullyStraightChecked)
+        {
+            return _isFullyStraight;
+        }
+
+        _isFullyStraightChecked = true;
+
+        if (GetBeatType() != BeatType.Hold)
+        {
+            return _isFullyStraight;
+        }
+
+        // _isFullyStraight = !BeatList.Exists(beat => beat.PIn != null || beat.POut != null);
+        for (var index = 1; index < BeatList.Count; index++)
+        {
+            var previousBeat = BeatList[index - 1];
+            var nextBeat = BeatList[index];
+
+            if (Math.Abs(previousBeat.UCoord - nextBeat.UCoord) > 0.001)
+            {
+                // they're found not equal
+                _isFullyStraight = false;
+                break;
+            }
+
+            if (previousBeat.PIn != null
+                || previousBeat.POut != null
+                || nextBeat.PIn != null
+                || nextBeat.POut != null)
+            {
+                _isFullyStraight = false;
+                break;
+            }
+        }
+
+        // todo(turnip): add test
+        // todo: only applicable for hold beats, throw if not hold beat
+        return _isFullyStraight;
+    }
+
     public BeatInputResult SimulateHoldingIdleBeat()
     {
         if (_simulator == null)
@@ -299,7 +345,6 @@ public class Beat : TimeUCoordVector, IBeat
             HoldReleaseResult = BeatInputResult.Done;
             return BeatInputResult.Ignore;
         }
-        // todo(turnip): for holding with movement, make sure we are on track
 
         // detecting release is handled at the bottom, we only handle possible late releases here
         var lastBeat = BeatList.Last();
@@ -315,9 +360,39 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Miss;
         }
 
+        // todo(turnip): add test?
+        // todo(turnip): for holding with movement, make sure we are on track
+        // todo(turnip): which beat are we assessing?
+        // var beatToAssess = BeatList[_holdIndex];
+        // var initialBeat = BeatList[_holdIndex - 1];
+        // beatToAssess.SimulateMovingHoldBeat(initialBeat, beatToAssess == lastBeat, IsFullyStraight());
+        // todo(turnip): only increment if we are not at the last beat
+
         // todo: inform signal about state change and result?
         return BeatInputResult.Holding;
     }
+
+
+    // private float _averageDistance = 0;
+    // public void SimulateMovingHoldBeat(Beat initialBeat, bool isLast, bool isFullyStraight)
+    // {
+    //     // todo(turnip): add test
+    //     
+    //     
+    //     // todo(turnip): determine if straight, if straight you are free to ignore?
+    //     // todo(turnip): use hold piece
+    //     // var positionDifference = (_simulator.GetCursorPosition() - UCoord);
+    //     
+    //
+    //     // we move the hold index if we are above beattoassess unless it's the end note
+    // }
+    //
+    // private void _refresh()
+    // {
+    //     // todo: make sure that the beat will not be invoked
+    //     // todo: if reaction was not granted then
+    //     
+    // }
 
 
     private BeatInputResult _simulateStartHold(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
@@ -360,12 +435,7 @@ public class Beat : TimeUCoordVector, IBeat
             {
                 // we need reference to this for the release time
                 _simulator = rhythmSimulator;
-
-                // todo(turnip): inform initial beat of the result and animate
-                var result = reactionWindow.BeatInputResult;
-                // todo: think of how visualizing works later
-                // Visualizer?.OnBeatResult(result, this);
-                Logger.Print("Start hold");
+                BeatList[0].SubmitResult(reactionWindow.BeatInputResult);
                 return BeatInputResult.Holding;
             }
         }
@@ -519,7 +589,44 @@ public class Beat : TimeUCoordVector, IBeat
 
     public void SubmitResult(BeatInputResult result, Beat referenceBeat)
     {
+        if (_isTick)
+        {
+            Logger.Print($"Tick: {_positionTotal} / {_timeTotal} = {_positionTotal/_timeTotal}");
+        }
         Visualizer?.OnBeatResult(result, referenceBeat);
         Visualizer = null;
+    }
+
+    private bool _isTick = false;
+    private float _positionTotal;
+    private float _timeTotal;
+
+    public void RecordPositionDifference(float positionDifference, float timeDifference)
+    {
+        _isTick = true;
+        _positionTotal += positionDifference * timeDifference;
+        _timeTotal += timeDifference;
+    }
+
+    public void SubmitHoldResult()
+    {
+        if (Visualizer == null)
+        {
+            return;
+        }
+        
+        var weightedTotal = _positionTotal / _timeTotal;
+        if (weightedTotal < 96)
+        {
+            SubmitResult(BeatInputResult.Excellent);
+        } else if (weightedTotal < 192)
+        {
+            SubmitResult(BeatInputResult.Good);
+        } else if (weightedTotal < 384)
+        {
+            SubmitResult(BeatInputResult.Ok);
+        }
+        
+        SubmitResult(BeatInputResult.Miss);
     }
 }

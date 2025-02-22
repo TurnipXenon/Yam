@@ -67,10 +67,26 @@ public partial class HoldBeat : Node2D, IBeatVisualizer
 
         if (_mainBeat.GetState() == Beat.State.Holding)
         {
-            _mainBeat.SimulateHoldingIdleBeat();
+            var result = _mainBeat.SimulateHoldingIdleBeat();
+
+            if (result == BeatInputResult.Holding)
+            {
+                _calculateHoldScore();
+                // todo(turnip): simulate hold distance calculation??
+            }
         }
 
         // todo: kill when endBeat reaches beyond
+    }
+
+    private int _holdIndex = 0;
+    private void _calculateHoldScore()
+    {
+        var holdPiece = _holdPieceList[_holdIndex];
+        if (holdPiece.CalculateScore(_holdIndex == _holdPieceList.Count - 1))
+        {
+            _holdIndex++;
+        }
     }
 
     // final beat was triggered so everybody got cleared anyway
@@ -101,13 +117,19 @@ public partial class HoldBeat : Node2D, IBeatVisualizer
         _endSingleBeat.Beat.SubmitResult(result);
         QueueFree();
     }
-    
-    
+
     public override void _Notification(int what)
     {
         if (what == NotificationPredelete)
         {
             _endSingleBeat.ReleaseEvent -= OnTriggerEndBeat;
         }
+    }
+
+    public float GetWeightedDistance()
+    {
+        // todo(turnip): we might want to delete this if we dont need it
+        // todo(turnip): calculate distance
+        return 0;
     }
 }

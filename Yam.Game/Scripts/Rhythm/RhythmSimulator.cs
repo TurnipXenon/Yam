@@ -213,4 +213,9 @@ public partial class RhythmSimulator : Node, IRhythmSimulator
         var resultLabel = ResultPrefab.Instantiate<Scenes.Rhythm.RhythmPlayground.Result.ResultLabel>();
         resultLabel.Initialize(this, result, beat.GetVisualizer());
     }
+
+    public Vector2 GetCursorPosition()
+    {
+        return InputProvider.GetDirectionInput().GetCursorPosition();
+    }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Godot;
 
 namespace Yam.Core.Rhythm.Chart;
 
@@ -20,4 +21,5 @@ public interface IRhythmSimulator
     
 
     void InvokeBeatResultEvent(IBeatVisualizer beatVisualizer, IBeat beat, BeatInputResult result);
+    Vector2 GetCursorPosition();
 }

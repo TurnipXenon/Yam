@@ -17,8 +17,15 @@ public partial class SlideBeat : Node2D, IBeatVisualizer
     }
 
     public RhythmSimulator RhythmSimulator { get; set; }
+
+    public float GetWeightedDistance()
+    {
+        GD.Print("Weighted distance should not be called for SlideBeat");
+        return 0;
+    }
+
     public SlideBeatPooler Pooler { get; set; }
-    
+
     public event EventHandler ReleaseEvent = delegate { };
 
     public override void _Process(double delta)
@@ -49,7 +56,7 @@ public partial class SlideBeat : Node2D, IBeatVisualizer
         {
             return;
         }
-        
+
         IsActive = false;
         Visible = false;
         Pooler.Release(this);

@@ -92,4 +92,10 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         RhythmSimulator.InvokeBeatResultEvent(this, beat, result);
         ReleaseSelf();
     }
+
+    public float GetWeightedDistance()
+    {
+        GD.Print("Weighted distance should not be called for SingleBeat");
+        return 0;
+    }
 }

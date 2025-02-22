@@ -24,6 +24,7 @@ public partial class TriggerVisualizer : Node2D
 
         Vector2 targetPosition;
         if (_beat?.GetBeatType() == BeatType.Hold
+            && !_beat.IsFullyStraight()
             && _beat.HoldReleaseResult is BeatInputResult.Holding
                 or BeatInputResult.Anticipating
                 or BeatInputResult.Idle)
