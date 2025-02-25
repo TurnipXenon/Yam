@@ -72,7 +72,6 @@ public partial class HoldBeat : Node2D, IBeatVisualizer
             if (result == BeatInputResult.Holding)
             {
                 _calculateHoldScore();
-                // todo(turnip): simulate hold distance calculation??
             }
         }
 
@@ -124,12 +123,5 @@ public partial class HoldBeat : Node2D, IBeatVisualizer
         {
             _endSingleBeat.ReleaseEvent -= OnTriggerEndBeat;
         }
-    }
-
-    public float GetWeightedDistance()
-    {
-        // todo(turnip): we might want to delete this if we dont need it
-        // todo(turnip): calculate distance
-        return 0;
     }
 }

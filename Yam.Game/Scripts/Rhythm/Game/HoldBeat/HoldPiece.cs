@@ -143,18 +143,14 @@ public partial class HoldPiece : Node2D
     
     public bool CalculateScore(bool isLast)
     {
-        // cover global position to location position
+        // convert global position to location position; global time to local time
         var localTime = (_simulator.GetCurrentSongTime() - _startBeat.Time) / (_endBeat.Time - _startBeat.Time);
         var localPosition = ToLocal(_simulator.GetCursorPosition());
         _nextPosition = CubicBezierCached(localTime);
         var positionDifference = Mathf.Abs(localPosition.Y - _nextPosition.Y);
         _endBeat.RecordPositionDifference(positionDifference, Mathf.Abs(_lastTime - localTime));
         _lastTime = localTime;
-        
-        
-        // todo: return true if done
 
-        // todo: if localTime > 1f, inform endBeat unless if isLast, we keep the data in the beat
         QueueRedraw();
         var done = !isLast && localTime > 1f;
         if (done)

@@ -92,9 +92,4 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         ReleaseSelf();
     }
 
-    public float GetWeightedDistance()
-    {
-        GD.Print("Weighted distance should not be called for SingleBeat");
-        return 0;
-    }
 }
