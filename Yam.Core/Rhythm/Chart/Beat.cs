@@ -277,7 +277,6 @@ public class Beat : TimeUCoordVector, IBeat
 
     #region Hold
 
-    // private int _holdIndex = 1;
     private IRhythmSimulator? _simulator;
 
     // For hold, we need to store the following information:
@@ -292,51 +291,6 @@ public class Beat : TimeUCoordVector, IBeat
         }
 
         return SimulateHoldingIdleBeat();
-    }
-
-    private bool _isFullyStraightChecked;
-    private bool _isFullyStraight = true;
-
-    public bool IsFullyStraight()
-    {
-        if (_isFullyStraightChecked)
-        {
-            return _isFullyStraight;
-        }
-
-        _isFullyStraightChecked = true;
-
-        if (GetBeatType() != BeatType.Hold)
-        {
-            return _isFullyStraight;
-        }
-
-        // _isFullyStraight = !BeatList.Exists(beat => beat.PIn != null || beat.POut != null);
-        for (var index = 1; index < BeatList.Count; index++)
-        {
-            var previousBeat = BeatList[index - 1];
-            var nextBeat = BeatList[index];
-
-            if (Math.Abs(previousBeat.UCoord - nextBeat.UCoord) > 0.001)
-            {
-                // they're found not equal
-                _isFullyStraight = false;
-                break;
-            }
-
-            if (previousBeat.PIn != null
-                || previousBeat.POut != null
-                || nextBeat.PIn != null
-                || nextBeat.POut != null)
-            {
-                _isFullyStraight = false;
-                break;
-            }
-        }
-
-        // todo(turnip): add test
-        // todo: only applicable for hold beats, throw if not hold beat
-        return _isFullyStraight;
     }
 
     public BeatInputResult SimulateHoldingIdleBeat()
@@ -356,47 +310,15 @@ public class Beat : TimeUCoordVector, IBeat
         var currentTime = _simulator.GetCurrentSongTime();
         if (currentTime >= okReaction.Range.Y)
         {
-            // todo: inform signal about state change and result?
-            // todo: make multiholdinput listen!
             _state = State.Done;
-            Logger.Print($"Missed Hold release ({Time}, {UCoord})");
+            Logger.Print(GameLogger.Noise.Verbose, $"Missed Hold release ({Time}, {UCoord})");
             HoldReleaseResult = BeatInputResult.Miss;
             return BeatInputResult.Miss;
         }
-
-        // todo(turnip): add test?
-        // todo(turnip): for holding with movement, make sure we are on track
-        // todo(turnip): which beat are we assessing?
-        // var beatToAssess = BeatList[_holdIndex];
-        // var initialBeat = BeatList[_holdIndex - 1];
-        // beatToAssess.SimulateMovingHoldBeat(initialBeat, beatToAssess == lastBeat, IsFullyStraight());
-        // todo(turnip): only increment if we are not at the last beat
-
-        // todo: inform signal about state change and result?
+        
         return BeatInputResult.Holding;
     }
 
-
-    // private float _averageDistance = 0;
-    // public void SimulateMovingHoldBeat(Beat initialBeat, bool isLast, bool isFullyStraight)
-    // {
-    //     // todo(turnip): add test
-    //     
-    //     
-    //     // todo(turnip): determine if straight, if straight you are free to ignore?
-    //     // todo(turnip): use hold piece
-    //     // var positionDifference = (_simulator.GetCursorPosition() - UCoord);
-    //     
-    //
-    //     // we move the hold index if we are above beattoassess unless it's the end note
-    // }
-    //
-    // private void _refresh()
-    // {
-    //     // todo: make sure that the beat will not be invoked
-    //     // todo: if reaction was not granted then
-    //     
-    // }
 
 
     private BeatInputResult _simulateStartHold(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
@@ -437,7 +359,6 @@ public class Beat : TimeUCoordVector, IBeat
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {
-                // we need reference to this for the release time
                 _simulator = rhythmSimulator;
                 BeatList[0].SubmitResult(reactionWindow.BeatInputResult);
                 return BeatInputResult.Holding;
@@ -471,19 +392,17 @@ public class Beat : TimeUCoordVector, IBeat
             var finalResult = BeatInputResultUtil.AverageResult(releaseResult, holdResult);
             if (shouldApply)
             {
-                // Logger.Print($"({Time}): Release: {releaseResult}; Hold: {holdResult}; Final: {finalResult}");
+                Logger.Print(GameLogger.Noise.Verbose, $"({Time}): Release: {releaseResult}; Hold: {holdResult}; Final: {finalResult}");
                 _state = State.Done;
                 HoldReleaseResult = finalResult;
             }
 
-            // todo: inform beat channel next???
             return finalResult;
         }
 
         if (shouldApply)
         {
             HoldReleaseResult = BeatInputResult.Miss;
-            Logger.Print("Release too late!");
             _state = State.Done;
         }
 
@@ -498,7 +417,6 @@ public class Beat : TimeUCoordVector, IBeat
             or BeatInputResult.Miss or BeatInputResult.Bad or BeatInputResult.Ok
             or BeatInputResult.Good or BeatInputResult.Excellent or BeatInputResult.Done)
         {
-            // Logger.Print($"OnInput: {Visualizer != null}");
             SubmitResult(result, BeatList.Last());
         }
     }
@@ -603,13 +521,12 @@ public class Beat : TimeUCoordVector, IBeat
     {
         _positionTotal += positionDifference * timeDifference;
         _timeTotal += timeDifference;
-        // Logger.Print($"Record called ({Time}) {_positionTotal}");
     }
 
     private BeatInputResult _calculateHoldResult()
     {
         var weightedTotal = _positionTotal / float.Max(_timeTotal, 1f);
-        // Logger.Print($"Weighted total: {_positionTotal} / float.Max({_timeTotal}, 1f) = {weightedTotal}");
+        Logger.Print(GameLogger.Noise.Verbose, $"Weighted total: {_positionTotal} / float.Max({_timeTotal}, 1f) = {weightedTotal}");
         return weightedTotal switch
         {
             < ExcellentHoldDistanceLimit => BeatInputResult.Excellent,

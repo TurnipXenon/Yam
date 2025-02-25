@@ -7,6 +7,21 @@ namespace Yam.Core.Common;
 
 public class GameLogger
 {
+    
+    /// <summary>
+    /// The higher, the noisier
+    /// </summary>
+    public enum Noise
+    {
+        AlwaysOn = 0,
+        Log = 1,
+        Debug = 2,
+        Verbose = 3,
+        TooVerbose = 4,
+    }
+
+    private const int AllowedNoise = (int)Noise.Log;
+
     private static readonly bool IsGodot = Environment.GetEnvironmentVariable("GODOT_EDITOR_CUSTOM_FEATURES") != null;
     private static readonly bool IsLocalTest = Environment.GetEnvironmentVariable("RESHARPER_TESTRUNNER") != null;
 
@@ -14,6 +29,16 @@ public class GameLogger
 
     public void Print(params string[] what)
     {
+        Print(Noise.Log, what);
+    }
+    
+    public void Print(Noise noise, params string[] what)
+    {
+        if ((int)noise > AllowedNoise)
+        {
+            return;
+        }
+        
         if (XUnitLogger != null)
         {
             XUnitLogger.WriteLine(what.Join(""));
