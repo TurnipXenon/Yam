@@ -18,6 +18,10 @@ public class Beat : TimeUCoordVector, IBeat
     public const float DefaultGoodRadius = 0.2f;
     public const float DefaultExcellentRadius = 0.1f;
 
+    public const float ExcellentHoldDistanceLimit = 64f;
+    public const float GoodHoldDistanceLimit = 160f;
+    public const float OkHoldDistanceLimit = 256f;
+
     public const float DirectionEpsilon = Mathf.Pi / 32;
     public const float LeastWrongDirectionDifference = Mathf.Pi / 4;
     public const float DefaultDirectionTolerance = LeastWrongDirectionDifference - DirectionEpsilon;
@@ -299,7 +303,6 @@ public class Beat : TimeUCoordVector, IBeat
             HoldReleaseResult = BeatInputResult.Done;
             return BeatInputResult.Ignore;
         }
-        // todo(turnip): for holding with movement, make sure we are on track
 
         // detecting release is handled at the bottom, we only handle possible late releases here
         var lastBeat = BeatList.Last();
@@ -307,17 +310,15 @@ public class Beat : TimeUCoordVector, IBeat
         var currentTime = _simulator.GetCurrentSongTime();
         if (currentTime >= okReaction.Range.Y)
         {
-            // todo: inform signal about state change and result?
-            // todo: make multiholdinput listen!
             _state = State.Done;
-            Logger.Print($"Missed Hold release ({Time}, {UCoord})");
+            Logger.Print(GameLogger.Noise.Verbose, $"Missed Hold release ({Time}, {UCoord})");
             HoldReleaseResult = BeatInputResult.Miss;
             return BeatInputResult.Miss;
         }
-
-        // todo: inform signal about state change and result?
+        
         return BeatInputResult.Holding;
     }
+
 
 
     private BeatInputResult _simulateStartHold(IRhythmSimulator rhythmSimulator, IRhythmInput playerInput)
@@ -358,14 +359,8 @@ public class Beat : TimeUCoordVector, IBeat
             foreach (var reactionWindow in _reactionWindowList.Where(reactionWindow =>
                          reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
             {
-                // we need reference to this for the release time
                 _simulator = rhythmSimulator;
-
-                // todo(turnip): inform initial beat of the result and animate
-                var result = reactionWindow.BeatInputResult;
-                // todo: think of how visualizing works later
-                // Visualizer?.OnBeatResult(result, this);
-                Logger.Print("Start hold");
+                BeatList[0].SubmitResult(reactionWindow.BeatInputResult);
                 return BeatInputResult.Holding;
             }
         }
@@ -387,30 +382,27 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Ignore;
         }
 
-        var lastReactionWindow = BeatList.Last()._reactionWindowList;
+        var lastBeat = BeatList.Last();
+        var lastReactionWindow = lastBeat._reactionWindowList;
         foreach (var reactionWindow in lastReactionWindow.Where(reactionWindow =>
                      reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
         {
-            // todo(turnip): inform initial beat of the result and animate
-            var result = reactionWindow.BeatInputResult;
-            // todo: figure out which visualizer we should call??? the hold beat???
-            // _visualizer?.InformEndResult(result, this);
-            // _visualizer = null;
+            var releaseResult = reactionWindow.BeatInputResult;
+            var holdResult = lastBeat._calculateHoldResult();
+            var finalResult = BeatInputResultUtil.AverageResult(releaseResult, holdResult);
             if (shouldApply)
             {
-                Logger.Print($"Release: {result}");
+                Logger.Print(GameLogger.Noise.Verbose, $"({Time}): Release: {releaseResult}; Hold: {holdResult}; Final: {finalResult}");
                 _state = State.Done;
-                HoldReleaseResult = result;
+                HoldReleaseResult = finalResult;
             }
 
-            // todo: inform beat channel next???
-            return result;
+            return finalResult;
         }
 
         if (shouldApply)
         {
             HoldReleaseResult = BeatInputResult.Miss;
-            Logger.Print("Release too late!");
             _state = State.Done;
         }
 
@@ -425,7 +417,6 @@ public class Beat : TimeUCoordVector, IBeat
             or BeatInputResult.Miss or BeatInputResult.Bad or BeatInputResult.Ok
             or BeatInputResult.Good or BeatInputResult.Excellent or BeatInputResult.Done)
         {
-            Logger.Print($"OnInput: {Visualizer != null}");
             SubmitResult(result, BeatList.Last());
         }
     }
@@ -521,5 +512,37 @@ public class Beat : TimeUCoordVector, IBeat
     {
         Visualizer?.OnBeatResult(result, referenceBeat);
         Visualizer = null;
+    }
+
+    private float _positionTotal;
+    private float _timeTotal;
+
+    public void RecordPositionDifference(float positionDifference, float timeDifference)
+    {
+        _positionTotal += positionDifference * timeDifference;
+        _timeTotal += timeDifference;
+    }
+
+    private BeatInputResult _calculateHoldResult()
+    {
+        var weightedTotal = _positionTotal / float.Max(_timeTotal, 1f);
+        Logger.Print(GameLogger.Noise.Verbose, $"Weighted total: {_positionTotal} / float.Max({_timeTotal}, 1f) = {weightedTotal}");
+        return weightedTotal switch
+        {
+            < ExcellentHoldDistanceLimit => BeatInputResult.Excellent,
+            < GoodHoldDistanceLimit => BeatInputResult.Good,
+            < OkHoldDistanceLimit => BeatInputResult.Ok,
+            _ => BeatInputResult.Miss
+        };
+    }
+
+    public void SubmitHoldResult()
+    {
+        if (Visualizer == null)
+        {
+            return;
+        }
+
+        SubmitResult(_calculateHoldResult());
     }
 }

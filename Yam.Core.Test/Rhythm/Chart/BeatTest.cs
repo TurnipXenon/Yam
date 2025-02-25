@@ -281,6 +281,7 @@ public abstract class BeatTest
             beat.SimulateHoldingIdleBeat();
             Assert.Equal(BeatInputResult.Holding, beat.HoldReleaseResult);
 
+            beat.BeatList.Last().RecordPositionDifference(Beat.OkHoldDistanceLimit - 1f, 1f);
             beat.OnInputRelease();
             Assert.Equal(BeatInputResult.Ok, beat.HoldReleaseResult);
         }
