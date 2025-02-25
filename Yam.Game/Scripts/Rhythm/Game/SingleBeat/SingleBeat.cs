@@ -54,8 +54,7 @@ public partial class SingleBeat : Node2D, IBeatVisualizer
         IsActive = false;
         Visible = false;
         Pooler.Release(this);
-
-
+        
         ReleaseEvent.Invoke(this, EventArgs.Empty);
         foreach (var releaseListeners in ReleaseEvent.GetInvocationList())
         {

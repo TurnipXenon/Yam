@@ -67,6 +67,7 @@ public abstract class MultiHoldInputTest
 
             // first, let's release during earlierBeat
             simulator.Setup(s => s.GetCurrentSongTime()).Returns(earlierEnd);
+            laterBeat.BeatList.Last().RecordPositionDifference(Beat.OkHoldDistanceLimit - 1f, 1f);
             multiHoldInput.OnInputRelease();
             Assert.Equal(BeatInputResult.Excellent, earlierBeat.HoldReleaseResult);
             Assert.Equal(BeatInputResult.Ok, laterBeat.HoldReleaseResult);
@@ -123,6 +124,7 @@ public abstract class MultiHoldInputTest
 
             // first, let's release during earlierBeat
             simulator.Setup(s => s.GetCurrentSongTime()).Returns(earlierEnd);
+            laterBeat.BeatList.Last().RecordPositionDifference(Beat.OkHoldDistanceLimit - 1f, 1f);
             multiHoldInput.OnInputRelease();
             Assert.Equal(BeatInputResult.Idle, earlierBeat.HoldReleaseResult);
             Assert.Equal(BeatInputResult.Ok, laterBeat.HoldReleaseResult);

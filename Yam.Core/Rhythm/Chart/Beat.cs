@@ -18,6 +18,10 @@ public class Beat : TimeUCoordVector, IBeat
     public const float DefaultGoodRadius = 0.2f;
     public const float DefaultExcellentRadius = 0.1f;
 
+    public const float ExcellentHoldDistanceLimit = 64f;
+    public const float GoodHoldDistanceLimit = 160f;
+    public const float OkHoldDistanceLimit = 256f;
+
     public const float DirectionEpsilon = Mathf.Pi / 32;
     public const float LeastWrongDirectionDifference = Mathf.Pi / 4;
     public const float DefaultDirectionTolerance = LeastWrongDirectionDifference - DirectionEpsilon;
@@ -457,24 +461,23 @@ public class Beat : TimeUCoordVector, IBeat
             return BeatInputResult.Ignore;
         }
 
-        var lastReactionWindow = BeatList.Last()._reactionWindowList;
+        var lastBeat = BeatList.Last();
+        var lastReactionWindow = lastBeat._reactionWindowList;
         foreach (var reactionWindow in lastReactionWindow.Where(reactionWindow =>
                      reactionWindow.Range.X < currentTime && currentTime < reactionWindow.Range.Y))
         {
-            // todo(turnip): inform initial beat of the result and animate
-            var result = reactionWindow.BeatInputResult;
-            // todo: figure out which visualizer we should call??? the hold beat???
-            // _visualizer?.InformEndResult(result, this);
-            // _visualizer = null;
+            var releaseResult = reactionWindow.BeatInputResult;
+            var holdResult = lastBeat._calculateHoldResult();
+            var finalResult = BeatInputResultUtil.AverageResult(releaseResult, holdResult);
             if (shouldApply)
             {
-                Logger.Print($"Release: {result}");
+                // Logger.Print($"({Time}): Release: {releaseResult}; Hold: {holdResult}; Final: {finalResult}");
                 _state = State.Done;
-                HoldReleaseResult = result;
+                HoldReleaseResult = finalResult;
             }
 
             // todo: inform beat channel next???
-            return result;
+            return finalResult;
         }
 
         if (shouldApply)
@@ -495,7 +498,7 @@ public class Beat : TimeUCoordVector, IBeat
             or BeatInputResult.Miss or BeatInputResult.Bad or BeatInputResult.Ok
             or BeatInputResult.Good or BeatInputResult.Excellent or BeatInputResult.Done)
         {
-            Logger.Print($"OnInput: {Visualizer != null}");
+            // Logger.Print($"OnInput: {Visualizer != null}");
             SubmitResult(result, BeatList.Last());
         }
     }
@@ -589,23 +592,31 @@ public class Beat : TimeUCoordVector, IBeat
 
     public void SubmitResult(BeatInputResult result, Beat referenceBeat)
     {
-        if (_isTick)
-        {
-            Logger.Print($"Tick: {_positionTotal} / {_timeTotal} = {_positionTotal/_timeTotal}");
-        }
         Visualizer?.OnBeatResult(result, referenceBeat);
         Visualizer = null;
     }
 
-    private bool _isTick = false;
     private float _positionTotal;
     private float _timeTotal;
 
     public void RecordPositionDifference(float positionDifference, float timeDifference)
     {
-        _isTick = true;
         _positionTotal += positionDifference * timeDifference;
         _timeTotal += timeDifference;
+        // Logger.Print($"Record called ({Time}) {_positionTotal}");
+    }
+
+    private BeatInputResult _calculateHoldResult()
+    {
+        var weightedTotal = _positionTotal / float.Max(_timeTotal, 1f);
+        // Logger.Print($"Weighted total: {_positionTotal} / float.Max({_timeTotal}, 1f) = {weightedTotal}");
+        return weightedTotal switch
+        {
+            < ExcellentHoldDistanceLimit => BeatInputResult.Excellent,
+            < GoodHoldDistanceLimit => BeatInputResult.Good,
+            < OkHoldDistanceLimit => BeatInputResult.Ok,
+            _ => BeatInputResult.Miss
+        };
     }
 
     public void SubmitHoldResult()
@@ -614,19 +625,7 @@ public class Beat : TimeUCoordVector, IBeat
         {
             return;
         }
-        
-        var weightedTotal = _positionTotal / _timeTotal;
-        if (weightedTotal < 96)
-        {
-            SubmitResult(BeatInputResult.Excellent);
-        } else if (weightedTotal < 192)
-        {
-            SubmitResult(BeatInputResult.Good);
-        } else if (weightedTotal < 384)
-        {
-            SubmitResult(BeatInputResult.Ok);
-        }
-        
-        SubmitResult(BeatInputResult.Miss);
+
+        SubmitResult(_calculateHoldResult());
     }
 }

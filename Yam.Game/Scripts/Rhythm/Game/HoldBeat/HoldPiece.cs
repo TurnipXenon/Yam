@@ -32,6 +32,8 @@ public partial class HoldPiece : Node2D
     {
         _simulator = rhythmSimulator;
         _startBeat = startBeat;
+        _endBeat = endBeat;
+        
         VisualStartBeat = pooler.Request(new PooledSingleBeatArgs()
         {
             Beat = startBeat,
@@ -44,8 +46,6 @@ public partial class HoldPiece : Node2D
             GD.Print($"Failed creating start beat: {startBeat.Time}");
             return;
         }
-
-        _endBeat = endBeat;
 
         // todo: find a better place
         _ogP1 = VisualStartBeat.Beat.GetVector();
@@ -98,7 +98,6 @@ public partial class HoldPiece : Node2D
 
     public override void _Ready()
     {
-        
         _p1 = Vector2.Zero;
         _p1Out = VisualStartBeat.Beat.POut == null ? Vector2.Zero : _ogP1Out - _ogP1;
         _p2 = _ogP2 - _ogP1;

@@ -24,4 +24,17 @@ public static class BeatInputResultUtil
             _ => throw new ArgumentOutOfRangeException(nameof(result), result, null)
         };
     }
+    
+    
+    public static BeatInputResult AverageResult(BeatInputResult? result1, BeatInputResult? result2)
+    {
+        var averageScore = (int)float.Round((GetScore(result1) + GetScore(result2)) / 2f);
+        return averageScore switch
+        {
+            1 => BeatInputResult.Ok,
+            2 => BeatInputResult.Good,
+            3 => BeatInputResult.Excellent,
+            _ => BeatInputResult.Miss
+        };
+    }
 }
