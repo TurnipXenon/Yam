@@ -1,0 +1,47 @@
+[gd_scene load_steps=2 format=3 uid="uid://diqkbyevlddoc"]
+
+[ext_resource type="Script" uid="uid://c1y7xccvmh88i" path="res://Scenes/Twenty48/NumberTile.cs" id="1_1ukyf"]
+
+[node name="Twenty48" type="Node2D"]
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 156.0
+offset_top = 61.0
+offset_right = 556.0
+offset_bottom = 461.0
+
+[node name="NumberTile" type="ColorRect" parent="ColorRect"]
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(1, 1, 0, 1)
+script = ExtResource("1_1ukyf")
+endingColor = Color(0, 1, 0.583333, 0)
+
+[node name="Label" type="Label" parent="ColorRect/NumberTile"]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_colors/font_shadow_color = Color(0.567494, 0.656209, 0.947483, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = -1
+text = "test"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NumberTile" type="ColorRect" parent="ColorRect/NumberTile"]
+offset_right = 100.0
+offset_bottom = 100.0
+color = Color(1, 1, 0, 1)
+script = ExtResource("1_1ukyf")
+endingColor = Color(1, 0, 0.85, 1)
+
+[node name="Label" type="Label" parent="ColorRect/NumberTile/NumberTile"]
+layout_mode = 0
+offset_right = 100.0
+offset_bottom = 100.0
+theme_override_colors/font_shadow_color = Color(0.567494, 0.656209, 0.947483, 1)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = -1
+text = "test"
+horizontal_alignment = 1
+vertical_alignment = 1
